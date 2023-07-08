@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>GPT CoBuilder</title>
+    <link rel="stylesheet" href="generate.css" />
+  </head>
+  <body>
+    <!-- Input field for ChatGPT API key -->
+    <label for="api-key">ChatGPT API Key:</label>
+    <input type="text" id="api-key" />
+
+    <!-- Input field for folder selection -->
+    <label for="folder-selection">Select a Folder:</label>
+    <input type="file" id="folder-selection" directory webkitdirectory />
+
+    <!-- Element to display the file structure -->
+    <pre id="file-structure"></pre>
+
+    <!-- Textarea for project description -->
+    <label for="project-description">Project Description:</label>
+    <textarea id="project-description" rows="5"></textarea>
+
+    <!-- Input field for system message -->
+    <label for="system-message">System Message:</label>
+    <textarea id="system-message" rows="5" ></textarea>
+
+    <!-- Div for generated message -->
+    <div>
+      <label for="generated-message">Generated Message:</label>
+      <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
+    </div>
+
+    <!-- Input field for user message -->
+    <label for="user-message">User Message:</label>
+    <textarea id="user-message" rows="5" ></textarea>
+
+    <!-- Div for full message -->
+    <div>
+      <label for="full-message">Full Message:</label>
+      <textarea id="full-message" class="full-message" rows="20" disabled></textarea>
+    </div>
+        
+    <!-- Total tokens count -->
+    <div id="token-count"></div>
+
+     <!-- Button to trigger GPT completion -->
+     <button class="button" id="generate-button">Generate GPT Completion</button>
+
+     <!-- Element to display errors -->
+    <div id="error-log"></div>
+
+    <script src="generate.js"></script>
+    <script>
+      // Attach event listener to the button
+      const generateButton = document.getElementById('generate-button');
+      const errorLog = document.getElementById('error-log');
+
+      const userMessage = 'Hello, how can you help me?';
+      generateButton.addEventListener('click', () => {
+        sendMessageToChatGPT(userMessage)
+        .then(response => {
+          console.log('Assistant:', response);
+          // Do something with the assistant's response
+        })
+        .catch(error => {
+          errorLog.textContent = `Error: ${error.message}`;
+        });
+      });
+    </script>
+  </body>
+</html>
