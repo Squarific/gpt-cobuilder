@@ -2,6 +2,19 @@
 const apiKeyInput = document.getElementById('api-key');
 const url = 'https://api.openai.com/v1/chat/completions';
 
+// Load the API key from localStorage if it exists
+const savedApiKey = localStorage.getItem('apiKey');
+if (savedApiKey) {
+  apiKeyInput.value = savedApiKey;
+}
+
+// Add event listener to the apiKeyInput field
+apiKeyInput.addEventListener('input', () => {
+  const apiKey = apiKeyInput.value;
+  // Save the API key in localStorage
+  localStorage.setItem('apiKey', apiKey.trim());
+});
+
 // Mapping to store the content of each checked file
 const fileContentMap = new Map();
 
@@ -47,6 +60,12 @@ const displayFileStructure = (fileList) => {
 
     fileStructure.appendChild(fileEntry);
   }
+};
+
+// Function to display the assistant's response
+const displayAssistantResponse = (response) => {
+  const generatedMessageTextarea = document.getElementById('server-response');
+  generatedMessageTextarea.value = response;
 };
 
 const filterFilesByGitignore = async (fileList) => {

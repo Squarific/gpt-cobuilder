@@ -48,11 +48,14 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <!-- Total tokens count -->
     <div id="token-count"></div>
 
-     <!-- Button to trigger GPT completion -->
-     <button class="button" id="generate-button">Generate GPT Completion</button>
+    <!-- Button to trigger GPT completion -->
+    <button class="button" id="generate-button">Generate GPT Completion</button>
 
-     <!-- Element to display errors -->
+    <!-- Element to display errors -->
     <div id="error-log"></div>
+
+    <!-- Div for server response -->
+    <div id="server-response"></div>
 
     <script src="generate.js"></script>
     <script>
@@ -62,13 +65,17 @@ Suggest changes to the right files. If you need to change multiple files, includ
 
       const userMessage = 'Hello, how can you help me?';
       generateButton.addEventListener('click', () => {
+        generateButton.disabled = true; // Disable the button
         sendMessageToChatGPT(userMessage)
         .then(response => {
           console.log('Assistant:', response);
           // Do something with the assistant's response
+          generateButton.disabled = false; // Re-enable the button after receiving the response
+          displayAssistantResponse(response); // Display the assistant's response
         })
         .catch(error => {
           errorLog.textContent = `Error: ${error.message}`;
+          generateButton.disabled = false; // Re-enable the button after an error occurs
         });
       });
     </script>
