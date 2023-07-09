@@ -49,6 +49,32 @@ const displayFileStructure = (fileList) => {
   }
 };
 
+const filterFilesByGitignore = async (fileList) => {
+  let fileListArray = Array.from(fileList);
+
+  try {
+    // Find the .gitignore file in the fileListArray
+    const gitignoreFile = fileListArray.find(file => file.name === '.gitignore');
+    if (!gitignoreFile) {
+      return fileListArray;
+    }
+
+    // Read the .gitignore file content
+    const gitignoreContent = await readFileContent(gitignoreFile) + "\n.git/";
+    gitignore = gitignoreParser.compile(gitignoreContent);
+
+    // Filter out files based on .gitignore rules
+    return fileListArray.filter(file => {
+      const filePath = file.webkitRelativePath || file.path || file.name;
+      const normalizedFilePath = filePath.replace(/^[^/]+\//, ''); // Remove the first folder in the path
+      return gitignore.accepts(normalizedFilePath);
+    });
+  } catch (error) {
+    console.error('Error reading .gitignore:', error);
+    return fileListArray;
+  }
+};
+
 // Read the content of a file
 const readFileContent = (file) => {
   return new Promise((resolve, reject) => {
@@ -106,8 +132,14 @@ const updateFullMessageContent = () => {
 const folderSelectionInput = document.getElementById('folder-selection');
 folderSelectionInput.addEventListener('change', (event) => {
   const fileList = event.target.files;
-  console.log(event.target.files);
-  displayFileStructure(fileList);
+  filterFilesByGitignore(fileList)
+  .then(filteredFileList => {
+    displayFileStructure(filteredFileList);
+  })
+  .catch(error => {
+    console.error(error);
+    displayFileStructure(fileList);
+  });
 });
 
 // Add event listener to the user message textarea
@@ -116,10 +148,15 @@ userMessageTextarea.addEventListener('input', () => {
   updateFullMessageContent();
 });
 
+const projectDescriptionTextarea = document.getElementById('project-description');
+projectDescriptionTextarea.addEventListener('input', () => {
+  updateFullMessageContent();
+})
+
 const sendMessageToChatGPT = async (message) => {
     const apiKey = apiKeyInput.value;
     const systemMessage = document.getElementById('system-message').value;
-    const userMessage = document.getElementById('user-message').value;
+    const userMessage = document.getElementById('full-message').value;
   
     const requestOptions = {
       method: 'POST',
