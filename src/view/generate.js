@@ -64,8 +64,8 @@ const displayFileStructure = (fileList) => {
 
 // Function to display the assistant's response
 const displayAssistantResponse = (response) => {
-  const generatedMessageTextarea = document.getElementById('server-response');
-  generatedMessageTextarea.value = response;
+  const serverResponseTextarea = document.getElementById('server-response');
+  serverResponseTextarea.value = response;
 };
 
 const filterFilesByGitignore = async (fileList) => {
@@ -172,7 +172,7 @@ projectDescriptionTextarea.addEventListener('input', () => {
   updateFullMessageContent();
 })
 
-const sendMessageToChatGPT = async (message) => {
+const sendMessageToChatGPT = async () => {
     const apiKey = apiKeyInput.value;
     const systemMessage = document.getElementById('system-message').value;
     const userMessage = document.getElementById('full-message').value;

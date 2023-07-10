@@ -61,7 +61,7 @@ label {
   display: inline-block;
 }
 
-.generated-message, .full-message {
+.generated-message, .full-message, #server-response {
   height:450px;
 }
 
@@ -70,4 +70,13 @@ label {
   margin-top: 10px;
   font-size: 14px;
   color: #555;
+}
+
+.button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover {
+  background-color: #999;
 }

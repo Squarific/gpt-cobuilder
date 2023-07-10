@@ -54,8 +54,9 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <!-- Element to display errors -->
     <div id="error-log"></div>
 
-    <!-- Div for server response -->
-    <div id="server-response"></div>
+    <!-- Input field for user message -->
+    <label for="server-response">Model response:</label>
+    <textarea id="server-response" rows="5" disabled></textarea>
 
     <script src="generate.js"></script>
     <script>
@@ -63,14 +64,19 @@ Suggest changes to the right files. If you need to change multiple files, includ
       const generateButton = document.getElementById('generate-button');
       const errorLog = document.getElementById('error-log');
 
+      function clearErrorLog() {
+        errorLog.textContent = "";
+      }
+
       const userMessage = 'Hello, how can you help me?';
       generateButton.addEventListener('click', () => {
         generateButton.disabled = true; // Disable the button
-        sendMessageToChatGPT(userMessage)
+        sendMessageToChatGPT()
         .then(response => {
           console.log('Assistant:', response);
           // Do something with the assistant's response
           generateButton.disabled = false; // Re-enable the button after receiving the response
+          clearErrorLog(); // Clear the error log
           displayAssistantResponse(response); // Display the assistant's response
         })
         .catch(error => {
