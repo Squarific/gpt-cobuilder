@@ -14,7 +14,7 @@ Even later it should be able to automatically apply the changes it suggests.
 
 To run the project, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/your-username/gpt-cobuilder.git`
+1. Clone the repository: `git clone https://github.com/Squarific/gpt-cobuilder.git`
 2. Navigate to the project directory: `cd gpt-cobuilder`
 3. Install dependencies: `npm install`
 4. Start the application: `npm start`
@@ -63,7 +63,7 @@ Contributions are welcome! Please read our [Contribution Guidelines](CONTRIBUTIN
 
 ## Feedback and Support
 
-For feedback, bug reports, or support, please open an issue on the [GitHub repository](https://github.com/your-username/gpt-cobuilder/issues).
+For feedback, bug reports, or support, please open an issue on the [GitHub repository](https://github.com/Squarific/gpt-cobuilder/issues).
 
 ## Acknowledgements
 
