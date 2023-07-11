@@ -64,8 +64,9 @@ const displayFileStructure = (fileList) => {
 
 // Function to display the assistant's response
 const displayAssistantResponse = (response) => {
-  const serverResponseTextarea = document.getElementById('server-response');
-  serverResponseTextarea.innerHTML = mdrender(response);
+  const serverResponse = document.getElementById('model-response');
+  //serverResponse.innerHTML = mdrender(response);
+  serverResponse.value = response;
 };
 
 const filterFilesByGitignore = async (fileList) => {
@@ -143,7 +144,7 @@ const updateFullMessageContent = () => {
   const fullMessage = `${projectDescription}\n\n${generatedMessages}\n\n${userMessage}`;
   fullMessageTextarea.value = fullMessage;
 
-  const tokenCountElement = document.getElementById('token-count');
+  const tokenCountElement = document.getElementById('local-token-count');
   const systemMessage = document.getElementById('system-message').value;
   const totalMessage = `${systemMessage}\n\n${fullMessage}`;
 
@@ -180,6 +181,17 @@ const projectDescriptionTextarea = document.getElementById('project-description'
 projectDescriptionTextarea.addEventListener('input', () => {
   updateFullMessageContent();
 })
+
+const displayGitDiffResponse = (response) => {
+  const gitDiffResponse = document.getElementById('model-git-diff-response');
+  gitDiffResponse.value = response;
+};
+
+const displayGitDiffTokenCounts = (response) => {
+  const tokenCountElement = document.getElementById('git-diff-response-token-count');
+  const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
+  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}`;
+};
 
 const sendMessageToChatGPT = async () => {
     const apiKey = apiKeyInput.value;
@@ -220,3 +232,56 @@ const sendMessageToChatGPT = async () => {
         throw new Error(`Request failed! ${error.message}`);
       }
   };
+
+const convertChangeRequestToGitDiff = async () => {
+  const apiKey = apiKeyInput.value;
+  const projectDescription = document.getElementById('project-description').value;
+  const generatedMessages = document.getElementById('generated-message').value;
+  const convertSystemMessage = document.getElementById('convert-system-message').value;
+  const convertUserMessage = document.getElementById('convert-user-message').value;
+
+  const fileEntries = [];
+
+  for (const [file, content] of fileContentMap) {
+    const filePath = file.webkitRelativePath || file.path || file.name;
+    fileEntries.push(`Content of ${filePath}:\n${content}`);
+  }
+  
+  const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${generatedMessages}\n\n${convertUserMessage}`;
+  
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'gpt-3.5-turbo-16k-0613',
+      messages: [
+        { role: 'system', content: convertSystemMessage },
+        { role: 'user', content: userMessage }
+      ]
+    })
+  };
+  
+  try {
+    const response = await fetch(url, requestOptions);
+    
+    if (!response.ok) {
+      let errorMessage = `HTTP error! Status: ${response.status}`;
+      const errorData = await response.json();
+    if (errorData.error && errorData.error.message) {
+      errorMessage += ` Message: ${errorData.error.message}`;
+    }
+    throw new Error(errorMessage);
+  }
+  
+  const data = await response.json();
+    displayGitDiffTokenCounts(data);
+    displayGitDiffResponse(data.choices[0].message.content);
+  } catch (error) {
+    console.error('Error converting change request to git diff:', error);
+  } finally {
+    convertButton.disabled = false;
+  }
+};
