@@ -2,9 +2,14 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 const { contextBridge, ipcRenderer } = require('electron');
+
 const { getEncoding, encodingForModel } = require("js-tiktoken");
 const enc = getEncoding("cl100k_base");
+
 const parser = require("gitignore-parser");
+
+const markdownIt = require('markdown-it');
+const md = new markdownIt();
 
 // Expose the Tokenizer module to the renderer process
 contextBridge.exposeInMainWorld('tiktoken', {
@@ -14,3 +19,7 @@ contextBridge.exposeInMainWorld('tiktoken', {
 });
 
 contextBridge.exposeInMainWorld('gitignoreParser', parser);
+
+contextBridge.exposeInMainWorld('mdrender', (text) => {
+  return md.render(text);
+});

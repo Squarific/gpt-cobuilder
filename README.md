@@ -37,8 +37,6 @@ To run the project, follow these steps:
 ## Plans
 - Stream response
 - Read response and transform into a change suggestion
-- Total tokens should include system message
-- Report token counts the api gave back
 - Maybe keep some statistics like total token count ever
 - Somehow automatically apply the change suggestions
 - By default open the files/folder of this project

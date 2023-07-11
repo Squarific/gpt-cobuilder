@@ -65,7 +65,7 @@ const displayFileStructure = (fileList) => {
 // Function to display the assistant's response
 const displayAssistantResponse = (response) => {
   const serverResponseTextarea = document.getElementById('server-response');
-  serverResponseTextarea.value = response;
+  serverResponseTextarea.innerHTML = mdrender(response);
 };
 
 const filterFilesByGitignore = async (fileList) => {
@@ -123,6 +123,12 @@ const updateGeneratedMessageContent = () => {
   updateFullMessageContent();
 };
 
+const displayTokenCounts = (response) => {
+  const tokenCountElement = document.getElementById('response-token-count');
+  const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
+  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}`;
+};
+
 // Function to update the content of the "full-message" textarea
 const updateFullMessageContent = () => {
   const generatedMessageTextarea = document.getElementById('generated-message');
@@ -138,7 +144,10 @@ const updateFullMessageContent = () => {
   fullMessageTextarea.value = fullMessage;
 
   const tokenCountElement = document.getElementById('token-count');
-  tiktoken.countTokens(fullMessage)
+  const systemMessage = document.getElementById('system-message').value;
+  const totalMessage = `${systemMessage}\n\n${fullMessage}`;
+
+  tiktoken.countTokens(totalMessage)
     .then((tokenCount) => {
       tokenCountElement.textContent = `Total Tokens: ${tokenCount}`;
     })
@@ -205,6 +214,7 @@ const sendMessageToChatGPT = async () => {
         }
     
         const data = await response.json();
+        displayTokenCounts(data);
         return data.choices[0].message.content;
       } catch (error) {
         throw new Error(`Request failed! ${error.message}`);
