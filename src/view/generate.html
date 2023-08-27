@@ -6,80 +6,125 @@
     <link rel="stylesheet" href="generate.css" />
   </head>
   <body>
-    <!-- Input field for ChatGPT API key -->
-    <label for="api-key">ChatGPT API Key:</label>
-    <input type="text" id="api-key" />
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">Change Request</button>
+      <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
+      <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
+    </div>
+    
+    <!-- Tab content -->
+    <div id="Settings" class="tabcontent">
+      <!-- Input field for ChatGPT API key -->
+      <label for="api-key">ChatGPT API Key:</label>
+      <input type="text" id="api-key" />
 
-    <!-- Input field for folder selection -->
-    <label for="folder-selection">Select a Folder:</label>
-    <input type="file" id="folder-selection" directory webkitdirectory />
+      <!-- Input field for folder selection -->
+      <label for="folder-selection">Select a Folder:</label>
+      <input type="file" id="folder-selection" directory webkitdirectory />
+      
+      <!-- Textarea for project description -->
+      <label for="project-description">Project Description:</label>
+      <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
+    </div>
 
-    <!-- Element to display the file structure -->
-    <pre id="file-structure"></pre>
-
-    <div>Tips: 1. Sometimes less is more, sometimes you need to add more context</div>
-
-    <!-- Textarea for project description -->
-    <label for="project-description">Project Description:</label>
-    <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
-
-    <!-- Input field for system message -->
-    <label for="system-message">System Message:</label>
-    <textarea id="system-message" rows="5" >You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. 
+    <div id="ChangeRequest" class="tabcontent">
+        <!-- Element to display the file structure -->
+        <pre id="file-structure"></pre>
+        
+      <!-- Input field for system message -->
+      <label for="system-message">System Message:</label>
+      <textarea id="system-message" rows="5" >You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. 
 
 Suggest changes to the right files. If you need to change multiple files, include which code belongs in which file.</textarea>
 
-    <!-- Div for generated message -->
-    <div>
-      <label for="generated-message">Generated Message:</label>
-      <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
+      <!-- Div for generated message -->
+      <div>
+        <label for="generated-message">Generated Message:</label>
+        <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
+      </div>
+
+      <!-- Input field for user message -->
+      <label for="user-message">User Message:</label>
+      <textarea id="user-message" rows="5" ></textarea>
+
+      <!-- Div for full message -->
+      <div>
+        <label for="full-message">Full Message:</label>
+        <textarea id="full-message" class="full-message" rows="20" disabled></textarea>
+      </div>
+          
+      <!-- Total tokens count -->
+      <div id="local-token-count"></div>
+
+      <!-- Button to trigger GPT completion -->
+      <button class="button" id="generate-button">Generate GPT Completion</button>
+
+      <!-- Element to display errors -->
+      <div id="error-log"></div>
     </div>
-
-    <!-- Input field for user message -->
-    <label for="user-message">User Message:</label>
-    <textarea id="user-message" rows="5" ></textarea>
-
-    <!-- Div for full message -->
-    <div>
-      <label for="full-message">Full Message:</label>
-      <textarea id="full-message" class="full-message" rows="20" disabled></textarea>
-    </div>
-        
-    <!-- Total tokens count -->
-    <div id="local-token-count"></div>
-
-    <!-- Button to trigger GPT completion -->
-    <button class="button" id="generate-button">Generate GPT Completion</button>
-
-    <!-- Element to display errors -->
-    <div id="error-log"></div>
-
-    <!-- Total tokens count -->
-    <div id="response-token-count"></div>
-
-    <!-- Model response -->
-    <label for="model-response">Model response:</label>
-    <textarea id="model-response"></textarea>
-
-    <!-- Input field for user message -->
-    <label for="convert-system-message">Convert System Message:</label>
-    <textarea id="convert-system-message" rows="5" >You convert a change request written by a programmer into a git diff patch. Only include the proposed changes.</textarea>
-
-    <!-- Input field for user message -->
-    <label for="convert-user-message">Conver User Message:</label>
-    <textarea id="convert-user-message" rows="5" >With the given files and proposed changes, write a git diff patch.</textarea>
-
-    <!-- Button to convert response to git diff -->
-    <button class="button" id="convert-button" disabled>Convert to Git Diff</button>
     
-    <!-- Model git diff response -->
-    <label for="model-git-diff-response">Model response:</label>
-    <textarea id="model-git-diff-response"></textarea>
+    <div id="ChangeResponse" class="tabcontent">
+      <!-- Total tokens count -->
+      <div id="response-token-count"></div>
 
-    <!-- Total tokens count -->
-    <div id="git-diff-response-token-count"></div>
+      <!-- Model response -->
+      <label for="model-response">Model response:</label>
+      <textarea id="model-response"></textarea>
+    </div>
+
+    <div id="Convert" class="tabcontent">
+      <!-- Input field for user message -->
+      <label for="convert-system-message">Convert System Message:</label>
+      <textarea id="convert-system-message" rows="5" >You are an excellent programmer. Output the changed file given the proposed changes.
+Use this format:
+
+path/to/file.ext
+```language
+CONTENT OF FILE
+```</textarea>
+
+      <!-- Input field for user message -->
+      <label for="convert-user-message">Convert User Message:</label>
+      <textarea id="convert-user-message" rows="5" ></textarea>
+
+      <!-- Button to convert response to git diff -->
+      <button class="button" id="convert-button" disabled>Convert to Git Diff</button>
+
+      <!-- Model git diff response -->
+      <label for="model-git-diff-response">Model response:</label>
+      <textarea id="model-git-diff-response"></textarea>
+
+      <!-- Total tokens count -->
+      <div id="git-diff-response-token-count"></div>
+
+      <!-- Button to apply git diff automatically -->
+      <button class="button" id="apply-button">Apply Git Diff</button>
+    </div>
 
     <script src="generate.js"></script>
+    <script>
+      function openTab(evt, tabName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+    </script>
     <script>
       // Attach event listener to the button
       const generateButton = document.getElementById('generate-button');
@@ -92,6 +137,8 @@ Suggest changes to the right files. If you need to change multiple files, includ
 
       const userMessage = 'Hello, how can you help me?';
       generateButton.addEventListener('click', () => {
+        openTab(event, 'ChangeResponse')
+      
         generateButton.disabled = true; // Disable the button
           convertButton.disabled = true;
         sendMessageToChatGPT()

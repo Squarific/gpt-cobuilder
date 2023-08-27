@@ -116,7 +116,8 @@ const updateGeneratedMessageContent = () => {
 
   for (const [file, content] of fileContentMap) {
     const filePath = file.webkitRelativePath || file.path || file.name;
-    fileEntries.push(`Content of ${filePath}:\n${content}`);
+    const fileDelimeter = "```";
+    fileEntries.push(`${filePath}:\n${fileDelimeter}\n${content}\n${fileDelimeter}`);
   }
 
   generatedMessageTextarea.value = fileEntries.join('\n\n'); // Add two new lines between file entries
@@ -205,7 +206,7 @@ const sendMessageToChatGPT = async () => {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo-16k-0613',
+        model: 'gpt-4',
         messages: [
             { role: 'system', content: systemMessage },
             { role: 'user', content: userMessage }
@@ -236,7 +237,7 @@ const sendMessageToChatGPT = async () => {
 const convertChangeRequestToGitDiff = async () => {
   const apiKey = apiKeyInput.value;
   const projectDescription = document.getElementById('project-description').value;
-  const generatedMessages = document.getElementById('generated-message').value;
+  const modelResponse = document.getElementById('model-response').value;
   const convertSystemMessage = document.getElementById('convert-system-message').value;
   const convertUserMessage = document.getElementById('convert-user-message').value;
 
@@ -244,10 +245,11 @@ const convertChangeRequestToGitDiff = async () => {
 
   for (const [file, content] of fileContentMap) {
     const filePath = file.webkitRelativePath || file.path || file.name;
-    fileEntries.push(`Content of ${filePath}:\n${content}`);
+    const fileDelimeter = "```";
+    fileEntries.push(`${filePath}:\n${fileDelimeter}\n${content}\n${fileDelimeter}`);
   }
   
-  const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${generatedMessages}\n\n${convertUserMessage}`;
+  const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${modelResponse}\n\n${convertUserMessage}`;
   
   const requestOptions = {
     method: 'POST',
