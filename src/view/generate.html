@@ -7,10 +7,11 @@
   </head>
   <body>
     <div class="tab">
-      <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+      <button id="settingstab" class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">Change Request</button>
       <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
       <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
+      <button class="tablinks" id="add-tab-button">+</button>
     </div>
     
     <!-- Tab content -->
@@ -21,7 +22,7 @@
 
       <!-- Input field for folder selection -->
       <label for="folder-selection">Select a Folder:</label>
-      <input type="file" id="folder-selection" directory webkitdirectory />
+      <button id="folder-selection">Project folder</button>
       
       <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
@@ -101,6 +102,15 @@ CONTENT OF FILE
       <!-- Button to apply git diff automatically -->
       <button class="button" id="apply-button">Apply Git Diff</button>
     </div>
+    
+    <!-- Add Modal for tab naming -->
+    <div id="tabNameModal" class="modal">
+        <div class="modal-content">
+            <label for="tabNameInput">Name of the tab:</label>
+            <input type="text" id="tabNameInput" />
+            <button id="submitTabNameButton">Submit</button>
+        </div>
+    </div>
 
     <script src="generate.js"></script>
     <script>
@@ -124,12 +134,15 @@ CONTENT OF FILE
         document.getElementById(tabName).style.display = "block";
         evt.currentTarget.className += " active";
       }
+
+      document.getElementById("settingstab").click();
     </script>
     <script>
       // Attach event listener to the button
       const generateButton = document.getElementById('generate-button');
       const convertButton = document.getElementById('convert-button');
       const errorLog = document.getElementById('error-log');
+      const reponseField = document.getElementById('model-response');
 
       function clearErrorLog() {
         errorLog.textContent = "";
@@ -137,23 +150,26 @@ CONTENT OF FILE
 
       const userMessage = 'Hello, how can you help me?';
       generateButton.addEventListener('click', () => {
-        openTab(event, 'ChangeResponse')
-      
-        generateButton.disabled = true; // Disable the button
-          convertButton.disabled = true;
+        openTab(event, 'ChangeResponse');
+        
+        reponseField.disabled = true;
+        generateButton.disabled = true;
+        convertButton.disabled = true;
+        
         sendMessageToChatGPT()
         .then(response => {
           console.log('Assistant:', response);
-          // Do something with the assistant's response
-          generateButton.disabled = false; // Re-enable the button after receiving the response
+          reponseField.disabled = false;
+          generateButton.disabled = false;
           convertButton.disabled = false;
 
-          clearErrorLog(); // Clear the error log
-          displayAssistantResponse(response); // Display the assistant's response
+          clearErrorLog();
+          displayAssistantResponse(response);
         })
         .catch(error => {
           errorLog.textContent = `Error: ${error.message}`;
-          generateButton.disabled = false; // Re-enable the button after an error occurs
+          reponseField.disabled = false;
+          generateButton.disabled = false;
           convertButton.disabled = false;
         });
       });
@@ -161,6 +177,46 @@ CONTENT OF FILE
       convertButton.addEventListener('click', () => {
         convertButton.disabled = true;
         convertChangeRequestToGitDiff();
+      });
+    </script>
+    <script>
+      const addTabButton = document.getElementById("add-tab-button");
+      const tabNameModal = document.getElementById("tabNameModal");
+      const submitTabNameButton = document.getElementById("submitTabNameButton");
+      const tabNameInput = document.getElementById("tabNameInput");
+      const tabs = document.querySelector(".tab");
+
+      addTabButton.addEventListener('click', () => {
+          tabNameModal.style.display = "block";
+      });
+
+      submitTabNameButton.addEventListener('click', () => {
+          // Get the tab name from the input
+          const tabName = tabNameInput.value;
+          const newTabButton = document.createElement("button");
+
+          newTabButton.className = "tablinks";
+          newTabButton.innerText = tabName;
+          newTabButton.onclick = (event) => openTab(event, tabName);
+
+          // Insert new tab next to add tab button
+          tabs.insertBefore(newTabButton, addTabButton);
+
+          // Reset the input value
+          tabNameInput.value = "";
+          tabNameModal.style.display = "none";
+          
+          // Create a new Div for the new tab
+          const newDiv = document.createElement("div");
+          newDiv.id = tabName;
+          newDiv.className = "tabcontent";
+          document.body.appendChild(newDiv); // add new div to the body
+      }); 
+
+      window.addEventListener('click', (event) => {
+          if (event.target == tabNameModal) {
+              tabNameModal.style.display = "none";
+          }
       });
     </script>
   </body>

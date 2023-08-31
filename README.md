@@ -35,6 +35,7 @@ To run the project, follow these steps:
 - Review and edit the generated message to suit your specific requirements.
 
 ## Plans
+- Ask for clarification if it is not possible to generate a good request
 - Stream response
 - Read response and transform into a change suggestion
 - Maybe keep some statistics like total token count ever
@@ -50,6 +51,8 @@ To run the project, follow these steps:
 - Make it easy to share prompts/outputs
 - Have a big library of prompts that can be picked from
 - Let GPT pick the prompts itself
+- Give access to library docs
+- Automatically give errors
 
 ## License
 

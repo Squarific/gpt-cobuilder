@@ -25,7 +25,7 @@ const displayFileStructure = (fileList) => {
 
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i];
-    const filePath = file.webkitRelativePath || file.path || file.name;
+    const filePath = file.path;
     const fileEntry = document.createElement('div');
     fileEntry.className = 'file-entry';
 
@@ -74,19 +74,19 @@ const filterFilesByGitignore = async (fileList) => {
 
   try {
     // Find the .gitignore file in the fileListArray
-    const gitignoreFile = fileListArray.find(file => file.name === '.gitignore');
+    const gitignoreFile = fileListArray.find(file => file.path.endsWith('.gitignore'));
     if (!gitignoreFile) {
       return fileListArray;
     }
 
     // Read the .gitignore file content
-    const gitignoreContent = await readFileContent(gitignoreFile) + "\n.git/";
+    gitignoreContent = await readFileContent(gitignoreFile) + "\n.git/";
     gitignore = gitignoreParser.compile(gitignoreContent);
 
     // Filter out files based on .gitignore rules
     return fileListArray.filter(file => {
-      const filePath = file.webkitRelativePath || file.path || file.name;
-      const normalizedFilePath = filePath.replace(/^[^/]+\//, ''); // Remove the first folder in the path
+      const filePath = file.path;
+      const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), filePath).replaceAll("\\", "/");
       return gitignore.accepts(normalizedFilePath);
     });
   } catch (error) {
@@ -96,17 +96,8 @@ const filterFilesByGitignore = async (fileList) => {
 };
 
 // Read the content of a file
-const readFileContent = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      resolve(event.target.result);
-    };
-    reader.onerror = (event) => {
-      reject(new Error('Error reading file.'));
-    };
-    reader.readAsText(file);
-  });
+const readFileContent = async (file) => {
+  return await window.fs.readFile(file.path);
 };
 
 // Function to update the content of the "generated-message" textarea
@@ -115,7 +106,7 @@ const updateGeneratedMessageContent = () => {
   const fileEntries = [];
 
   for (const [file, content] of fileContentMap) {
-    const filePath = file.webkitRelativePath || file.path || file.name;
+    const filePath = file.path;
     const fileDelimeter = "```";
     fileEntries.push(`${filePath}:\n${fileDelimeter}\n${content}\n${fileDelimeter}`);
   }
@@ -158,18 +149,19 @@ const updateFullMessageContent = () => {
     });
 };
 
-// Add event listener to the folder selection input
 const folderSelectionInput = document.getElementById('folder-selection');
-folderSelectionInput.addEventListener('change', (event) => {
-  const fileList = event.target.files;
-  filterFilesByGitignore(fileList)
-  .then(filteredFileList => {
+
+folderSelectionInput.addEventListener('click', async (event) => {
+  const folder = await folderDialog.open();
+  if (folder) {
+    const filePaths = await window.fs.getFilesInDirectory(folder);
+    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
+    
+    let filteredFileList = fileEntries;
+    filteredFileList = await filterFilesByGitignore(fileEntries);
     displayFileStructure(filteredFileList);
-  })
-  .catch(error => {
-    console.error(error);
-    displayFileStructure(fileList);
-  });
+  }
+  event.preventDefault();
 });
 
 // Add event listener to the user message textarea
@@ -244,7 +236,7 @@ const convertChangeRequestToGitDiff = async () => {
   const fileEntries = [];
 
   for (const [file, content] of fileContentMap) {
-    const filePath = file.webkitRelativePath || file.path || file.name;
+    const filePath = file.path;
     const fileDelimeter = "```";
     fileEntries.push(`${filePath}:\n${fileDelimeter}\n${content}\n${fileDelimeter}`);
   }

@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -26,6 +27,19 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
+
+// Add a new event listener
+ipcMain.on('open-folder-dialog', (event) => {
+  dialog.showOpenDialog({
+    properties: ['openDirectory']
+  }).then(result => {
+    if (!result.canceled) {
+      event.sender.send('selected-folder', result.filePaths[0])
+    }
+  }).catch(err => {
+    console.log(err)
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
