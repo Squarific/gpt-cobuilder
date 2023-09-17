@@ -23,6 +23,8 @@
       <!-- Input field for folder selection -->
       <label for="folder-selection">Select a Folder:</label>
       <button id="folder-selection">Project folder</button>
+      <!-- Display Selected Folder -->
+      <span id="folder-display"></span>
       
       <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
@@ -77,11 +79,12 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <div id="Convert" class="tabcontent">
       <!-- Input field for user message -->
       <label for="convert-system-message">Convert System Message:</label>
-      <textarea id="convert-system-message" rows="5" >You are an excellent programmer. Output the changed files given the proposed changes.
+      <textarea id="convert-system-message" rows="5" >You are an excellent programmer. Output the changed files given the proposed changes. Make sure each file is there from beginning to end. All files should be complete. 
+
 Use this format:
 
 path/to/file.ext
-```language
+```
 CONTENT OF FILE
 ```</textarea>
 

@@ -13,6 +13,7 @@ const savedFolder = localStorage.getItem('folder');
 
 (async function () {
   if (savedFolder) {
+    document.getElementById('folder-display').textContent = ` Selected Folder: ${savedFolder}`;
     const filePaths = await window.fs.getFilesInDirectory(savedFolder);
     const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
     let filteredFileList = fileEntries;
@@ -201,6 +202,8 @@ folderSelectionInput.addEventListener('click', async (event) => {
 
   if (folder) {
     localStorage.setItem('folder', folder);
+
+    document.getElementById('folder-display').textContent = ` Selected Folder: ${folder}`;
 
     const filePaths = await window.fs.getFilesInDirectory(folder);
     const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
