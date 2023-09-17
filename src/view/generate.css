@@ -67,6 +67,10 @@ label {
   height:650px;
 }
 
+#generated-message-div {
+  display:none;
+}
+
 /* CSS styles for the token count */
 #token-count {
   margin-top: 10px;

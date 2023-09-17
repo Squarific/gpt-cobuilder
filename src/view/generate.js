@@ -35,10 +35,20 @@ const fileContentMap = new Map();
 const displayFileStructure = (fileList) => {
   const fileStructure = document.getElementById('file-structure');
   fileStructure.textContent = ''; // Clear any previous content
+  fileContentMap.clear();
+
+  // Get the selected folder from localStorage
+  const savedFolder = localStorage.getItem('folder');
 
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i];
-    const filePath = file.path;
+    let filePath = file.path;
+
+    if (savedFolder) {
+      // Display only the path relative to the selected folder
+      filePath = path.relative(savedFolder, filePath);
+    }
+
     const fileEntry = document.createElement('div');
     fileEntry.className = 'file-entry';
 
@@ -117,9 +127,16 @@ const readFileContent = async (file) => {
 const updateGeneratedMessageContent = () => {
   const generatedMessageTextarea = document.getElementById('generated-message');
   const fileEntries = [];
+  const savedFolder = localStorage.getItem('folder');
 
   for (const [file, content] of fileContentMap) {
-    const filePath = file.path;
+    let filePath = file.path;
+
+    if (savedFolder) {
+      // Display only the path relative to the selected folder
+      filePath = path.relative(savedFolder, filePath);
+    }
+
     const fileDelimeter = "```";
     fileEntries.push(`${filePath}:\n${fileDelimeter}\n${content}\n${fileDelimeter}`);
   }
@@ -166,15 +183,23 @@ const folderSelectionInput = document.getElementById('folder-selection');
 
 folderSelectionInput.addEventListener('click', async (event) => {
   const folder = await folderDialog.open();
+
   if (folder) {
+    localStorage.setItem('folder', folder);
+
     const filePaths = await window.fs.getFilesInDirectory(folder);
     const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
     
     let filteredFileList = fileEntries;
     filteredFileList = await filterFilesByGitignore(fileEntries);
     displayFileStructure(filteredFileList);
-    localStorage.setItem('folder', folder);
+
+    // Load the projectDescription
+    const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
+    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+    document.getElementById('project-description').value = projectDescription;
   }
+
   event.preventDefault();
 });
 
@@ -185,8 +210,23 @@ userMessageTextarea.addEventListener('input', () => {
 });
 
 const projectDescriptionTextarea = document.getElementById('project-description');
-projectDescriptionTextarea.addEventListener('input', () => {
+projectDescriptionTextarea.addEventListener('input', async () => {
   updateFullMessageContent();
+  const projectDescription = projectDescriptionTextarea.value;
+  const folderPath = localStorage.getItem('folder');
+  const dirPath = `${folderPath}/gptcobuilder`;
+  const projectDescriptionFilePath = `${folderPath}/gptcobuilder/project_description.txt`;
+
+  try {
+    // Checking if the directory 'gptcobuilder' exists & creating if it doesn't exist
+    if(!await fs.exists(dirPath)){
+      await fs.mkdir(dirPath);
+    }
+    // Save the projectDescription string into the project_description.txt file
+    await window.fs.saveFile(projectDescriptionFilePath,  projectDescription);
+  } catch(error){
+    console.error("Failed to save project description to the file: ", error);
+  }
 })
 
 const displayGitDiffResponse = (response) => {

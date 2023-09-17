@@ -12,6 +12,7 @@ const markdownIt = require('markdown-it');
 const md = new markdownIt();
 
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 
 async function getFilesInDirectory (dirPath) {
@@ -27,12 +28,27 @@ async function getFilesInDirectory (dirPath) {
   return filePaths;
 }
 
+async function saveFile(filePath, content) {
+  await fs.writeFile(filePath, content, 'utf8');
+}
+
+async function exists (dirPath) {
+  return fsSync.existsSync(dirPath);
+}
+
+async function mkdir (path) {
+  return fs.mkdir(path);
+}
+
 contextBridge.exposeInMainWorld('fs', {
   readFile: async (filePath) => {
     const content = await fs.readFile(filePath, 'utf8');
     return content;
   },
-  getFilesInDirectory
+  getFilesInDirectory,
+  saveFile,
+  exists,
+  mkdir
 });
 
 contextBridge.exposeInMainWorld('path', {

@@ -40,7 +40,7 @@
 Suggest changes to the right files. If you need to change multiple files, include which code belongs in which file.</textarea>
 
       <!-- Div for generated message -->
-      <div>
+      <div id="generated-message-div">
         <label for="generated-message">Generated Message:</label>
         <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
       </div>
@@ -77,7 +77,7 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <div id="Convert" class="tabcontent">
       <!-- Input field for user message -->
       <label for="convert-system-message">Convert System Message:</label>
-      <textarea id="convert-system-message" rows="5" >You are an excellent programmer. Output the changed file given the proposed changes.
+      <textarea id="convert-system-message" rows="5" >You are an excellent programmer. Output the changed files given the proposed changes.
 Use this format:
 
 path/to/file.ext
