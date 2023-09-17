@@ -253,7 +253,7 @@ const displayFilesResponse = (response) => {
     formattedResponse += `File Path: ${file.path}\n\nFile Content:\n${file.content}\n\n========================\n\n`;
   });
   
-  filesResponse.value = formattedResponse;
+  filesResponse.value = response;
 };
 
 const displayFilesTokenCounts = (response) => {
@@ -355,3 +355,16 @@ const convertChangeRequestToFiles = async () => {
     convertButton.disabled = false;
   }
 };
+
+document.getElementById('apply-button').addEventListener('click', async () => {
+  const parsedFiles = parseResponse(document.getElementById('model-files-response').value);
+
+  for (const file of parsedFiles) {
+    try {
+      await window.fs.saveFile(file.path, file.content);
+      console.log(`Saved file: ${file.path}`);
+    } catch (error) {
+      console.error(`Error saving file ${file.path}: `, error);
+    }
+  }
+});
