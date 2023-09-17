@@ -7,8 +7,8 @@
   </head>
   <body>
     <div class="tab">
-      <button id="settingstab" class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">Change Request</button>
+      <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
+      <button id="changeRequestTab" class="tablinks" onclick="openTab(event, 'ChangeRequest')">Change Request</button>
       <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
       <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
       <button class="tablinks" id="add-tab-button">+</button>
@@ -135,7 +135,7 @@ CONTENT OF FILE
         evt.currentTarget.className += " active";
       }
 
-      document.getElementById("settingstab").click();
+      document.getElementById("changeRequestTab").click();
     </script>
     <script>
       // Attach event listener to the button

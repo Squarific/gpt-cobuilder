@@ -8,6 +8,19 @@ if (savedApiKey) {
   apiKeyInput.value = savedApiKey;
 }
 
+//read saved folder from local storage
+const savedFolder = localStorage.getItem('folder');
+
+(async function () {
+  if (savedFolder) {
+    const filePaths = await window.fs.getFilesInDirectory(savedFolder);
+    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
+    let filteredFileList = fileEntries;
+    filteredFileList = await filterFilesByGitignore(fileEntries);
+    displayFileStructure(filteredFileList);
+  }
+})();
+
 // Add event listener to the apiKeyInput field
 apiKeyInput.addEventListener('input', () => {
   const apiKey = apiKeyInput.value;
@@ -160,6 +173,7 @@ folderSelectionInput.addEventListener('click', async (event) => {
     let filteredFileList = fileEntries;
     filteredFileList = await filterFilesByGitignore(fileEntries);
     displayFileStructure(filteredFileList);
+    localStorage.setItem('folder', folder);
   }
   event.preventDefault();
 });
