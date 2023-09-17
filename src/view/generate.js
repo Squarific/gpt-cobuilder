@@ -52,7 +52,8 @@ const parseResponse = (response) => {
   for(let i = 0; i < blocks.length - 1; i += 2) {
     // Get the file path and file content
     const path = blocks[i].trim();
-    const content = blocks[i + 1].trim();
+    let content = blocks[i + 1].trim();
+    content = content.substring(content.indexOf("\n") + 1); // Remove language specifier
     // Add the file to the list
     files.push({ path, content });
   }
