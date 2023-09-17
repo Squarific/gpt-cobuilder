@@ -52,7 +52,7 @@ const parseResponse = (response) => {
   for(let i = 0; i < blocks.length - 1; i += 2) {
     // Get the file path and file content
     const path = blocks[i].trim();
-    let content = blocks[i + 1].trim();
+    let content = blocks[i + 1];
     content = content.substring(content.indexOf("\n") + 1); // Remove language specifier
     // Add the file to the list
     files.push({ path, content });
@@ -341,7 +341,7 @@ const sendMessageToChatGPT = async () => {
 async function logRequestAndResponse(apiKey, model, role, content, response) {
   try {
     const currentTime = new Date(); // Get current date and time
-    const formattedTime = currentTime.toISOString().split('.')[0].replace('T', ' '); // Format the time in the required format
+    const formattedTime = toLocalISOString(currentTime).replace('T', '--'); // Format the time in the required format
     const filename = `gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
     
     const fileContent = {};
@@ -429,3 +429,9 @@ document.getElementById('apply-button').addEventListener('click', async () => {
     }
   }
 });
+
+const toLocalISOString = (date) => {
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  const localDate = new Date(date - tzOffset);
+  return localDate.toISOString().split('.')[0];
+};
