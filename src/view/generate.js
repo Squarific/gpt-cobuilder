@@ -31,6 +31,21 @@ apiKeyInput.addEventListener('input', () => {
 // Mapping to store the content of each checked file
 const fileContentMap = new Map();
 
+const parseResponse = (response) => {
+  const files = [];
+  // Split the response by the code block delimiter
+  const blocks = response.split('```');
+  // Iterate over the blocks, skipping the language specifier
+  for(let i = 0; i < blocks.length - 1; i += 2) {
+    // Get the file path and file content
+    const path = blocks[i].trim();
+    const content = blocks[i + 1].trim();
+    // Add the file to the list
+    files.push({ path, content });
+  }
+  return files;
+};
+
 // Function to display file structure
 const displayFileStructure = (fileList) => {
   const fileStructure = document.getElementById('file-structure');
@@ -229,13 +244,20 @@ projectDescriptionTextarea.addEventListener('input', async () => {
   }
 })
 
-const displayGitDiffResponse = (response) => {
-  const gitDiffResponse = document.getElementById('model-git-diff-response');
-  gitDiffResponse.value = response;
+const displayFilesResponse = (response) => {
+  const filesResponse = document.getElementById('model-files-response');
+  const parsedFiles = parseResponse(response);
+  
+  let formattedResponse = '';
+  parsedFiles.forEach(file => {
+    formattedResponse += `File Path: ${file.path}\n\nFile Content:\n${file.content}\n\n========================\n\n`;
+  });
+  
+  filesResponse.value = formattedResponse;
 };
 
-const displayGitDiffTokenCounts = (response) => {
-  const tokenCountElement = document.getElementById('git-diff-response-token-count');
+const displayFilesTokenCounts = (response) => {
+  const tokenCountElement = document.getElementById('files-response-token-count');
   const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
   tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}`;
 };
@@ -280,7 +302,7 @@ const sendMessageToChatGPT = async () => {
       }
   };
 
-const convertChangeRequestToGitDiff = async () => {
+const convertChangeRequestToFiles = async () => {
   const apiKey = apiKeyInput.value;
   const projectDescription = document.getElementById('project-description').value;
   const modelResponse = document.getElementById('model-response').value;
@@ -304,7 +326,7 @@ const convertChangeRequestToGitDiff = async () => {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo-16k-0613',
+      model: 'gpt-4',
       messages: [
         { role: 'system', content: convertSystemMessage },
         { role: 'user', content: userMessage }
@@ -325,10 +347,10 @@ const convertChangeRequestToGitDiff = async () => {
   }
   
   const data = await response.json();
-    displayGitDiffTokenCounts(data);
-    displayGitDiffResponse(data.choices[0].message.content);
+    displayFilesTokenCounts(data);
+    displayFilesResponse(data.choices[0].message.content);
   } catch (error) {
-    console.error('Error converting change request to git diff:', error);
+    console.error('Error converting change request to files:', error);
   } finally {
     convertButton.disabled = false;
   }

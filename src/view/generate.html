@@ -86,21 +86,21 @@ CONTENT OF FILE
 ```</textarea>
 
       <!-- Input field for user message -->
-      <label for="convert-user-message">Convert User Message:</label>
+      <label for="convert-user-message">Optional Convert User Message:</label>
       <textarea id="convert-user-message" rows="5" ></textarea>
 
-      <!-- Button to convert response to git diff -->
-      <button class="button" id="convert-button" disabled>Convert to Git Diff</button>
+      <!-- Button to convert change request to files -->
+      <button class="button" id="convert-button" disabled>Convert change request to files</button>
 
-      <!-- Model git diff response -->
-      <label for="model-git-diff-response">Model response:</label>
-      <textarea id="model-git-diff-response"></textarea>
+      <!-- Model files response -->
+      <label for="model-files-response">Model response:</label>
+      <textarea id="model-files-response"></textarea>
 
       <!-- Total tokens count -->
-      <div id="git-diff-response-token-count"></div>
+      <div id="files-response-token-count"></div>
 
-      <!-- Button to apply git diff automatically -->
-      <button class="button" id="apply-button">Apply Git Diff</button>
+      <!-- Button to apply files automatically -->
+      <button class="button" id="apply-button">Apply files</button>
     </div>
     
     <!-- Add Modal for tab naming -->
@@ -176,7 +176,7 @@ CONTENT OF FILE
 
       convertButton.addEventListener('click', () => {
         convertButton.disabled = true;
-        convertChangeRequestToGitDiff();
+        convertChangeRequestToFiles();
       });
     </script>
     <script>
