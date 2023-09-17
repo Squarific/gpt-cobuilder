@@ -117,7 +117,6 @@ const displayFileStructure = (fileList) => {
 // Function to display the assistant's response
 const displayAssistantResponse = (response) => {
   const serverResponse = document.getElementById('model-response');
-  //serverResponse.innerHTML = mdrender(response);
   serverResponse.value = response;
 };
 
@@ -174,10 +173,34 @@ const updateGeneratedMessageContent = () => {
   updateFullMessageContent();
 };
 
+// Function to calculate the cost given counts of input and output tokens
+const calculateCost = (inputTokens, outputTokens) => {
+  const INPUT_TOKEN_COST = 0.03;  // Cost per 1k input tokens
+  const OUTPUT_TOKEN_COST = 0.06; // Cost per 1k output tokens
+
+  const cost = (inputTokens * INPUT_TOKEN_COST / 1000) + (outputTokens * OUTPUT_TOKEN_COST / 1000);
+  
+  return cost.toFixed(2); // Returns the cost with 2 decimal places
+};
+
 const displayTokenCounts = (response) => {
   const tokenCountElement = document.getElementById('response-token-count');
   const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
-  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}`;
+  
+  // Calculate cost
+  const cost = calculateCost(prompt_tokens, completion_tokens);
+
+  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
+};
+
+const displayFilesTokenCounts = (response) => {
+  const tokenCountElement = document.getElementById('files-response-token-count');
+  const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
+  
+  // Calculate cost
+  const cost = calculateCost(prompt_tokens, completion_tokens);
+
+  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
 // Function to update the content of the "full-message" textarea
@@ -269,12 +292,6 @@ const displayFilesResponse = (response) => {
   });
   
   filesResponse.value = response;
-};
-
-const displayFilesTokenCounts = (response) => {
-  const tokenCountElement = document.getElementById('files-response-token-count');
-  const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
-  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}`;
 };
 
 const sendMessageToChatGPT = async () => {
