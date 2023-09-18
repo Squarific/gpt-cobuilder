@@ -39,9 +39,7 @@
       <label for="system-message">System Message:</label>
       <textarea id="system-message" rows="5" >You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. 
 
-Suggest changes to the right files. If you need to change multiple files, include which code belongs in which file. At the end, include a git commit message for this change in the format:
-
-Git commit message: The commit message describing the changes</textarea>
+Suggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense.</textarea>
 
       <!-- Div for generated message -->
       <div id="generated-message-div">
@@ -110,6 +108,8 @@ Git commit message: The commit message describing the changes</textarea>
         </div>
     </div>
 
+    <script src="apiOperations.js"></script>
+    <script src="fileOperations.js"></script>
     <script src="generate.js"></script>
     <script>
       function openTab(evt, tabName) {
