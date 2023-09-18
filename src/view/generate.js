@@ -183,30 +183,6 @@ const displayFilesResponse = (response) => {
   filesResponse.value = response;
 };
 
-// Function to save HTTP request and response to a file
-async function logRequestAndResponse(apiKey, model, role, content, response) {
-  try {
-    const currentTime = new Date(); // Get current date and time
-    const formattedTime = toLocalISOString(currentTime).replace('T', '--'); // Format the time in the required format
-    const filename = `gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
-    
-    const fileContent = {};
-    fileContent['request'] = {
-      apiKey,
-      model,
-      role,
-      content
-    };
-    fileContent['response'] = response;
-
-    // Save the request and response to the file
-    await window.fs.saveFile(filename, JSON.stringify(fileContent, null, 2)); // The second argument of JSON.stringify is a replacer function which we don't need and the third argument is the number of spaces for indentation
-    console.log(`Request and response logged to ${filename}`);
-  } catch (error) {
-    console.error('Error logging request and response: ', error);
-  }
-}
-
 document.getElementById('apply-button').addEventListener('click', async () => {
   const parsedFiles = parseResponse(document.getElementById('model-files-response').value);
 

@@ -3,7 +3,7 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
-const { getEncoding, encodingForModel } = require("js-tiktoken");
+const { getEncoding } = require("js-tiktoken");
 const enc = getEncoding("cl100k_base");
 
 const parser = require("gitignore-parser");
