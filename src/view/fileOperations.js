@@ -61,7 +61,8 @@ const readFileContent = async (file) => {
 async function logRequestAndResponse(apiKey, model, role, content, response) {
   try {
     const currentTime = new Date(); // Get current date and time
-    const formattedTime = toLocalISOString(currentTime).replace('T', '--'); // Format the time in the required format
+    let formattedTime = toLocalISOString(currentTime); // Format the time in the required format
+    formattedTime = formattedTime.replace(/:/g, '-'); // Replace colons with dashes
     const filename = `gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
     
     const fileContent = {};
