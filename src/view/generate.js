@@ -50,10 +50,14 @@ const parseResponse = (response) => {
   const blocks = response.split(FILE_DELIMETER);
   // Iterate over the blocks, skipping the language specifier
   for(let i = 0; i < blocks.length - 1; i += 2) {
-    // Get the file path and file content
-    const path = blocks[i].trim();
+    // Get the file path
+    let path = blocks[i].trim().split("\n");
+    path = path[path.length - 1]; // Only the line directly before the delimiter
+
+    // Get the file content
     let content = blocks[i + 1];
     content = content.substring(content.indexOf("\n") + 1); // Remove language specifier
+
     // Add the file to the list
     files.push({ path, content });
   }
