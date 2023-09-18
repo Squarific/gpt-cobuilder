@@ -6,7 +6,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 const { getEncoding } = require("js-tiktoken");
 const enc = getEncoding("cl100k_base");
 
-const parser = require("gitignore-parser");
+const parser = require("@gerhobbelt/gitignore-parser");
 
 const markdownIt = require('markdown-it');
 const md = new markdownIt();
@@ -32,14 +32,6 @@ async function saveFile(filePath, content) {
   await fs.writeFile(filePath, content, 'utf8');
 }
 
-async function exists (dirPath) {
-  return fsSync.existsSync(dirPath);
-}
-
-async function mkdir (path) {
-  return fs.mkdir(path);
-}
-
 contextBridge.exposeInMainWorld('fs', {
   readFile: async (filePath) => {
     const content = await fs.readFile(filePath, 'utf8');
@@ -47,8 +39,8 @@ contextBridge.exposeInMainWorld('fs', {
   },
   getFilesInDirectory,
   saveFile,
-  exists,
-  mkdir
+  exists: fsSync.existsSync,
+  mkdir: fs.mkdir
 });
 
 contextBridge.exposeInMainWorld('path', {

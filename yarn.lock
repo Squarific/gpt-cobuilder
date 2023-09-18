@@ -269,6 +269,11 @@
     "minimatch" "^3.0.4"
     "plist" "^3.0.4"
 
+"@gerhobbelt/gitignore-parser@^0.2.0-9":
+  "integrity" "sha512-leOyCx+xnmioBSPqdkFBi1drkdM+Nm5+MfgffRcdkcVVUjFuAlxqEJ7jkYeXyHLvL9/l7ejPGooE1TPAo7qmmA=="
+  "resolved" "https://registry.npmjs.org/@gerhobbelt/gitignore-parser/-/gitignore-parser-0.2.0-9.tgz"
+  "version" "0.2.0-9"
+
 "@isaacs/cliui@^8.0.2":
   "integrity" "sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA=="
   "resolved" "https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz"

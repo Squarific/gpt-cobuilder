@@ -18,6 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@gerhobbelt/gitignore-parser": "^0.2.0-9",
     "electron-squirrel-startup": "^1.0.0",
     "gitignore-parser": "^0.0.2",
     "js-tiktoken": "^1.0.7",

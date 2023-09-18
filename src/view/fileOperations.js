@@ -102,3 +102,32 @@ const filterFilesByGitignore = async (fileList) => {
     return fileListArray;
   }
 };
+
+async function updateFolder (folder) {
+  if (folder) {
+    localStorage.setItem('folder', folder);
+    document.getElementById('folder-display').textContent = ` Selected Folder: ${folder}`;
+
+    const dirPath = `${folder}/gptcobuilder`;
+    if(!await fs.exists(dirPath)){
+      await fs.mkdir(dirPath);
+    }
+
+    const dirPathRequests = `${folder}/gptcobuilder/requests`;
+    if(!await fs.exists(dirPathRequests)){
+      await fs.mkdir(dirPathRequests);
+    }
+    
+    // Update the file list
+    const filePaths = await window.fs.getFilesInDirectory(folder);
+    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
+    let filteredFileList = fileEntries;
+    filteredFileList = await filterFilesByGitignore(fileEntries);
+    displayFileStructure(filteredFileList);
+
+    // Load the projectDescription
+    const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
+    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+    document.getElementById('project-description').value = projectDescription;
+  }
+};

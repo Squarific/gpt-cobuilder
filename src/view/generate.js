@@ -21,18 +21,7 @@ CONTENT OF FILE
 ${FILE_DELIMETER}`;
 
 //read saved folder from local storage
-const savedFolder = localStorage.getItem('folder');
-
-(async function () {
-  if (savedFolder) {
-    document.getElementById('folder-display').textContent = ` Selected Folder: ${savedFolder}`;
-    const filePaths = await window.fs.getFilesInDirectory(savedFolder);
-    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
-    let filteredFileList = fileEntries;
-    filteredFileList = await filterFilesByGitignore(fileEntries);
-    displayFileStructure(filteredFileList);
-  }
-})();
+updateFolder(localStorage.getItem('folder'));
 
 // Add event listener to the apiKeyInput field
 apiKeyInput.addEventListener('input', () => {
@@ -123,25 +112,7 @@ const folderSelectionInput = document.getElementById('folder-selection');
 
 folderSelectionInput.addEventListener('click', async (event) => {
   const folder = await folderDialog.open();
-
-  if (folder) {
-    localStorage.setItem('folder', folder);
-
-    document.getElementById('folder-display').textContent = ` Selected Folder: ${folder}`;
-
-    const filePaths = await window.fs.getFilesInDirectory(folder);
-    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
-    
-    let filteredFileList = fileEntries;
-    filteredFileList = await filterFilesByGitignore(fileEntries);
-    displayFileStructure(filteredFileList);
-
-    // Load the projectDescription
-    const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
-    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
-    document.getElementById('project-description').value = projectDescription;
-  }
-
+  updateFolder(folder);
   event.preventDefault();
 });
 
