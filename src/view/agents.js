@@ -52,6 +52,7 @@ function createTab(agent) {
     fullMessageTextArea.setAttribute("rows", "20");
     fullMessageTextArea.disabled = true;
     fullMessageDiv.appendChild(fullMessageTextArea);
+    agent.fullMessageTextArea = fullMessageTextArea;
 
     tabContent.appendChild(fullMessageDiv);
 
@@ -78,7 +79,7 @@ function createTab(agent) {
 }
 
 function updateAgentFullMessage (agent) {
-    
+    agent.fullMessageTextArea.value = document.getElementById("project-description").value;
 }
 
 async function refreshFileList(element) {

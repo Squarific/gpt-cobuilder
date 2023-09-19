@@ -28,10 +28,8 @@ const displayFilesTokenCounts = (response) => {
   tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
-const sendMessageToChatGPT = async () => {
+const _sendMessageToChatGPT = async (systemMessage, userMessage) => {
   const apiKey = apiKeyInput.value;
-  const systemMessage = document.getElementById('system-message').value;
-  const userMessage = document.getElementById('full-message').value;
 
   const requestOptions = {
     method: 'POST',
@@ -61,65 +59,44 @@ const sendMessageToChatGPT = async () => {
       }
   
       const data = await response.json();
+
       // Log the request and response
       await logRequestAndResponse(apiKey, (await loadSettings()).modelSelection, 'user', userMessage, data);
 
-      displayTokenCounts(data);
-      return data.choices[0].message.content;
+      return data;
     } catch (error) {
       throw new Error(`Request failed! ${error.message}`);
     }
 };
 
+const sendMessageToChatGPT = async () => {
+  const systemMessage = document.getElementById('system-message').value;
+  const userMessage = document.getElementById('full-message').value;
+  const data = await _sendMessageToChatGPT(systemMessage, userMessage)
+  displayTokenCounts(data);
+  return data.choices[0].message.content;
+};
+
 const convertChangeRequestToFiles = async () => {
-  const apiKey = apiKeyInput.value;
-  const projectDescription = document.getElementById('project-description').value;
-  const modelResponse = document.getElementById('model-response').value;
-  const convertSystemMessage = document.getElementById('convert-system-message').value;
-  const convertUserMessage = document.getElementById('convert-user-message').value;
-
-  const fileEntries = [];
-
-  for (const [file, content] of fileContentMap) {
-    const filePath = file.path;
-    fileEntries.push(`${filePath}\n${FILE_DELIMETER}\n${content}\n${FILE_DELIMETER}`);
-  }
-  
-  const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${modelResponse}\n\n${convertUserMessage}`;
-  
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: (await loadSettings()).modelSelection,
-      messages: [
-        { role: 'system', content: convertSystemMessage },
-        { role: 'user', content: userMessage }
-      ]
-    })
-  };
-  
   try {
-    const response = await fetch(url, requestOptions);
-    
-    if (!response.ok) {
-      let errorMessage = `HTTP error! Status: ${response.status}`;
-      const errorData = await response.json();
-    if (errorData.error && errorData.error.message) {
-      errorMessage += ` Message: ${errorData.error.message}`;
-    }
-    throw new Error(errorMessage);
-  }
-  
-  const data = await response.json();
-  // Log the request and response
-  await logRequestAndResponse(apiKey, (await loadSettings()).modelSelection, 'user', userMessage, data);
+    const apiKey = apiKeyInput.value;
+    const projectDescription = document.getElementById('project-description').value;
+    const modelResponse = document.getElementById('model-response').value;
+    const convertSystemMessage = document.getElementById('convert-system-message').value;
+    const convertUserMessage = document.getElementById('convert-user-message').value;
 
-  displayFilesTokenCounts(data);
-  displayFilesResponse(data.choices[0].message.content);
+    const fileEntries = [];
+
+    for (const [file, content] of fileContentMap) {
+      const filePath = file.path;
+      fileEntries.push(`${filePath}\n${FILE_DELIMETER}\n${content}\n${FILE_DELIMETER}`);
+    }
+    
+    const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${modelResponse}\n\n${convertUserMessage}`;
+    data = await _sendMessageToChatGPT(convertSystemMessage, userMessage);
+    
+    displayFilesTokenCounts(data);
+    displayFilesResponse(data.choices[0].message.content);
   } catch (error) {
     console.error('Error converting change request to files:', error);
   } finally {
