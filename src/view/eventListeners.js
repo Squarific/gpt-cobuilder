@@ -4,6 +4,7 @@ const refreshButton = document.getElementById('refresh-filelist');
 const convertButton = document.getElementById('convert-button');
 const errorLog = document.getElementById('error-log');
 const reponseField = document.getElementById('model-response');
+const modelSelection = document.getElementById('model-selection');
 
 function clearErrorLog() {
   errorLog.textContent = "";
@@ -52,4 +53,9 @@ applyButton.addEventListener('click', () => {
 convertButton.addEventListener('click', () => {
   convertButton.disabled = true;
   convertChangeRequestToFiles();
+});
+
+modelSelection.addEventListener('change', async () => {
+    const settings = { modelSelection: modelSelection.value };
+    await saveSettings(settings);
 });

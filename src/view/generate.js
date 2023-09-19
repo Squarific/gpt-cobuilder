@@ -1,5 +1,4 @@
 const FILE_DELIMETER = '``' + '`';
-const MODEL = 'gpt-4';
 
 // Get the API key from the HTML input field
 const apiKeyInput = document.getElementById('api-key');

@@ -127,6 +127,12 @@ async function updateFolder (folder) {
     const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
     const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
     document.getElementById('project-description').value = projectDescription;
+
+    // Load the settings
+    const settings = await loadSettings();
+    if (settings && settings.modelSelection) {
+        document.getElementById('model-selection').value = settings.modelSelection;
+    }
   }
 };
 
@@ -134,4 +140,24 @@ async function getFilesInFolderWithFilter(folder) {
   const filePaths = await window.fs.getFilesInDirectory(folder);
   const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
   return await filterFilesByGitignore(fileEntries);
+}
+
+async function saveSettings(settings) {
+    const settingsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/settings.json`;
+    try {
+        await window.fs.saveFile(settingsFilePath, JSON.stringify(settings, null, 2));
+    } catch (error) {
+        console.error('Error saving settings file:', error);
+    }
+}
+
+async function loadSettings() {
+    const settingsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/settings.json`;
+    try {
+        const settingsJSON = await window.fs.readFile(settingsFilePath);
+        return JSON.parse(settingsJSON);
+    } catch (error) {
+        console.error('Error loading settings file:', error);
+    }
+    return null;
 }

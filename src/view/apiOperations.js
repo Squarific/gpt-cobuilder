@@ -40,7 +40,7 @@ const sendMessageToChatGPT = async () => {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: (await loadSettings()).modelSelection,
       messages: [
           { role: 'system', content: systemMessage },
           { role: 'user', content: userMessage }
@@ -62,7 +62,7 @@ const sendMessageToChatGPT = async () => {
   
       const data = await response.json();
       // Log the request and response
-      await logRequestAndResponse(apiKey, MODEL, 'user', userMessage, data);
+      await logRequestAndResponse(apiKey, (await loadSettings()).modelSelection, 'user', userMessage, data);
 
       displayTokenCounts(data);
       return data.choices[0].message.content;
@@ -94,7 +94,7 @@ const convertChangeRequestToFiles = async () => {
       'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: (await loadSettings()).modelSelection,
       messages: [
         { role: 'system', content: convertSystemMessage },
         { role: 'user', content: userMessage }
@@ -116,7 +116,7 @@ const convertChangeRequestToFiles = async () => {
   
   const data = await response.json();
   // Log the request and response
-  await logRequestAndResponse(apiKey, MODEL, 'user', userMessage, data);
+  await logRequestAndResponse(apiKey, (await loadSettings()).modelSelection, 'user', userMessage, data);
 
   displayFilesTokenCounts(data);
   displayFilesResponse(data.choices[0].message.content);
