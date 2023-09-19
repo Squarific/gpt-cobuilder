@@ -25,7 +25,8 @@
       <button id="folder-selection">Project folder</button>
       <!-- Display Selected Folder -->
       <span id="folder-display"></span>
-      
+      <button id="refresh-filelist">Refresh File List</button>
+
       <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
       <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
@@ -138,6 +139,7 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <script>
       // Attach event listener to the button
       const generateButton = document.getElementById('generate-button');
+      const refreshButton = document.getElementById('refresh-filelist');
       const convertButton = document.getElementById('convert-button');
       const errorLog = document.getElementById('error-log');
       const reponseField = document.getElementById('model-response');
@@ -170,6 +172,14 @@ Suggest changes to the right files. If you need to change multiple files, includ
           generateButton.disabled = false;
           convertButton.disabled = false;
         });
+      });
+
+       // Attach event listener to refresh button
+      refreshButton.addEventListener('click', async () => {
+        const savedFolder = localStorage.getItem('folder');
+        if (savedFolder) {
+          await updateFolder(savedFolder);
+        }
       });
 
       convertButton.addEventListener('click', () => {
@@ -219,3 +229,4 @@ Suggest changes to the right files. If you need to change multiple files, includ
     </script>
   </body>
 </html>
+

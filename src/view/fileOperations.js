@@ -119,10 +119,7 @@ async function updateFolder (folder) {
     }
     
     // Update the file list
-    const filePaths = await window.fs.getFilesInDirectory(folder);
-    const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
-    let filteredFileList = fileEntries;
-    filteredFileList = await filterFilesByGitignore(fileEntries);
+    let filteredFileList = await getFilesInFolderWithFilter(folder);
     displayFileStructure(filteredFileList);
 
     // Load the projectDescription
@@ -131,3 +128,9 @@ async function updateFolder (folder) {
     document.getElementById('project-description').value = projectDescription;
   }
 };
+
+async function getFilesInFolderWithFilter(folder) {
+  const filePaths = await window.fs.getFilesInDirectory(folder);
+  const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
+  return await filterFilesByGitignore(fileEntries);
+}
