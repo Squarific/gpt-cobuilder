@@ -52,7 +52,7 @@ label {
   background-color: #0056b3;
 }
 
-#error-log {
+#error-log, .error-log {
   color: red;
   font-weight: bold;
   margin-top: 10px;

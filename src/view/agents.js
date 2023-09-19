@@ -7,7 +7,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 function createTab(agent) {
-
     const tabButton = document.createElement("button");
     tabButton.className = "tablinks";
     tabButton.innerText = agent.name;
@@ -22,18 +21,16 @@ function createTab(agent) {
     //If agent includes File_List, append a file list
     if(agent.inputs && agent.inputs.includes("FILE_LIST")) {
         const refreshButton = document.createElement("button");
-        refreshButton.id = "refresh-filelist";
         refreshButton.innerText = "Refresh File List";
         tabContent.appendChild(refreshButton);
         
         //Display File structure
         const preElement = document.createElement('pre');
-        preElement.id = 'file-structure';
         tabContent.appendChild(preElement);
 
         // Bind the refresh element to the preElement and call refresh once already
-        refreshButton.onclick = refreshFileList.bind(preElement);
-        refreshFileList.bind(preElement)();
+        refreshButton.onclick = refreshFileList.bind(this, preElement);
+        refreshFileList(preElement);
     }
 
     //Append system message
@@ -45,7 +42,7 @@ function createTab(agent) {
     //Append div for Full Message
     const fullMessageDiv = document.createElement("div");
     fullMessageDiv.innerHTML = `<label for="full-message">Full Message:</label>
-    <textarea id="full-message" class="full-message" rows="20" disabled></textarea>`;
+    <textarea class="full-message" rows="20" disabled></textarea>`;
     tabContent.appendChild(fullMessageDiv);
 
     //Append div to display token count
@@ -62,13 +59,19 @@ function createTab(agent) {
 
     //Append div to display error log
     const errorLogDiv = document.createElement("div");
-    errorLogDiv.id = "error-log";
+    errorLogDiv.className = "error-log";
     tabContent.appendChild(errorLogDiv);
 
     document.getElementsByTagName("body")[0].appendChild(tabContent);
+
+    updateAgentFullMessage(agent);
 }
 
-async function refreshFileList() {
+function updateAgentFullMessage (agent) {
+    
+}
+
+async function refreshFileList(element) {
     let fileList = await getFilesInFolderWithFilter(localStorage.getItem('folder')); 
-    displayFileStructure(fileList, this);
-  }
+    displayFileStructure(fileList, element);
+}
