@@ -1,8 +1,9 @@
 // Function to display file structure
 const displayFileStructure = (fileList) => {
+    fileContentMap.clear(); // Add this line to clear fileContentMap
     const fileStructure = document.getElementById('file-structure');
+
     fileStructure.textContent = ''; // Clear any previous content
-    fileContentMap.clear();
   
     // Get the selected folder from localStorage
     const savedFolder = localStorage.getItem('folder');

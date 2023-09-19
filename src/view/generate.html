@@ -25,16 +25,18 @@
       <button id="folder-selection">Project folder</button>
       <!-- Display Selected Folder -->
       <span id="folder-display"></span>
-      <button id="refresh-filelist">Refresh File List</button>
-
+      
       <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
       <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
     </div>
 
     <div id="ChangeRequest" class="tabcontent">
-        <!-- Element to display the file structure -->
-        <pre id="file-structure"></pre>
+      <!-- Include Refresh File List Button -->
+      <button id="refresh-filelist">Refresh File List</button>
+      
+      <!-- Element to display the file structure -->
+      <pre id="file-structure"></pre>
         
       <!-- Input field for system message -->
       <label for="system-message">System Message:</label>
@@ -149,6 +151,7 @@ Suggest changes to the right files. If you need to change multiple files, includ
       }
 
       const userMessage = 'Hello, how can you help me?';
+      
       generateButton.addEventListener('click', () => {
         openTab(event, 'ChangeResponse');
         
@@ -178,8 +181,15 @@ Suggest changes to the right files. If you need to change multiple files, includ
       refreshButton.addEventListener('click', async () => {
         const savedFolder = localStorage.getItem('folder');
         if (savedFolder) {
+          clearSelectedFiles();
           await updateFolder(savedFolder);
         }
+      });
+
+      // Add an event listener to Apply files button
+      const applyButton = document.getElementById('apply-button');
+      applyButton.addEventListener('click', () => {
+        refreshButton.click();
       });
 
       convertButton.addEventListener('click', () => {
@@ -188,6 +198,14 @@ Suggest changes to the right files. If you need to change multiple files, includ
       });
     </script>
     <script>
+      // Function to clear selected files
+      function clearSelectedFiles() {
+        const checkboxes = document.querySelectorAll('.file-entry input[type="checkbox"]');
+        for(let checkbox of checkboxes) {
+          checkbox.checked = false;
+        }
+      }
+
       const addTabButton = document.getElementById("add-tab-button");
       const tabNameModal = document.getElementById("tabNameModal");
       const submitTabNameButton = document.getElementById("submitTabNameButton");
@@ -229,4 +247,3 @@ Suggest changes to the right files. If you need to change multiple files, includ
     </script>
   </body>
 </html>
-
