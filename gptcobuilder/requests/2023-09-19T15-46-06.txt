@@ -1,0 +1,29 @@
+{
+  "request": {
+    "apiKey": "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",
+    "model": "gpt-4",
+    "role": "user",
+    "content": "This is an electron project that aims to let users quickly create and iterate on applications.\n\n\n\nconst parseResponse = (response) => {\n  const files = [];\n  // Split the response by the code block delimiter\n  const blocks = response.split(FILE_DELIMETER);\n\n  // Iterate over the blocks, skipping the language specifier\n  for(let i = 0; i < blocks.length - 1; i += 2) {\n    // Get the file path\n    let path = blocks[i].trim().split(\"\\n\");\n    path = path[path.length - 1]; // Only the line directly before the delimiter\n\n    // Get the file content\n    let content = blocks[i + 1];\n    content = content.substring(content.indexOf(\"\\n\") + 1); // Remove language specifier\n\n    // Add the file to the list\n    files.push({ path, content });\n  }\n  return files;\n};\n\nIt should only be split if a FILE_DELIMETER was at the start of a line."
+  },
+  "response": {
+    "id": "chatcmpl-80VKZXvt9R2BCAAG7VE6rW29XuCeT",
+    "object": "chat.completion",
+    "created": 1695131127,
+    "model": "gpt-4-0613",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "In the original implementation, the split on `FILE_DELIMETER` is made directly; I see this as the issue.\n\nThis code should solve the problem:\n\n```\nconst parseResponse = (response) => {\n  const files = [];\n\n  // Get the lines\n  let lines = response.split(\"\\n\");\n\n  // Get the blocks\n  let blocks = [];\n  let currentBlock = '';\n  for (let i = 0; i < lines.length; i++) {\n    if (lines[i] === FILE_DELIMETER) {\n        if (currentBlock !== '') {\n            blocks.push(currentBlock);\n            currentBlock = '';\n        }\n    } else {\n        currentBlock += lines[i] + \"\\n\";\n    }\n  }\n  if (currentBlock !== '') blocks.push(currentBlock);\n\n  // Iterate over the blocks, skipping the language specifier\n  for(let i = 0; i < blocks.length - 1; i += 2) {\n    // Get the file path\n    let path = blocks[i].trim().split(\"\\n\");\n    path = path[path.length - 1]; // Only the line directly before the delimiter\n\n    // Get the file content\n    let content = blocks[i + 1];\n    content = content.substring(content.indexOf(\"\\n\") + 1); // Remove language specifier\n\n    // Add the file to the list\n    files.push({ path, content });\n  }\n\n  return files;\n};\n```\n\nIn the changes, I first split the response string into individual lines. Then I loop through these lines to build the blocks. If a line equals `FILE_DELIMETER` I know a new block starts. Otherwise, I put the line into `currentBlock`. Whenever `FILE_DELIMETER` appears at line start, I push currentBlock into blocks array and start a new block (currentBlock = '').  At end of the loop, if there are any lines left in `currentBlock`, they get added as a block as well. \n\nThis function still belongs in the file where it originally was, there are no changes to structure required."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 277,
+      "completion_tokens": 427,
+      "total_tokens": 704
+    }
+  }
+}

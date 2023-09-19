@@ -32,10 +32,33 @@ apiKeyInput.addEventListener('input', () => {
 // Mapping to store the content of each checked file
 const fileContentMap = new Map();
 
+const parseBlocks = (response) => {
+    let lines = response.split("\n");
+    let blocks = [];
+    let currentBlock = '';
+
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].startsWith(FILE_DELIMETER)) {
+          if (currentBlock !== '') {
+              blocks.push(currentBlock);
+              currentBlock = '';
+          }
+      } else {
+          currentBlock += lines[i] + "\n";
+      }
+    }
+
+    if (currentBlock !== '') blocks.push(currentBlock);
+
+    return blocks;
+};
+
 const parseResponse = (response) => {
   const files = [];
+
   // Split the response by the code block delimiter
-  const blocks = response.split(FILE_DELIMETER);
+  const blocks = parseBlocks(response);
+
   // Iterate over the blocks, skipping the language specifier
   for(let i = 0; i < blocks.length - 1; i += 2) {
     // Get the file path
@@ -44,7 +67,6 @@ const parseResponse = (response) => {
 
     // Get the file content
     let content = blocks[i + 1];
-    content = content.substring(content.indexOf("\n") + 1); // Remove language specifier
 
     // Add the file to the list
     files.push({ path, content });

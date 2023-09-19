@@ -8,7 +8,9 @@
   <body>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button id="changeRequestTab" class="tablinks" onclick="openTab(event, 'ChangeRequest')">Change Request</button>
+      <button class="tablinks firstOpen" onclick="openTab(event, 'HighLevelChangeRequest')">User Change Request</button>
+      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">GPT Change Request</button>
+      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">GPT Change Request</button>
       <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
       <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
       <button class="tablinks" id="add-tab-button">+</button>
@@ -59,10 +61,6 @@ Suggest changes to the right files. If you need to change multiple files, includ
         <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
       </div>
 
-      <!-- Input field for user message -->
-      <label for="user-message">User Message:</label>
-      <textarea id="user-message" rows="5" ></textarea>
-
       <!-- Div for full message -->
       <div>
         <label for="full-message">Full Message:</label>
@@ -86,6 +84,12 @@ Suggest changes to the right files. If you need to change multiple files, includ
       <!-- Model response -->
       <label for="model-response">Model response:</label>
       <textarea id="model-response"></textarea>
+    </div>
+
+    <div id="HighLevelChangeRequest" class="tabcontent">
+      <!-- Input field for user message -->
+      <label for="user-message">User Message:</label>
+      <textarea id="user-message" rows="5" ></textarea>
     </div>
 
     <div id="Convert" class="tabcontent">
