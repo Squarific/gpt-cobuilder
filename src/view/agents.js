@@ -41,8 +41,18 @@ function createTab(agent) {
     
     //Append div for Full Message
     const fullMessageDiv = document.createElement("div");
-    fullMessageDiv.innerHTML = `<label for="full-message">Full Message:</label>
-    <textarea class="full-message" rows="20" disabled></textarea>`;
+
+    const fullMessageLabel = document.createElement("label");
+    fullMessageLabel.setAttribute("for", "full-message");
+    fullMessageLabel.innerText = "Full Message:";
+    fullMessageDiv.appendChild(fullMessageLabel);
+
+    const fullMessageTextArea = document.createElement("textarea");
+    fullMessageTextArea.className = "full-message";
+    fullMessageTextArea.setAttribute("rows", "20");
+    fullMessageTextArea.disabled = true;
+    fullMessageDiv.appendChild(fullMessageTextArea);
+
     tabContent.appendChild(fullMessageDiv);
 
     //Append div to display token count
