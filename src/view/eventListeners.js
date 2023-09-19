@@ -9,8 +9,6 @@ function clearErrorLog() {
   errorLog.textContent = "";
 }
 
-const userMessage = 'Hello, how can you help me?';
-
 generateButton.addEventListener('click', () => {
   openTab(event, 'ChangeResponse');
   
