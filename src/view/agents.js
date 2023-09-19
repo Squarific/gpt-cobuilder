@@ -61,12 +61,30 @@ function createTab(agent) {
     tokenCountDiv.className = "token-count";
     tokenCountDiv.innerText = "Token count: 0";
     tabContent.appendChild(tokenCountDiv);
+    agent.tokenCountElement = tokenCountDiv;
 
     //Append Generate Button
     const generateButton = document.createElement("button");
     generateButton.className = "button";
     generateButton.innerText = "Generate GPT Completion";
+    generateButton.onclick = async function() {
+        let systemMessage = agent.systemMessage;
+        let userMessage = agent.fullMessageTextArea.value;
+        try {
+            let response = await _sendMessageToChatGPT(systemMessage, userMessage);
+            modelResponseTextArea.value = response;
+        } catch (error) {
+            console.error('An error occurred while generating completion:', error);
+        }
+    }
     tabContent.appendChild(generateButton);
+
+    // Append textarea for Model Response
+    const modelResponseTextArea = document.createElement("textarea");
+    modelResponseTextArea.className = "model-response";
+    modelResponseTextArea.setAttribute("rows", "20");
+    modelResponseTextArea.disabled = true;
+    tabContent.appendChild(modelResponseTextArea);
 
     //Append div to display error log
     const errorLogDiv = document.createElement("div");
@@ -80,6 +98,14 @@ function createTab(agent) {
 
 function updateAgentFullMessage (agent) {
     agent.fullMessageTextArea.value = document.getElementById("project-description").value;
+
+    tiktoken.countTokens(agent.fullMessageTextArea.value)
+    .then((tokenCount) => {
+      agent.tokenCountElement.textContent = `Total Tokens: ${tokenCount}`;
+    })
+    .catch((error) => {
+      console.error('Failed to count tokens:', error);
+    });
 }
 
 async function refreshFileList(element) {
