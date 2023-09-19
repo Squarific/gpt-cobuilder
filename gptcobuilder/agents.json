@@ -1,11 +1,11 @@
 {
   "agents": [{
-    "name": "GPT Change Request",
+    "name": "GPT Change Request file",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
     "systemMessage": "You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. \n\nSuggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense.",
     "output": "GPT_CHANGE_REQUEST"
   }, {
-    "name": "Convert",
+    "name": "Convert to files",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "GPT_CHANGE_REQUEST"],
     "systemMessage": "You are an excellent programmer. Output the changed files given the proposed changes. Make sure each file is there from beginning to end. All files should be complete. We want full files and not partial files. Every change should be accounted for and all current code should be there aswell, unless you are directly told to change or remove it. Do not put in any placeholders or use three dots (...) to denote the rest of the file. Instead give the whole file. \n\nUse this format:\n\npath/to/file.ext\n```\nCONTENT OF FILE\n```",
     "output": "GPT_FILE_CHANGES"

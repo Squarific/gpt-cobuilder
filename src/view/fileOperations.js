@@ -1,9 +1,7 @@
 // Function to display file structure
-const displayFileStructure = (fileList) => {
+const displayFileStructure = (fileList, element) => {
     fileContentMap.clear(); // Add this line to clear fileContentMap
-    const fileStructure = document.getElementById('file-structure');
-
-    fileStructure.textContent = ''; // Clear any previous content
+    element.textContent = ''; // Clear any previous content
   
     // Get the selected folder from localStorage
     const savedFolder = localStorage.getItem('folder');
@@ -49,7 +47,7 @@ const displayFileStructure = (fileList) => {
       fileEntry.appendChild(checkbox);
       fileEntry.appendChild(label);
   
-      fileStructure.appendChild(fileEntry);
+      element.appendChild(fileEntry);
     }
   };
   
@@ -121,7 +119,7 @@ async function updateFolder (folder) {
     
     // Update the file list
     let filteredFileList = await getFilesInFolderWithFilter(folder);
-    displayFileStructure(filteredFileList);
+    displayFileStructure(filteredFileList, document.getElementById('file-structure'));
 
     // Load the projectDescription
     const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
