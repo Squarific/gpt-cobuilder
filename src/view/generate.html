@@ -8,9 +8,9 @@
   <body>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button class="tablinks firstOpen" onclick="openTab(event, 'HighLevelChangeRequest')">User Change Request</button>
-      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">GPT Change Request</button>
-      <button class="tablinks" onclick="openTab(event, 'ChangeRequest')">GPT Change Request</button>
+      <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Inputs</button>
+      <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved Outputs</button>
+      <button class="tablinks" onclick="openTab(event, 'GPTChangeRequest')">GPT Change Request</button>
       <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
       <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
       <button class="tablinks" id="add-tab-button">+</button>
@@ -28,10 +28,6 @@
       <!-- Display Selected Folder -->
       <span id="folder-display"></span>
       
-      <!-- Textarea for project description -->
-      <label for="project-description">Project Description:</label>
-      <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
-
       <!-- Dropdown for selecting a model -->
       <label for="model-selection">Select a model:</label>
       <select id="model-selection">
@@ -42,7 +38,7 @@
       </select>
     </div>
 
-    <div id="ChangeRequest" class="tabcontent">
+    <div id="GPTChangeRequest" class="tabcontent">
       <!-- Include Refresh File List Button -->
       <button id="refresh-filelist">Refresh File List</button>
       
@@ -86,9 +82,19 @@ Suggest changes to the right files. If you need to change multiple files, includ
       <textarea id="model-response"></textarea>
     </div>
 
-    <div id="HighLevelChangeRequest" class="tabcontent">
+    <div id="Inputs" class="tabcontent">
+      <!-- Textarea for project description -->
+      <label for="project-description">Project Description:</label>
+      <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
+      
       <!-- Input field for user message -->
-      <label for="user-message">User Message:</label>
+      <label for="user-message">User change request</label>
+      <textarea id="user-message" rows="5" ></textarea>
+    </div>
+
+    <div id="Outputs" class="tabcontent">
+      <!-- Input field for user message -->
+      <label for="user-message">EXAMPLE</label>
       <textarea id="user-message" rows="5" ></textarea>
     </div>
 
