@@ -1,0 +1,29 @@
+{
+  "request": {
+    "apiKey": "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",
+    "model": "gpt-4",
+    "role": "user",
+    "content": "This is an electron project that aims to let users quickly create and iterate on applications.\n\n\n\nIn order to add a dropdown for selecting the model in the settings tab, we should modify the generate.html file. We need to add a select dropdown menu under the settings tabcontent in the generate.html file.\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    // Unchanged content\n  </head>\n  <body>\n    <div class=\"tab\">\n      // Unchanged content\n    </div>\n    \n    <!-- Tab content -->\n    <div id=\"Settings\" class=\"tabcontent\">\n      <!-- Input field for ChatGPT API key -->\n      <label for=\"api-key\">ChatGPT API Key:</label>\n      <input type=\"text\" id=\"api-key\" />\n\n      <!-- Input field for folder selection -->\n      <label for=\"folder-selection\">Select a Folder:</label>\n      <button id=\"folder-selection\">Project folder</button>\n      <!-- Display Selected Folder -->\n      <span id=\"folder-display\"></span>\n\n      <!-- Dropdown for selecting the model -->\n      <label for=\"model-selection\">Select a Model:</label>\n      <select id=\"model-selection\">\n        <option value=\"gpt-3\">GPT-3</option>\n        <option value=\"gpt-4\">GPT-4</option>\n      </select>\n\n      <!-- Textarea for project description -->\n      <label for=\"project-description\">Project Description:</label>\n      <textarea id=\"project-description\" rows=\"5\">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>\n    </div>\n\n    // Rest of the unchanged content\n\n    <script src=\"apiOperations.js\"></script>\n    <script src=\"fileOperations.js\"></script>\n    <script src=\"generate.js\"></script>\n    <script>\n      // Unchanged content\n    </script>\n    <script>\n      // Unchanged content\n    </script>\n    <script>\n      // Unchanged content\n    </script>\n  </body>\n</html>\n```\n\nIn the generate.js file catch the model-selection change and store the selected model to the `MODEL` constant. Furthermore, add a default model to localStorage if it's not already set. \n\n```javascript\nconst MODEL = localStorage.getItem('model') || 'gpt-3'; // Set default model to gpt-3\n// Rest of the unchanged content\n\n// Save the API key in localStorage\nlocalStorage.setItem('apiKey', apiKey.trim());\n\n// Save model in the localStorage\nconst selectedModel = document.getElementById('model-selection');\nselectedModel.value = MODEL;\nselectedModel.addEventListener('change', () => {\n    localStorage.setItem('model', selectedModel.value);\n});\n\n// Rest of the script content\n```\n\n"
+  },
+  "response": {
+    "id": "chatcmpl-80RJFqH2rmlSVQXyrSxYQ2C0AStOU",
+    "object": "chat.completion",
+    "created": 1695115669,
+    "model": "gpt-4-0613",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "To show the current model in the settings tab, we need to create a renderSettings function to the generate.js file. Call renderSettings at the end of the function, which is called when the settings button is clicked.\n\n```javascript\n// Unchanged code\n\n// Function to render settings\nfunction renderSettings() {\n    // Display the current model in the settings tab\n    const modelDisplay = document.getElementById('model-display');\n    modelDisplay.innerHTML = `Current model: ${localStorage.getItem('model')}`;\n}\n\n// On click of the settings button\nsettingsButton.addEventListener('click', () => {\n    // Unchanged code\n\n    // Render settings\n    renderSettings();\n});\n\n// Rest of the script content\n```\n\nIn the generate.html file add a span for the model-display below the select dropdown menu.\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    // Unchanged content\n  </head>\n  <body>\n    <div class=\"tab\">\n      // Unchanged content\n    </div>\n    \n    <!-- Tab content -->\n    <div id=\"Settings\" class=\"tabcontent\">\n      <!-- Input field for ChatGPT API key -->\n      <label for=\"api-key\">ChatGPT API Key:</label>\n      <input type=\"text\" id=\"api-key\" />\n\n      <!-- Input field for folder selection -->\n      <label for=\"folder-selection\">Select a Folder:</label>\n      <button id=\"folder-selection\">Project folder</button>\n      <!-- Display Selected Folder -->\n      <span id=\"folder-display\"></span>\n\n      <!-- Dropdown for selecting the model -->\n      <label for=\"model-selection\">Select a Model:</label>\n      <select id=\"model-selection\">\n        <option value=\"gpt-3\">GPT-3</option>\n        <option value=\"gpt-4\">GPT-4</option>\n      </select>\n      <!-- Display Selected Model -->\n      <span id=\"model-display\"></span>\n\n      <!-- Textarea for project description -->\n      <label for=\"project-description\">Project Description:</label>\n      <textarea id=\"project-description\" rows=\"5\">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>\n    </div>\n\n    // Rest of the unchanged content\n\n    <script src=\"apiOperations.js\"></script>\n    <script src=\"fileOperations.js\"></script>\n    <script src=\"generate.js\"></script>\n    <script>\n      // Unchanged content\n    </script>\n    <script>\n      // Unchanged content\n    </script>\n    <script>\n      // Unchanged content\n    </script>\n  </body>\n</html>\n```\nFinally, add the following CSS to the style.css file, to style the model-display same as the folder-display.\n\n```css\n/* Unchanged CSS */\n\n#model-display {\n  font-weight: bold;\n  margin-left: 10px;\n}\n\n/* Rest of the CSS */\n```"
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 689,
+      "completion_tokens": 603,
+      "total_tokens": 1292
+    }
+  }
+}
