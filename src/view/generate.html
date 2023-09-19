@@ -203,6 +203,7 @@ Suggest changes to the right files. If you need to change multiple files, includ
         const checkboxes = document.querySelectorAll('.file-entry input[type="checkbox"]');
         for(let checkbox of checkboxes) {
           checkbox.checked = false;
+          checkbox.dispatchEvent(new Event('change'));
         }
       }
 
