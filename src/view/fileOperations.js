@@ -63,7 +63,7 @@ async function logRequestAndResponse(apiKey, model, role, content, response) {
     const currentTime = new Date(); // Get current date and time
     let formattedTime = toLocalISOString(currentTime); // Format the time in the required format
     formattedTime = formattedTime.replace(/:/g, '-'); // Replace colons with dashes
-    const filename = `gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
+    const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
     
     const fileContent = {};
     fileContent['request'] = {apiKey, model, role, content};
