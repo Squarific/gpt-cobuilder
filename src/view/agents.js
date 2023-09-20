@@ -1,8 +1,9 @@
+let agents;
+
 window.addEventListener('DOMContentLoaded', async () => {
     const agentsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/agents.json`;
     const agentsFile = await window.fs.readFile(agentsFilePath);
-    const agents = JSON.parse(agentsFile);
-    
+    agents = JSON.parse(agentsFile);
     agents.agents.forEach(createTab);
 });
 
@@ -20,17 +21,11 @@ function createTab(agent) {
 
     //If agent includes File_List, append a file list
     if(agent.inputs && agent.inputs.includes("FILE_LIST")) {
-        const refreshButton = document.createElement("button");
-        refreshButton.innerText = "Refresh File List";
-        tabContent.appendChild(refreshButton);
-        
-        //Display File structure
-        const preElement = document.createElement('pre');
-        tabContent.appendChild(preElement);
-
-        // Bind the refresh element to the preElement and call refresh once already
-        refreshButton.onclick = refreshFileList.bind(this, preElement);
-        refreshFileList(preElement);
+        agent.fileList = new FileListController();
+        tabContent.appendChild(agent.fileList.createDOM());
+        agent.fileList.element.addEventListener('filechange', () => {
+            updateAgentFullMessage(agent);
+        });
     }
 
     //Append system message
@@ -106,9 +101,4 @@ function updateAgentFullMessage (agent) {
     .catch((error) => {
       console.error('Failed to count tokens:', error);
     });
-}
-
-async function refreshFileList(element) {
-    let fileList = await getFilesInFolderWithFilter(localStorage.getItem('folder')); 
-    displayFileStructure(fileList, element);
 }

@@ -35,15 +35,6 @@ generateButton.addEventListener('click', () => {
   });
 });
 
- // Attach event listener to refresh button
-refreshButton.addEventListener('click', async () => {
-  const savedFolder = localStorage.getItem('folder');
-  if (savedFolder) {
-    clearSelectedFiles();
-    await updateFolder(savedFolder);
-  }
-});
-
 // Add an event listener to Apply files button
 const applyButton = document.getElementById('apply-button');
 applyButton.addEventListener('click', () => {

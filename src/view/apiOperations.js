@@ -87,7 +87,7 @@ const convertChangeRequestToFiles = async () => {
 
     const fileEntries = [];
 
-    for (const [file, content] of fileContentMap) {
+    for (const [file, content] of fileListController.fileContentMap) {
       const filePath = file.path;
       fileEntries.push(`${filePath}\n${FILE_DELIMETER}\n${content}\n${FILE_DELIMETER}`);
     }

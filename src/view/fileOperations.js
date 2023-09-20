@@ -1,61 +1,3 @@
-// Function to display file structure
-const displayFileStructure = (fileList, element) => {
-    fileContentMap.clear(); // Add this line to clear fileContentMap
-    element.textContent = ''; // Clear any previous content
-  
-    // Get the selected folder from localStorage
-    const savedFolder = localStorage.getItem('folder');
-  
-    for (let i = 0; i < fileList.length; i++) {
-      const file = fileList[i];
-      let filePath = file.path;
-  
-      if (savedFolder) {
-        // Display only the path relative to the selected folder
-        filePath = path.relative(savedFolder, filePath);
-      }
-  
-      const fileEntry = document.createElement('div');
-      fileEntry.className = 'file-entry';
-  
-      // Create checkbox
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = `file-checkbox-${i}`;
-  
-      checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          readFileContent(file)
-            .then(content => {
-              fileContentMap.set(file, content);
-              updateGeneratedMessageContent();
-            })
-            .catch(error => {
-              console.error(error);
-            });
-        } else {
-          fileContentMap.delete(file);
-          updateGeneratedMessageContent();
-        }
-      });
-  
-      // Create label for checkbox
-      const label = document.createElement('label');
-      label.setAttribute('for', `file-checkbox-${i}`);
-      label.textContent = filePath;
-  
-      fileEntry.appendChild(checkbox);
-      fileEntry.appendChild(label);
-  
-      element.appendChild(fileEntry);
-    }
-  };
-  
-// Read the content of a file
-const readFileContent = async (file) => {
-  return await window.fs.readFile(file.path);
-};
-
 // Function to save HTTP request and response to a file
 async function logRequestAndResponse(apiKey, model, role, content, response) {
   try {
@@ -75,32 +17,6 @@ async function logRequestAndResponse(apiKey, model, role, content, response) {
     console.error('Error logging request and response: ', error);
   }
 }
-  
-const filterFilesByGitignore = async (fileList) => {
-  let fileListArray = Array.from(fileList);
-
-  try {
-    // Find the .gitignore file in the fileListArray
-    const gitignoreFile = fileListArray.find(file => file.path.endsWith('.gitignore'));
-    if (!gitignoreFile) {
-      return fileListArray;
-    }
-
-    // Read the .gitignore file content
-    gitignoreContent = await readFileContent(gitignoreFile) + "\n.git/";
-    gitignore = gitignoreParser.compile(gitignoreContent);
-
-    // Filter out files based on .gitignore rules
-    return fileListArray.filter(file => {
-      const filePath = file.path;
-      const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), filePath).replaceAll("\\", "/");
-      return gitignore.accepts(normalizedFilePath);
-    });
-  } catch (error) {
-    console.error('Error reading .gitignore:', error);
-    return fileListArray;
-  }
-};
 
 async function updateFolder (folder) {
   if (folder) {
@@ -116,11 +32,11 @@ async function updateFolder (folder) {
     if(!await fs.exists(dirPathRequests)){
       await fs.mkdir(dirPathRequests);
     }
-    
-    // Update the file list
-    let filteredFileList = await getFilesInFolderWithFilter(folder);
-    displayFileStructure(filteredFileList, document.getElementById('file-structure'));
 
+    if (agents) {
+      agents.agents.forEach((agent) => { if (agent.fileList) agent.fileList.refresh(); });
+    }
+    
     // Load the projectDescription
     const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
     const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
@@ -133,6 +49,32 @@ async function updateFolder (folder) {
     }
   }
 };
+
+async function filterFilesByGitignore(fileList) {
+  let fileListArray = Array.from(fileList);
+
+  try {
+      // Find the .gitignore file in the fileListArray
+      const gitignoreFile = fileListArray.find(file => file.path.endsWith('.gitignore'));
+      if (!gitignoreFile) {
+      return fileListArray;
+      }
+
+      // Read the .gitignore file content
+      gitignoreContent = await window.fs.readFile(gitignoreFile.path) + "\n.git/";
+      gitignore = gitignoreParser.compile(gitignoreContent);
+
+      // Filter out files based on .gitignore rules
+      return fileListArray.filter(file => {
+      const filePath = file.path;
+      const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), filePath).replaceAll("\\", "/");
+      return gitignore.accepts(normalizedFilePath);
+      });
+  } catch (error) {
+      console.error('Error reading .gitignore:', error);
+      return fileListArray;
+  }
+}
 
 async function getFilesInFolderWithFilter(folder) {
   const filePaths = await window.fs.getFilesInDirectory(folder);
@@ -159,3 +101,4 @@ async function loadSettings() {
     }
     return null;
 }
+

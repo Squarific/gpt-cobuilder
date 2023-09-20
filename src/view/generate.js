@@ -22,15 +22,15 @@ ${FILE_DELIMETER}`;
 //read saved folder from local storage
 updateFolder(localStorage.getItem('folder'));
 
+var fileListController = new FileListController();
+document.getElementById('FileListTarget').appendChild(fileListController.createDOM());
+
 // Add event listener to the apiKeyInput field
 apiKeyInput.addEventListener('input', () => {
   const apiKey = apiKeyInput.value;
   // Save the API key in localStorage
   localStorage.setItem('apiKey', apiKey.trim());
 });
-
-// Mapping to store the content of each checked file
-const fileContentMap = new Map();
 
 const parseBlocks = (response) => {
     let lines = response.split("\n");
@@ -86,7 +86,7 @@ const updateGeneratedMessageContent = () => {
   const fileEntries = [];
   const savedFolder = localStorage.getItem('folder');
 
-  for (const [file, content] of fileContentMap) {
+  for (const [file, content] of fileListController.fileContentMap) {
     let filePath = file.path;
 
     if (savedFolder) {
@@ -101,6 +101,8 @@ const updateGeneratedMessageContent = () => {
 
   updateFullMessageContent();
 };
+
+fileListController.element.addEventListener('filechange', updateGeneratedMessageContent);
 
 // Function to update the content of the "full-message" textarea
 const updateFullMessageContent = () => {

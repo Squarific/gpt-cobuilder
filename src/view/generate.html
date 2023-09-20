@@ -39,11 +39,7 @@
     </div>
 
     <div id="GPTChangeRequest" class="tabcontent">
-      <!-- Include Refresh File List Button -->
-      <button id="refresh-filelist">Refresh File List</button>
-      
-      <!-- Element to display the file structure -->
-      <pre id="file-structure"></pre>
+      <div id="FileListTarget"></div>
         
       <!-- Input field for system message -->
       <label for="system-message">System Message:</label>
@@ -134,6 +130,7 @@ Suggest changes to the right files. If you need to change multiple files, includ
     <script src="fileOperations.js"></script>
     <script src="tabOperations.js"></script>
     <script src="eventListeners.js"></script>
+    <script src="FileListController.js"></script>
     <script src="agents.js"></script>
     <script src="modalOperations.js"></script>
     <script src="generate.js"></script>
