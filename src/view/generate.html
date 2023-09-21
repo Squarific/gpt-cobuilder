@@ -8,10 +8,8 @@
   <body>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Inputs</button>
-      <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved Outputs</button>
-      <button class="tablinks" onclick="openTab(event, 'GPTChangeRequest')">GPT Change Request</button>
-      <button class="tablinks" onclick="openTab(event, 'ChangeResponse')">Change Response</button>
+      <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
+      <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved GPT Outputs</button>
       <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
       <button class="tablinks" id="add-tab-button">+</button>
     </div>
@@ -38,60 +36,20 @@
       </select>
     </div>
 
-    <div id="GPTChangeRequest" class="tabcontent">
-      <div id="FileListTarget"></div>
-        
-      <!-- Input field for system message -->
-      <label for="system-message">System Message:</label>
-      <textarea id="system-message" rows="5" >You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. 
-
-Suggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense.</textarea>
-
-      <!-- Div for generated message -->
-      <div id="generated-message-div">
-        <label for="generated-message">Generated Message:</label>
-        <textarea id="generated-message" class="generated-message" rows="20" disabled></textarea>
-      </div>
-
-      <!-- Div for full message -->
-      <div>
-        <label for="full-message">Full Message:</label>
-        <textarea id="full-message" class="full-message" rows="20" disabled></textarea>
-      </div>
-          
-      <!-- Total tokens count -->
-      <div id="local-token-count"></div>
-
-      <!-- Button to trigger GPT completion -->
-      <button class="button" id="generate-button">Generate GPT Completion</button>
-
-      <!-- Element to display errors -->
-      <div id="error-log"></div>
-    </div>
-    
-    <div id="ChangeResponse" class="tabcontent">
-      <!-- Total tokens count -->
-      <div id="response-token-count"></div>
-
-      <!-- Model response -->
-      <label for="model-response">Model response:</label>
-      <textarea id="model-response"></textarea>
-    </div>
-
     <div id="Inputs" class="tabcontent">
       <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
       <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
       
       <!-- Input field for user message -->
-      <label for="user-message">User change request</label>
-      <textarea id="user-message" rows="5" ></textarea>
+      <label for="user-change-request">User change request</label>
+      <textarea id="user-change-request" rows="5" ></textarea>
     </div>
 
     <div id="Outputs" class="tabcontent">
       <!-- Input field for user message -->
-      <label for="user-message">EXAMPLE</label>
-      <textarea id="user-message" rows="5" ></textarea>
+      <label for="asdfasdf">EXAMPLE</label>
+      <textarea id="asdfasdf" rows="5" ></textarea>
     </div>
 
     <div id="Convert" class="tabcontent">

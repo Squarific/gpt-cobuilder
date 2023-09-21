@@ -9,13 +9,12 @@ const calculateCost = (inputTokens, outputTokens) => {
 };
 
 const displayTokenCounts = (response) => {
-  const tokenCountElement = document.getElementById('response-token-count');
   const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
   
   // Calculate cost
   const cost = calculateCost(prompt_tokens, completion_tokens);
 
-  tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
+  return `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
 const displayFilesTokenCounts = (response) => {
@@ -28,7 +27,7 @@ const displayFilesTokenCounts = (response) => {
   tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
-const _sendMessageToChatGPT = async (systemMessage, userMessage) => {
+const sendMessageToChatGPT = async (systemMessage, userMessage) => {
   const apiKey = apiKeyInput.value;
 
   const requestOptions = {
@@ -69,14 +68,6 @@ const _sendMessageToChatGPT = async (systemMessage, userMessage) => {
     }
 };
 
-const sendMessageToChatGPT = async () => {
-  const systemMessage = document.getElementById('system-message').value;
-  const userMessage = document.getElementById('full-message').value;
-  const data = await _sendMessageToChatGPT(systemMessage, userMessage)
-  displayTokenCounts(data);
-  return data.choices[0].message.content;
-};
-
 const convertChangeRequestToFiles = async () => {
   try {
     const apiKey = apiKeyInput.value;
@@ -93,7 +84,7 @@ const convertChangeRequestToFiles = async () => {
     }
     
     const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${modelResponse}\n\n${convertUserMessage}`;
-    data = await _sendMessageToChatGPT(convertSystemMessage, userMessage);
+    data = await sendMessageToChatGPT(convertSystemMessage, userMessage);
     
     displayFilesTokenCounts(data);
     displayFilesResponse(data.choices[0].message.content);

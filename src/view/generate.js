@@ -22,9 +22,6 @@ ${FILE_DELIMETER}`;
 //read saved folder from local storage
 updateFolder(localStorage.getItem('folder'));
 
-var fileListController = new FileListController();
-document.getElementById('FileListTarget').appendChild(fileListController.createDOM());
-
 // Add event listener to the apiKeyInput field
 apiKeyInput.addEventListener('input', () => {
   const apiKey = apiKeyInput.value;
@@ -74,75 +71,12 @@ const parseResponse = (response) => {
   return files;
 };
 
-// Function to display the assistant's response
-const displayAssistantResponse = (response) => {
-  const serverResponse = document.getElementById('model-response');
-  serverResponse.value = response;
-};
-
-// Function to update the content of the "generated-message" textarea
-const updateGeneratedMessageContent = () => {
-  const generatedMessageTextarea = document.getElementById('generated-message');
-  const fileEntries = [];
-  const savedFolder = localStorage.getItem('folder');
-
-  for (const [file, content] of fileListController.fileContentMap) {
-    let filePath = file.path;
-
-    if (savedFolder) {
-      // Display only the path relative to the selected folder
-      filePath = path.relative(savedFolder, filePath);
-    }
-
-    fileEntries.push(`${filePath}\n${FILE_DELIMETER}\n${content}\n${FILE_DELIMETER}`);
-  }
-
-  generatedMessageTextarea.value = fileEntries.join('\n\n'); // Add two new lines between file entries
-
-  updateFullMessageContent();
-};
-
-fileListController.element.addEventListener('filechange', updateGeneratedMessageContent);
-
-// Function to update the content of the "full-message" textarea
-const updateFullMessageContent = () => {
-  const generatedMessageTextarea = document.getElementById('generated-message');
-  const userMessageTextarea = document.getElementById('user-message');
-  const fullMessageTextarea = document.getElementById('full-message');
-
-  const projectDescription = document.getElementById('project-description').value;
-  const generatedMessages = generatedMessageTextarea.value;
-  const userMessage = userMessageTextarea.value;
-
-  // Combine project description, generated messages, and user message
-  const fullMessage = `${projectDescription}\n\n${generatedMessages}\n\n${userMessage}`;
-  fullMessageTextarea.value = fullMessage;
-
-  const tokenCountElement = document.getElementById('local-token-count');
-  const systemMessage = document.getElementById('system-message').value;
-  const totalMessage = `${systemMessage}\n\n${fullMessage}`;
-
-  tiktoken.countTokens(totalMessage)
-    .then((tokenCount) => {
-      tokenCountElement.textContent = `Total Tokens: ${tokenCount}`;
-    })
-    .catch((error) => {
-      console.error('Failed to count tokens:', error);
-    });
-};
-
 const folderSelectionInput = document.getElementById('folder-selection');
 
 folderSelectionInput.addEventListener('click', async (event) => {
   const folder = await folderDialog.open();
   updateFolder(folder);
   event.preventDefault();
-});
-
-// Add event listener to the user message textarea
-const userMessageTextarea = document.getElementById('user-message');
-userMessageTextarea.addEventListener('input', () => {
-  updateFullMessageContent();
 });
 
 const projectDescriptionTextarea = document.getElementById('project-description');

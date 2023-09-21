@@ -22,7 +22,6 @@ textarea {
   border-radius: 4px;
   font-size: 16px;
   width: 100%;
-  height: 100px;
   white-space: pre;
   overflow-wrap: normal;
   box-sizing: border-box;
@@ -61,10 +60,6 @@ label {
 .file-entry label {
   margin-top:0;
   display: inline-block;
-}
-
-.generated-message, .full-message, #server-response, #model-response, #model-git-diff-response {
-  height:650px;
 }
 
 #generated-message-div {

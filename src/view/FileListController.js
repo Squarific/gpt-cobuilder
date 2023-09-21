@@ -17,7 +17,7 @@ class FileListController {
     targetDiv.appendChild(this.element);
 
     // refresh the file list when the button is clicked
-    refreshButton.addEventListener('click', this.refresh);
+    refreshButton.addEventListener('click', this.refresh.bind(this));
 
     this.refresh();
 
@@ -27,6 +27,7 @@ class FileListController {
   async refresh() {
     let fileList = await this.getFilesInFolderWithFilter(); 
     this.displayFileStructure(fileList);
+    this.element.dispatchEvent(this.fileChange);
   }
 
   // Replace the original displayFileStructure function
@@ -90,6 +91,7 @@ class FileListController {
     // Create checkbox
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
+    checkbox.id = Math.random() + "-checkbox";
 
     checkbox.addEventListener('change', async () => {
       if (checkbox.checked) {
@@ -105,6 +107,7 @@ class FileListController {
     // Create label for checkbox
     const label = document.createElement('label');
     label.textContent = filePath;
+    label.setAttribute("for", checkbox.id);
 
     fileEntry.appendChild(checkbox);
     fileEntry.appendChild(label);

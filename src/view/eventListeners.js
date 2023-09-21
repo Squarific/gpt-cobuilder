@@ -10,31 +10,6 @@ function clearErrorLog() {
   errorLog.textContent = "";
 }
 
-generateButton.addEventListener('click', () => {
-  openTab(event, 'ChangeResponse');
-  
-  reponseField.disabled = true;
-  generateButton.disabled = true;
-  convertButton.disabled = true;
-  
-  sendMessageToChatGPT()
-  .then(response => {
-    console.log('Assistant:', response);
-    reponseField.disabled = false;
-    generateButton.disabled = false;
-    convertButton.disabled = false;
-
-    clearErrorLog();
-    displayAssistantResponse(response);
-  })
-  .catch(error => {
-    errorLog.textContent = `Error: ${error.message}`;
-    reponseField.disabled = false;
-    generateButton.disabled = false;
-    convertButton.disabled = false;
-  });
-});
-
 // Add an event listener to Apply files button
 const applyButton = document.getElementById('apply-button');
 applyButton.addEventListener('click', () => {

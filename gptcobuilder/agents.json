@@ -1,6 +1,6 @@
 {
   "agents": [{
-    "name": "GPT Change Request file",
+    "name": "GPT Change Request",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
     "systemMessage": "You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. \n\nSuggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense.",
     "output": "GPT_CHANGE_REQUEST"
