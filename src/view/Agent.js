@@ -1,6 +1,8 @@
 class Agent {
     constructor(agentData) {
         this.data = agentData;
+        this.projectDescriptionTextArea = document.getElementById('project-description');
+        this.userChangeRequestTextArea = document.getElementById('user-change-request');
     }
 
     createTab() {
@@ -79,6 +81,13 @@ class Agent {
         document.getElementsByTagName("body")[0].appendChild(tabContent);
 
         savedOutputs.addEventListener("change", () => {
+            this.updateFullMessage();
+        });
+
+        this.projectDescriptionTextArea.addEventListener('change', () => {
+            this.updateFullMessage();
+        });
+        this.userChangeRequestTextArea.addEventListener('change', () => {
             this.updateFullMessage();
         });
 
