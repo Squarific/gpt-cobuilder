@@ -1,6 +1,5 @@
 // Attach event listener to the button
 const generateButton = document.getElementById('generate-button');
-const refreshButton = document.getElementById('refresh-filelist');
 const convertButton = document.getElementById('convert-button');
 const errorLog = document.getElementById('error-log');
 const reponseField = document.getElementById('model-response');
@@ -12,13 +11,21 @@ function clearErrorLog() {
 
 // Add an event listener to Apply files button
 const applyButton = document.getElementById('apply-button');
-applyButton.addEventListener('click', () => {
-  refreshButton.click();
-});
+applyButton.addEventListener('click', async () => {
+  const parsedFiles = parseResponse(savedOutputs.get("OUTPUT.GPT_FILE_CHANGES"));
 
-convertButton.addEventListener('click', () => {
-  convertButton.disabled = true;
-  convertChangeRequestToFiles();
+  for (const file of parsedFiles) {
+    try {
+      await window.fs.saveFile(file.path, file.content);
+      console.log(`Saved file: ${file.path}`);
+    } catch (error) {
+      console.error(`Error saving file ${file.path}: `, error);
+    }
+  }
+
+  agents.agents.forEach((agent) => {
+    agent.fileList.refresh();
+  });
 });
 
 modelSelection.addEventListener('change', async () => {

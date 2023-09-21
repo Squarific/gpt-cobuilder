@@ -10,7 +10,6 @@
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
       <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved GPT Outputs</button>
-      <button class="tablinks" onclick="openTab(event, 'Convert')">Convert</button>
       <button class="tablinks" id="add-tab-button">+</button>
     </div>
     
@@ -47,29 +46,13 @@
     </div>
 
     <div id="Outputs" class="tabcontent">
-    </div>
+      <div id="saved-outputs-container">
+      </div>
 
-    <div id="Convert" class="tabcontent">
-      <!-- Input field for user message -->
-      <label for="convert-system-message">Convert System Message:</label>
-      <textarea id="convert-system-message" rows="5" ></textarea>
-
-      <!-- Input field for user message -->
-      <label for="convert-user-message">Optional Convert User Message:</label>
-      <textarea id="convert-user-message" rows="5" ></textarea>
-
-      <!-- Button to convert change request to files -->
-      <button class="button" id="convert-button" disabled>Convert change request to files</button>
-
-      <!-- Model files response -->
-      <label for="model-files-response">Model response:</label>
-      <textarea id="model-files-response"></textarea>
-
-      <!-- Total tokens count -->
-      <div id="files-response-token-count"></div>
-
-      <!-- Button to apply files automatically -->
-      <button class="button" id="apply-button">Apply files</button>
+      <div id="custom-buttons">
+        <!-- Button to apply files automatically -->
+        <button class="button" id="apply-button">Apply generated file changes</button>
+      </div>
     </div>
     
     <!-- Add Modal for tab naming -->

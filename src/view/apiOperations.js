@@ -67,30 +67,3 @@ const sendMessageToChatGPT = async (systemMessage, userMessage) => {
       throw new Error(`Request failed! ${error.message}`);
     }
 };
-
-const convertChangeRequestToFiles = async () => {
-  try {
-    const apiKey = apiKeyInput.value;
-    const projectDescription = document.getElementById('project-description').value;
-    const modelResponse = document.getElementById('model-response').value;
-    const convertSystemMessage = document.getElementById('convert-system-message').value;
-    const convertUserMessage = document.getElementById('convert-user-message').value;
-
-    const fileEntries = [];
-
-    for (const [file, content] of fileListController.fileContentMap) {
-      const filePath = file.path;
-      fileEntries.push(`${filePath}\n${FILE_DELIMETER}\n${content}\n${FILE_DELIMETER}`);
-    }
-    
-    const userMessage = `${projectDescription}\n\n${fileEntries.join('\n\n')}\n\n${modelResponse}\n\n${convertUserMessage}`;
-    data = await sendMessageToChatGPT(convertSystemMessage, userMessage);
-    
-    displayFilesTokenCounts(data);
-    displayFilesResponse(data.choices[0].message.content);
-  } catch (error) {
-    console.error('Error converting change request to files:', error);
-  } finally {
-    convertButton.disabled = false;
-  }
-};

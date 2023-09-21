@@ -10,15 +10,6 @@ if (savedApiKey) {
   apiKeyInput.value = savedApiKey;
 }
 
-document.getElementById('convert-system-message').value = `You are an excellent programmer. Output the changed files given the proposed changes. Make sure each file is there from beginning to end. All files should be complete. We want full files and not partial files. Every change should be accounted for and all current code should be there aswell, unless you are directly told to change or remove it. Do not put in any placeholders or use three dots (...) to denote the rest of the file. Instead give the whole file. 
-
-Use this format:
-
-path/to/file.ext
-${FILE_DELIMETER}
-CONTENT OF FILE
-${FILE_DELIMETER}`;
-
 //read saved folder from local storage
 updateFolder(localStorage.getItem('folder'));
 
@@ -28,48 +19,6 @@ apiKeyInput.addEventListener('input', () => {
   // Save the API key in localStorage
   localStorage.setItem('apiKey', apiKey.trim());
 });
-
-const parseBlocks = (response) => {
-    let lines = response.split("\n");
-    let blocks = [];
-    let currentBlock = '';
-
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i].startsWith(FILE_DELIMETER)) {
-          if (currentBlock !== '') {
-              blocks.push(currentBlock);
-              currentBlock = '';
-          }
-      } else {
-          currentBlock += lines[i] + "\n";
-      }
-    }
-
-    if (currentBlock !== '') blocks.push(currentBlock);
-
-    return blocks;
-};
-
-const parseResponse = (response) => {
-  const files = [];
-
-  // Split the response by the code block delimiter
-  const blocks = parseBlocks(response);
-
-  // Iterate over the blocks, skipping the language specifier
-  for(let i = 0; i < blocks.length - 1; i += 2) {
-    // Get the file path
-    let path = blocks[i].trim().split("\n");
-    path = path[path.length - 1]; // Only the line directly before the delimiter
-
-    // Get the file content
-    let content = blocks[i + 1];
-
-    // Add the file to the list
-    files.push({ path, content });
-  }
-  return files;
-};
 
 const folderSelectionInput = document.getElementById('folder-selection');
 
@@ -81,7 +30,6 @@ folderSelectionInput.addEventListener('click', async (event) => {
 
 const projectDescriptionTextarea = document.getElementById('project-description');
 projectDescriptionTextarea.addEventListener('input', async () => {
-  updateFullMessageContent();
   const projectDescription = projectDescriptionTextarea.value;
   const folderPath = localStorage.getItem('folder');
   const dirPath = `${folderPath}/gptcobuilder`;
@@ -97,35 +45,4 @@ projectDescriptionTextarea.addEventListener('input', async () => {
   } catch(error){
     console.error("Failed to save project description to the file: ", error);
   }
-})
-
-const displayFilesResponse = (response) => {
-  const filesResponse = document.getElementById('model-files-response');
-  const parsedFiles = parseResponse(response);
-  
-  let formattedResponse = '';
-  parsedFiles.forEach(file => {
-    formattedResponse += `File Path: ${file.path}\n\nFile Content:\n${file.content}\n\n========================\n\n`;
-  });
-  
-  filesResponse.value = response;
-};
-
-document.getElementById('apply-button').addEventListener('click', async () => {
-  const parsedFiles = parseResponse(document.getElementById('model-files-response').value);
-
-  for (const file of parsedFiles) {
-    try {
-      await window.fs.saveFile(file.path, file.content);
-      console.log(`Saved file: ${file.path}`);
-    } catch (error) {
-      console.error(`Error saving file ${file.path}: `, error);
-    }
-  }
 });
-
-const toLocalISOString = (date) => {
-  const tzOffset = date.getTimezoneOffset() * 60000;
-  const localDate = new Date(date - tzOffset);
-  return localDate.toISOString().split('.')[0];
-};

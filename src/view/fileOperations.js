@@ -1,3 +1,9 @@
+const toLocalISOString = (date) => {
+  const tzOffset = date.getTimezoneOffset() * 60000;
+  const localDate = new Date(date - tzOffset);
+  return localDate.toISOString().split('.')[0];
+};
+
 // Function to save HTTP request and response to a file
 async function logRequestAndResponse(apiKey, model, role, content, response) {
   try {
