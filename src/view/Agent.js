@@ -104,9 +104,9 @@ class Agent {
 
     getInput(input) {
         if (input == "USER_CHANGE_REQUEST") {
-            return document.getElementById("user-change-request").value;
+            return document.getElementById("user-change-request").value || "Empty change request";
         } else if (input == "PROJECT_DESCRIPTION") {
-            return document.getElementById("project-description").value;
+            return document.getElementById("project-description").value || "No project description";
         } else if (input == "FILE_LIST") {
             return this.fileContentMapToText(this.data.fileList.fileContentMap);
         } else if (input.startsWith("OUTPUT.")) {
@@ -118,16 +118,17 @@ class Agent {
     }
 
     fileContentMapToText(fileContentMap) {
-        let returnValue = "";
+        let files = [];
 
         fileContentMap.forEach((value, key, map) => {
-            returnValue += key.path + "\n";
-            returnValue += FILE_DELIMETER + "\n";
-            returnValue += value + "\n";
-            returnValue += FILE_DELIMETER + "\n\n";
+            var file = key.path + "\n";
+            file += FILE_DELIMETER + "\n";
+            file += value + "\n";
+            file += FILE_DELIMETER;
+            files.push(file);
         });
 
-        return returnValue;
+        return files.join("\n\n") || "No files selected.";
     }
 
     async updateFullMessage() {

@@ -11,7 +11,7 @@ class SavedOutputs extends EventTarget {
     }
 
     get (name) {
-        return this.outputs.get(name);
+        return this.outputs.get(name) || name;
     }
 }
 
