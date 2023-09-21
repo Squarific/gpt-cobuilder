@@ -90,6 +90,10 @@ function createTab(agent) {
 
     document.getElementsByTagName("body")[0].appendChild(tabContent);
 
+    savedOutputs.addEventListener("change", () => {
+        updateAgentFullMessage(agent);
+    });
+
     updateAgentFullMessage(agent);
 }
 
