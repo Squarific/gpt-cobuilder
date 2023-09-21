@@ -13,7 +13,8 @@ function createTab(agent) {
     tabButton.innerText = agent.name;
     tabButton.setAttribute("onclick", `openTab(event, '${agent.name}')`);
 
-    document.getElementsByClassName("tab")[0].appendChild(tabButton);
+    
+    document.getElementsByClassName("tab")[0].insertBefore(tabButton, document.getElementById("add-tab-button"));
     
     const tabContent = document.createElement("div");
     tabContent.id = agent.name;
@@ -30,7 +31,8 @@ function createTab(agent) {
 
     //Append system message
     const systemMessage = createTextAreaWithLabel("System Message:", agent.name + "-system-message", false, 5);
-    systemMessage.querySelector("textarea").value = agent.systemMessage;
+    agent.systemMessageTextarea = systemMessage.querySelector("textarea");
+    agent.systemMessageTextarea.value = agent.systemMessage;
     tabContent.appendChild(systemMessage);
     
     //Append div for Full Message
@@ -69,13 +71,15 @@ function createTab(agent) {
     tabContent.appendChild(errorLogDiv);
 
     generateButton.onclick = async function() {
-        let systemMessage = agent.systemMessage;
+        let systemMessage = agent.systemMessageTextarea.value;
         let userMessage = agent.fullMessageTextArea.value;
         generateButton.disabled = true;
         try {
             let response = await sendMessageToChatGPT(systemMessage, userMessage);
             agent.modelResponseTextArea.value = response.choices[0].message.content;
             agent.responseTokenCountElement.innerText = displayTokenCounts(response);
+            savedOutputs.save(agent.output, response.choices[0].message.content);
+            savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
         } catch (error) {
             console.error('An error occurred while generating completion:', error);
             errorLogDiv.innerText = error;
@@ -113,6 +117,8 @@ function getInput (agent, input) {
         return document.getElementById("project-description").value;
     } else if (input == "FILE_LIST") {
         return fileContentMapToText(agent.fileList.fileContentMap);
+    } else if (input.startsWith("OUTPUT.")) {
+        return savedOutputs.get(input);
     }
 
     console.error("Unknown input", input);
@@ -140,10 +146,16 @@ function updateAgentFullMessage (agent) {
     });
 
     tiktoken.countTokens(agent.fullMessageTextArea.value)
-    .then((tokenCount) => {
-      agent.tokenCountElement.textContent = `Total Tokens: ${tokenCount}`;
+    .then((tokenCountFullMessage) => {
+        tiktoken.countTokens(agent.systemMessageTextarea.value)
+        .then((tokenCountSystemMessage) => {
+            agent.tokenCountElement.textContent = `Total Tokens: ${tokenCountSystemMessage + tokenCountFullMessage}`;
+        })
+        .catch((error) => {
+            console.error('Failed to count systemtokens:', error);
+        });
     })
     .catch((error) => {
-      console.error('Failed to count tokens:', error);
+      console.error('Failed to count fullmessagetokens:', error);
     });
 }

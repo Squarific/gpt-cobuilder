@@ -7,7 +7,7 @@ class FileListController {
     this.fileChange = new Event('filechange');
   }
 
-  createDOM () {
+  createDOM() {
     const targetDiv = document.createElement("div");
 
     const refreshButton = document.createElement("button");
