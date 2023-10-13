@@ -94,12 +94,19 @@ class Agent {
         this.updateFullMessage();
     }
 
+    // Modified createTextAreaWithLabel Function with details and summary elements
     createTextAreaWithLabel(labelmessage, id, disabled, rows) {
+        const details = document.createElement("details");
+
+        const summary = document.createElement("summary");
+        summary.innerText = labelmessage;
+        details.appendChild(summary);
+
         const div = document.createElement("div");
 
         const label = document.createElement("label");
         label.setAttribute("for", id);
-        label.innerText = labelmessage;
+        label.innerText = "Expand/Collapse";
         div.appendChild(label);
 
         const textarea = document.createElement("textarea");
@@ -108,7 +115,9 @@ class Agent {
         textarea.disabled = disabled;
         div.appendChild(textarea);
 
-        return div;
+        details.appendChild(div);
+
+        return details;
     }
 
     getInput(input) {
