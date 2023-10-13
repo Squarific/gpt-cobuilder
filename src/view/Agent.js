@@ -102,20 +102,11 @@ class Agent {
         summary.innerText = labelmessage;
         details.appendChild(summary);
 
-        const div = document.createElement("div");
-
-        const label = document.createElement("label");
-        label.setAttribute("for", id);
-        label.innerText = "Expand/Collapse";
-        div.appendChild(label);
-
         const textarea = document.createElement("textarea");
         textarea.id = id;
         textarea.setAttribute("rows", rows);
         textarea.disabled = disabled;
-        div.appendChild(textarea);
-
-        details.appendChild(div);
+        details.appendChild(textarea);
 
         return details;
     }
