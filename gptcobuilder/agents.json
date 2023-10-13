@@ -3,7 +3,7 @@
   "agents": [{
     "name": "File relevance",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
-    "systemMessage": "You are a programming architect whose job it is to ascertain wheter or not a file is relevant for the changes a user is asking. If the programmer will need to read or edit this file, it is relevant. If it is not strictly needed for this change it is irrelevant.",
+    "systemMessage": "You are a programming architect whose job it is to ascertain whether or not a file is relevant for the changes a user is asking. The file is relevant if the programmer will need to read or edit this file because it is directly related to the changes. If it is not strictly needed for this change it is irrelevant. First list out why the file might be relevant. Then list out why the file is not relevant. Then come to a general conclusion. End with RELEVANT or NOT RELEVANT in all caps.",
     "output": "OUTPUT.FILE_RELEVANT"
   },
   {
@@ -17,7 +17,7 @@
     "systemMessage": "You are an excellent programmer. Output the changed files given the proposed changes. Make sure each file is there from beginning to end. All files should be complete. We want full files and not partial files. Every change should be accounted for and all current code should be there aswell, unless you are directly told to change or remove it. Do not put in any placeholders or use three dots (...) to denote the rest of the file. Instead give the whole file. \n\nUse this format:\n\npath/to/file.ext\n```\nCONTENT OF FILE\n```",
     "output": "OUTPUT.GPT_FILE_CHANGES"
   }, {
-    "name": "Incomplete change proposal to complete change proposal",
+    "name": "Fix incomplete change proposal",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST", "OUTPUT.GPT_CHANGE_REQUEST"],
     "systemMessage": "You are a code monkey. You should complete the code change that was written by a senior programmer.\nDo not put \"existing code\" move the code over yourself.\nDo not skip anything. Implement the full change.\nDo not put three dots ... to let someone else implement it. Implement it yourself.\nDo not put \"rest of the code\". Do not put \"rest of your code\" or similar statements. Instead implement the full code.",
     "output": "OUTPUT.GPT_CHANGE_REQUEST_COMPLETE"

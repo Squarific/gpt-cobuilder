@@ -50,8 +50,19 @@ async function updateFileList(fileChanges) {
     for (const file of parsedFiles) {
       // Create and append new list item details
       let listItem = document.createElement('li');
-      let fileContent = await window.fs.readFile(file.path);
-      listItem.textContent = `File path: ${file.path} Current length: ${fileContent.length} New Length: ${file.content.length}`;
+
+      let fileContent;
+      try {
+        // Attempt to read the file
+        fileContent = await window.fs.readFile(file.path);
+      } catch (error) {
+        // If the file does not exist, catch the error and set fileContent to an empty string
+        fileContent = '';
+      }
+
+      // Display the length as zero if the file does not exist
+      listItem.textContent = `File path: ${file.path} Current length: ${fileContent.length || 0} New Length: ${file.content.length}`;
+
       listContainer.appendChild(listItem);
     }
 }
