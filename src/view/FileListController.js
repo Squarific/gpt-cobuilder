@@ -72,12 +72,21 @@ class FileListController {
         const gitignoreContent = (await window.fs.readFile(gitignoreFile.path)) + "\n.git/";
         const gitignore = gitignoreParser.compile(gitignoreContent);
 
-        // Filter out files based on .gitignore rules
-        return fileListArray.filter(file => {
-        const filePath = file.path;
-        const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), filePath).replaceAll("\\", "/");
-        return gitignore.accepts(normalizedFilePath);
+        // Filter based on .gitignore rules
+        const gitIgnoredFiltered = fileListArray.filter(file => {
+          const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), file.path).replaceAll("\\", "/");
+          return gitignore.accepts(normalizedFilePath);
         });
+
+        // Calculate the token size of each file
+        for (var k = 0; k < gitIgnoredFiltered.length; k++) {
+          var content = await window.fs.readFile(gitIgnoredFiltered[k].path);
+          if (content.length > 16192) continue;
+          gitIgnoredFiltered[k].size = await tiktoken.countTokens(content);
+        }
+        
+        // Filter out files that are too big
+        return gitIgnoredFiltered.filter(file => file.size < 4048);
     } catch (error) {
         console.error('Error reading .gitignore:', error);
         return fileListArray;

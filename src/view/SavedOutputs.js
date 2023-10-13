@@ -22,13 +22,29 @@ savedOutputs.addEventListener("change", ({ detail }) => {
     // get the container for the saved outputs
     const savedOutputsContainer = document.getElementById('saved-outputs-container');
 
-    // create a new textarea and set the content to the saved output
-    const newOutputArea = document.createElement('textarea');
-    newOutputArea.value = detail.content;
+    // Check if textarea already exists for the given output name
+    let outputArea = document.getElementById('output-' + detail.name);
 
-    // prevent text from being edited 
-    newOutputArea.disabled = true;
+    // If textarea doesn't exist, create new textarea and associated label
+    if (!outputArea) {
+        // create a new label and set the content to the output name
+        let outputLabel = document.createElement('div');
+        outputLabel.innerHTML = detail.name;
 
-    // add the new output area to the saved outputs container.
-    savedOutputsContainer.appendChild(newOutputArea);
+        // create a new textarea 
+        outputArea = document.createElement('textarea');
+
+        // Assign unique id to the textarea using output name
+        outputArea.id = 'output-' + detail.name;
+
+        // prevent text from being edited 
+        outputArea.disabled = true;
+
+        // add the new label and textarea to the saved outputs container.
+        savedOutputsContainer.appendChild(outputLabel);
+        savedOutputsContainer.appendChild(outputArea);
+    }
+
+    // Whether textarea was existent or newly created, set/update its value
+ outputArea.value = detail.content;
 });

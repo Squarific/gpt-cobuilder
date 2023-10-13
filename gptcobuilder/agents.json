@@ -1,9 +1,9 @@
 {
   "available_builtin_inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST", "OUTPUT.LAST_GPT_OUTPUT"],
   "agents": [{
-    "name": "File relevancy",
+    "name": "File relevance",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
-    "systemMessage": "You are a programming architect whose job it is to ascertain wheter or not a file is relevant for the changes a user is asking. If the programmer will need to read or edit this file, it is relevant.",
+    "systemMessage": "You are a programming architect whose job it is to ascertain wheter or not a file is relevant for the changes a user is asking. If the programmer will need to read or edit this file, it is relevant. If it is not strictly needed for this change it is irrelevant.",
     "output": "OUTPUT.FILE_RELEVANT"
   },
   {
