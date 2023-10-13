@@ -1,6 +1,12 @@
 {
   "available_builtin_inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST", "OUTPUT.LAST_GPT_OUTPUT"],
   "agents": [{
+    "name": "File relevancy",
+    "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
+    "systemMessage": "You are a programming architect whose job it is to ascertain wheter or not a file is relevant for the changes a user is asking. If the programmer will need to read or edit this file, it is relevant.",
+    "output": "OUTPUT.FILE_RELEVANT"
+  },
+  {
     "name": "Change request to change proposal",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
     "systemMessage": "You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. \n\nSuggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense. The user does not know how to write code or how to edit code so you need to be as complete as possible.",
