@@ -32,3 +32,26 @@ modelSelection.addEventListener('change', async () => {
     const settings = { modelSelection: modelSelection.value };
     await saveSettings(settings);
 });
+
+// new code
+savedOutputs.addEventListener('change', (event) => {
+    if(event.detail.name === "OUTPUT.GPT_FILE_CHANGES"){
+        updateFileList(event.detail.content);
+    }
+});
+
+async function updateFileList(fileChanges) {
+    // Get the current list container
+    let listContainer = document.getElementById('file-changes-container');
+    // Clear current content
+    listContainer.innerHTML = '';
+
+    let parsedFiles = parseResponse(fileChanges);
+    for (const file of parsedFiles) {
+      // Create and append new list item details
+      let listItem = document.createElement('li');
+      let fileContent = await window.fs.readFile(file.path);
+      listItem.textContent = `File path: ${file.path} Current length: ${fileContent.length} New Length: ${file.content.length}`;
+      listContainer.appendChild(listItem);
+    }
+}
