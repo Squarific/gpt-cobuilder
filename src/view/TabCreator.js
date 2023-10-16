@@ -47,7 +47,7 @@ class TabCreator {
     }
 
     createTabButton(agentData) {
-        const tabButton = this.htmlCreator.createButton("tablinks", agentData.data.name, `openTab(event, '${this.data.name}')`);
+        const tabButton = this.htmlCreator.createButton("tablinks", agentData.data.name, `openTab(event, '${agentData.data.name}')`);
         document.getElementsByClassName("tab")[0].insertBefore(tabButton, document.getElementById("add-tab-button"));
         return tabButton;
     } 
