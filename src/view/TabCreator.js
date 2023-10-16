@@ -1,6 +1,6 @@
 class TabCreator {
     constructor() {
-        this.htmlCreator = new HtmlElmentCreator();
+        this.htmlCreator = new HtmlElementCreator();
     }
 
     createTabContent(agentData) {
@@ -33,12 +33,12 @@ class TabCreator {
 
         // Append textarea for Model Response
         const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.output}):`, agentData.name + '-model-response', true, 20);
-        agentData.data.modelResponseTextArea = responseDiv.querySelector('textarea');
+        agentData.modelResponseTextArea = responseDiv.querySelector('textarea');
         tabContent.appendChild(responseDiv);
 
         const responseTokenCountDiv = this.htmlCreator.createDiv("token-count", "Waiting for response");
         tabContent.appendChild(responseTokenCountDiv);
-        agentData.data.responseTokenCountElement = responseTokenCountDiv;
+        agentData.responseTokenCountElement = responseTokenCountDiv;
 
         const errorLogDiv = this.htmlCreator.createDiv("error-log");
         tabContent.appendChild(errorLogDiv);
