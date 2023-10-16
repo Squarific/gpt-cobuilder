@@ -3,7 +3,7 @@ class Agent {
         this.data = agentData;
         this.projectDescriptionTextArea = document.getElementById('project-description');
         this.userChangeRequestTextArea = document.getElementById('user-change-request');
-        this.tabCreator = new TabCreator(agentData);
+        this.tabCreator = new TabCreator();
     }
 
     createTab() {

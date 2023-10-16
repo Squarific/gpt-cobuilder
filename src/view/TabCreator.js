@@ -1,6 +1,6 @@
 class TabCreator {
-    constructor(htmlCreator) {
-        this.htmlCreator = htmlCreator;
+    constructor() {
+        this.htmlCreator = new HtmlElmentCreator();
     }
 
     createTabContent(agentData) {
@@ -32,7 +32,7 @@ class TabCreator {
         tabContent.appendChild(generateButton);
 
         // Append textarea for Model Response
-        const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.data.output}):`, agentData.data.name + '-model-response', true, 20);
+        const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.output}):`, agentData.name + '-model-response', true, 20);
         agentData.data.modelResponseTextArea = responseDiv.querySelector('textarea');
         tabContent.appendChild(responseDiv);
 
@@ -47,7 +47,7 @@ class TabCreator {
     }
 
     createTabButton(agentData) {
-        const tabButton = this.htmlCreator.createButton("tablinks", agentData.data.name, `openTab(event, '${agentData.data.name}')`);
+        const tabButton = this.htmlCreator.createButton("tablinks", agentData.name, `openTab(event, '${agentData.name}')`);
         document.getElementsByClassName("tab")[0].insertBefore(tabButton, document.getElementById("add-tab-button"));
         return tabButton;
     } 
