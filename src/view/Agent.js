@@ -14,8 +14,12 @@ class Agent {
         document.getElementsByTagName("body")[0].appendChild(tabContent);
 
         savedOutputs.addEventListener("change", this.updateFullMessage.bind(this));
-        this.projectDescriptionTextArea.addEventListener('change', this.updateFullMessage.bind(this))
+        this.projectDescriptionTextArea.addEventListener('change', this.updateFullMessage.bind(this));
         this.userChangeRequestTextArea.addEventListener('change', this.updateFullMessage.bind(this));
+
+        if (this.data.inputs && this.data.inputs.includes("FILE_LIST")) {
+            this.data.fileList.element.addEventListener('filechange', this.updateFullMessage.bind(this));
+        }
 
         this.updateFullMessage();
     }
