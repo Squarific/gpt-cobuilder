@@ -4,6 +4,7 @@ class Agent {
         this.projectDescriptionTextArea = document.getElementById('project-description');
         this.userChangeRequestTextArea = document.getElementById('user-change-request');
         this.tabCreator = new TabCreator();
+        this.inputGetter = new InputGetter();
     }
 
     createTab() {
@@ -11,23 +12,12 @@ class Agent {
         const tabContent = this.tabCreator.createTabContent(this.data);
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
-        savedOutputs.addEventListener("change", () => {
-            this.updateFullMessage();
-        }); 
 
-        this.projectDescriptionTextArea.addEventListener('change', () => {
-            this.updateFullMessage();
-        });
-
-        this.userChangeRequestTextArea.addEventListener('change', () => {
-            this.updateFullMessage();
-        });
+        savedOutputs.addEventListener("change", this.updateFullMessage.bind(this));
+        this.projectDescriptionTextArea.addEventListener('change', this.updateFullMessage.bind(this))
+        this.userChangeRequestTextArea.addEventListener('change', this.updateFullMessage.bind(this));
 
         this.updateFullMessage();
-    }
-
-    getInput(input) {
-        return this.inputGetter.getInput(input);
     }
 
     fileContentMapToText(fileContentMap) {
@@ -38,7 +28,7 @@ class Agent {
         this.data.fullMessageTextArea.value = "";
 
         for (const input of this.data.inputs) {
-            this.data.fullMessageTextArea.value += this.inputGetter.getInput(input) + "\n\n";
+            this.data.fullMessageTextArea.value += this.inputGetter.getInput(input, this.data) + "\n\n";
         }
 
         try {

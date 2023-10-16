@@ -1,15 +1,11 @@
 class InputGetter {
-    constructor(agentData) {
-        this.data = agentData;
-    }
-
-    getInput(input) {
+    getInput(input, agentData) {
         if (input == "USER_CHANGE_REQUEST") {
             return document.getElementById("user-change-request").value || "Empty change request";
         } else if (input == "PROJECT_DESCRIPTION") {
             return document.getElementById("project-description").value || "No project description";
         } else if (input == "FILE_LIST") {
-            return this.fileContentMapToText(this.data.fileList.fileContentMap);
+            return this.fileContentMapToText(agentData.fileList.fileContentMap);
         } else if (input.startsWith("OUTPUT.")) {
             return savedOutputs.get(input);
         }
