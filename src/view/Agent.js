@@ -8,7 +8,7 @@ class Agent {
     }
 
     createTab() {
-        const tabButton = this.tabCreator.createTabButton(this.data);
+        const {tabButton, generateButton} = this.tabCreator.createTabButton(this.data); 
         const tabContent = this.tabCreator.createTabContent(this.data);
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
@@ -20,6 +20,24 @@ class Agent {
         if (this.data.inputs && this.data.inputs.includes("FILE_LIST")) {
             this.data.fileList.element.addEventListener('filechange', this.updateFullMessage.bind(this));
         }
+
+        generateButton.onclick = async function() {
+            let systemMessage = this.data.systemMessageTextarea.value;
+            let userMessage = this.data.fullMessageTextArea.value;
+            generateButton.disabled = true;
+            try {
+                let response = await sendMessageToChatGPT(systemMessage, userMessage);
+                this.data.modelResponseTextArea.value = response.choices[0].message.content;
+                this.data.responseTokenCountElement.innerText = displayTokenCounts(response);
+                savedOutputs.save(this.data.output, response.choices[0].message.content);
+                savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
+            } catch (error) {
+                console.error('An error occurred while generating completion:', error);
+                this.data.errorLogDiv.innerText = error;
+            } finally {
+                generateButton.disabled = false;
+            }
+        }.bind(this); 
 
         this.updateFullMessage();
     }

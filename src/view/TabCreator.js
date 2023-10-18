@@ -28,7 +28,6 @@ class TabCreator {
         const generateButton = this.htmlCreator.createButton("button", "Generate GPT Completion");
         tabContent.appendChild(generateButton);
 
-        // Append textarea for Model Response
         const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.output}):`, agentData.name + '-model-response', true, 20);
         agentData.modelResponseTextArea = responseDiv.querySelector('textarea');
         tabContent.appendChild(responseDiv);
@@ -40,25 +39,7 @@ class TabCreator {
         const errorLogDiv = this.htmlCreator.createDiv("error-log");
         tabContent.appendChild(errorLogDiv);
 
-        generateButton.onclick = async function() {
-            let systemMessage = agentData.systemMessageTextarea.value;
-            let userMessage = agentData.fullMessageTextArea.value;
-            generateButton.disabled = true;
-            try {
-                let response = await sendMessageToChatGPT(systemMessage, userMessage);
-                agentData.modelResponseTextArea.value = response.choices[0].message.content;
-                agentData.responseTokenCountElement.innerText = displayTokenCounts(response);
-                savedOutputs.save(agentData.output, response.choices[0].message.content);
-                savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
-            } catch (error) {
-                console.error('An error occurred while generating completion:', error);
-                errorLogDiv.innerText = error;
-            } finally {
-                generateButton.disabled = false;
-            }
-        }.bind(this);
-
-        return tabContent;
+        return {tabContent, generateButton}; // return the button along with the tabContent
     }
 
     createTabButton(agentData) {
