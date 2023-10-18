@@ -46,3 +46,11 @@ projectDescriptionTextarea.addEventListener('input', async () => {
     console.error("Failed to save project description to the file: ", error);
   }
 });
+
+window.addEventListener('DOMContentLoaded', () => {
+  const fileListController = new FileListController();
+  const fileListElement = fileListController.createDOM();
+  const fileListContainer = document.getElementById('file-list');
+  
+  fileListContainer.appendChild(fileListElement);
+});
