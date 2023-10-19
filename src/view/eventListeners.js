@@ -9,9 +9,7 @@ function clearErrorLog() {
   errorLog.textContent = "";
 }
 
-// Add an event listener to Apply files button
-const applyButton = document.getElementById('apply-button');
-applyButton.addEventListener('click', async () => {
+async function applyFileChanges () {
   const parsedFiles = parseResponse(savedOutputs.get("OUTPUT.GPT_FILE_CHANGES"));
 
   for (const file of parsedFiles) {
@@ -26,43 +24,43 @@ applyButton.addEventListener('click', async () => {
   agents.forEach((agent) => {
     agent.data.fileList.refresh();
   });
-});
+}
+
+const applyButton = document.getElementById('apply-button');
+applyButton.addEventListener('click', applyFileChanges);
+
+const apply2Button = document.getElementById('apply2-button');
+apply2Button.addEventListener('click', applyFileChanges);
 
 modelSelection.addEventListener('change', async () => {
     const settings = { modelSelection: modelSelection.value };
     await saveSettings(settings);
 });
 
-// new code
 savedOutputs.addEventListener('change', (event) => {
     if(event.detail.name === "OUTPUT.GPT_FILE_CHANGES"){
-        updateFileList(event.detail.content);
+        updateFileList('file-changes-container', event.detail.content);
+        updateFileList('file-changes-container2', event.detail.content);
     }
 });
 
-async function updateFileList(fileChanges) {
-    // Get the current list container
-    let listContainer = document.getElementById('file-changes-container');
-    // Clear current content
+async function updateFileList(targetElementId, fileChanges) {
+    let listContainer = document.getElementById(targetElementId);
     listContainer.innerHTML = '';
 
     let parsedFiles = parseResponse(fileChanges);
     for (const file of parsedFiles) {
-      // Create and append new list item details
       let listItem = document.createElement('li');
 
       let fileContent;
       try {
-        // Attempt to read the file
         fileContent = await window.fs.readFile(file.path);
         tokenCount = await window.tiktoken.countTokens(fileContent);
       } catch (error) {
-        // If the file does not exist, catch the error and set fileContent to an empty string
         fileContent = '';
         tokenCount = 0;
       }
 
-      // Display the length as zero if the file does not exist
       listItem.textContent = `File path: ${file.path} Current length: ${tokenCount} New Length: ${await window.tiktoken.countTokens(file.content)}`;
 
       listContainer.appendChild(listItem);

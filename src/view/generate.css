@@ -33,7 +33,6 @@ label {
   margin-top: 10px;
 }
 
-
 /* Style for the button */
 .button {
   display: block;
@@ -44,6 +43,32 @@ label {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/* Style for the new button */
+#run-full-workflow-button {
+  display: block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: green;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Hover effect for the new button */
+#run-full-workflow-button:hover {
+  background-color: darkgreen;
+}
+
+#run-full-workflow-button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+#run-full-workflow-button:disabled:hover {
+  background-color: #999;
 }
 
 /* Hover effect for the button */
@@ -147,3 +172,4 @@ label {
 .token-serious-warning {
   color: red;
 }
+
