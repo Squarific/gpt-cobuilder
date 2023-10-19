@@ -8,8 +8,9 @@ class Agent {
     }
 
     createTab() {
-        const {tabButton, generateButton} = this.tabCreator.createTabButton(this.data); 
-        const tabContent = this.tabCreator.createTabContent(this.data);
+        this.tabCreator.createTabButton(this.data); 
+        
+        const {tabContent, generateButton} = this.tabCreator.createTabContent(this.data);
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
 
