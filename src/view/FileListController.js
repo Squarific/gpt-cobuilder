@@ -109,18 +109,19 @@ class FileListController {
       } else {
         this.fileContentMap.delete(file);
       }
-      
+
       this.element.dispatchEvent(this.fileChange);
     });
 
     // Create label for checkbox
     const label = document.createElement('label');
-    label.textContent = filePath;
     label.setAttribute("for", checkbox.id);
+
+    label.textContent = `${filePath} (${file.size})`;
 
     fileEntry.appendChild(checkbox);
     fileEntry.appendChild(label);
-    
+
     this.element.appendChild(fileEntry);
   }
 }

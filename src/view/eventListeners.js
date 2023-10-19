@@ -55,13 +55,15 @@ async function updateFileList(fileChanges) {
       try {
         // Attempt to read the file
         fileContent = await window.fs.readFile(file.path);
+        tokenCount = await window.tiktoken.countTokens(fileContent);
       } catch (error) {
         // If the file does not exist, catch the error and set fileContent to an empty string
         fileContent = '';
+        tokenCount = 0;
       }
 
       // Display the length as zero if the file does not exist
-      listItem.textContent = `File path: ${file.path} Current length: ${fileContent.length || 0} New Length: ${file.content.length}`;
+      listItem.textContent = `File path: ${file.path} Current length: ${tokenCount} New Length: ${await window.tiktoken.countTokens(file.content)}`;
 
       listContainer.appendChild(listItem);
     }
