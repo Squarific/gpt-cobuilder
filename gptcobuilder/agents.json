@@ -8,7 +8,7 @@
   }, {
     "name": "Change request to change proposal",
     "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
-    "systemMessage": "You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. \n\nSuggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense. The user does not know how to write code or how to edit code so you need to be as complete as possible.",
+    "systemMessage": "You are a good programmer and you should do your best to suggest complete code changes to achieve the users goal. \n\nSuggest changes to the right files. If you need to change multiple files, include which code belongs in which file. Try to place new code in a new file if it makes sense. The user does not know how to write code or how to edit code so you need to be as complete as possible. Do not add unnecessary comments.",
     "output": "OUTPUT.GPT_CHANGE_REQUEST"
   }, {
     "name": "Change proposal to file changes",

@@ -45,15 +45,27 @@ class Agent {
         runAgentButton.className = "button";
         document.getElementById('Inputs').appendChild(runAgentButton);
 
-        runAgentButton.onclick = async function() { 
-            this.data.fileList.fileContentMap = fileListController.fileContentMap; // Set the selected files to be the same as the files in the human inputs tab
-            this.run();
+        function disableButtons () {
+            generateButton.disabled = true;
+            runAgentButton.disabled = true;
+        }
+
+        function enableButtons () {
+            generateButton.disabled = false;
+            runAgentButton.disabled = false;
+        }
+
+        runAgentButton.onclick = async function() {
+            disableButtons();
+            this.data.fileList.fileContentMap = fileListController.fileContentMap;
+            this.run().finally(enableButtons);
         }.bind(this);
-        
+
         generateButton.onclick = async function() {
-            this.run().finally(() => generateButton.disabled = false);
+            disableButtons();
+            this.run().finally(enableButtons);
         }.bind(this);
-      
+
         this.updateFullMessage();
     }
 
