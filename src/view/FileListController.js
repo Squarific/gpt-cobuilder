@@ -3,7 +3,7 @@ class FileListController {
   constructor() {
     this.element = document.createElement('pre');
     this.fileContentMap = new Map();
-    this.totalTokenCount = 0; // Added this line
+    this.totalTokenCount = 0;
     
     //Create a new Event named 'filechange'
     this.fileChange = new Event('filechange');
@@ -12,8 +12,9 @@ class FileListController {
   createDOM() {
     const targetDiv = document.createElement("div");
 
-    this.totalTokenLabel = document.createElement("p"); // Added this line
-    targetDiv.appendChild(this.totalTokenLabel); // Added this line
+    this.totalTokenLabel = document.createElement("p");
+    targetDiv.appendChild(this.totalTokenLabel);
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
     const refreshButton = document.createElement("button");
     refreshButton.innerText = "Refresh File List";
@@ -103,14 +104,14 @@ class FileListController {
       if (checkbox.checked) {
         const content = await window.fs.readFile(file.path);
         this.fileContentMap.set(file, content);
-        this.totalTokenCount += file.size; // Added this line
+        this.totalTokenCount += file.size;
       } else {
         this.fileContentMap.delete(file);
-        this.totalTokenCount -= file.size; // Added this line
+        this.totalTokenCount -= file.size;
       }
 
       this.element.dispatchEvent(this.fileChange);
-      this.totalTokenLabel.innerText = `Total tokens: ${this.totalTokenCount}`; // Added this line
+      this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
     });
 
     const label = document.createElement('label');
