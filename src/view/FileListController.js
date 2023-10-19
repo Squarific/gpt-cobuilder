@@ -1,7 +1,9 @@
+
 class FileListController {
   constructor() {
     this.element = document.createElement('pre');
     this.fileContentMap = new Map();
+    this.totalTokenCount = 0; // Added this line
     
     //Create a new Event named 'filechange'
     this.fileChange = new Event('filechange');
@@ -9,6 +11,9 @@ class FileListController {
 
   createDOM() {
     const targetDiv = document.createElement("div");
+
+    this.totalTokenLabel = document.createElement("p"); // Added this line
+    targetDiv.appendChild(this.totalTokenLabel); // Added this line
 
     const refreshButton = document.createElement("button");
     refreshButton.innerText = "Refresh File List";
@@ -32,12 +37,10 @@ class FileListController {
     this.element.dispatchEvent(this.fileChange);
   }
 
-  // Replace the original displayFileStructure function
   async displayFileStructure(fileList) {
-    this.fileContentMap.clear(); // Add this line to clear fileContentMap
-    this.element.textContent = ''; // Clear any previous content
+    this.fileContentMap.clear();
+    this.element.textContent = '';
 
-    // Get the selected folder from localStorage
     const savedFolder = localStorage.getItem('folder');
 
     for (let i = 0; i < fileList.length; i++) {
@@ -45,11 +48,9 @@ class FileListController {
       let filePath = file.path;
 
       if (savedFolder) {
-        // Display only the path relative to the selected folder
         filePath = path.relative(savedFolder, filePath);
       }
 
-      // Add UI for every file
       await this.addFileUI(filePath, file);
     }
   }
@@ -64,30 +65,25 @@ class FileListController {
     let fileListArray = Array.from(fileList);
 
     try {
-        // Find the .gitignore file in the fileListArray
         const gitignoreFile = fileListArray.find(file => file.path.endsWith('.gitignore'));
         if (!gitignoreFile) {
         return fileListArray;
         }
 
-        // Read the .gitignore file content
         const gitignoreContent = (await window.fs.readFile(gitignoreFile.path)) + "\n.git/";
         const gitignore = gitignoreParser.compile(gitignoreContent);
 
-        // Filter based on .gitignore rules
         const gitIgnoredFiltered = fileListArray.filter(file => {
           const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), file.path).replaceAll("\\", "/");
           return gitignore.accepts(normalizedFilePath);
         });
 
-        // Calculate the token size of each file
         for (var k = 0; k < gitIgnoredFiltered.length; k++) {
           var content = await window.fs.readFile(gitIgnoredFiltered[k].path);
           if (content.length > 16192) continue;
           gitIgnoredFiltered[k].size = await tiktoken.countTokens(content);
         }
         
-        // Filter out files that are too big
         return gitIgnoredFiltered.filter(file => file.size < 4048);
     } catch (error) {
         console.error('Error reading .gitignore:', error);
@@ -99,27 +95,27 @@ class FileListController {
     const fileEntry = document.createElement('div');
     fileEntry.className = 'file-entry';
 
-    // Create checkbox
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = Math.random() + "-checkbox";
-
+    
     checkbox.addEventListener('change', async () => {
       if (checkbox.checked) {
         const content = await window.fs.readFile(file.path);
         this.fileContentMap.set(file, content);
+        this.totalTokenCount += file.size; // Added this line
       } else {
         this.fileContentMap.delete(file);
+        this.totalTokenCount -= file.size; // Added this line
       }
 
       this.element.dispatchEvent(this.fileChange);
+      this.totalTokenLabel.innerText = `Total tokens: ${this.totalTokenCount}`; // Added this line
     });
 
-    // Create label for checkbox
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
 
-    // Conditional coloring based on token count 
     if (file.size > 512) {
       label.classList.add('token-warning');
     }

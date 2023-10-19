@@ -17,10 +17,12 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('run-full-workflow-button').disabled = true;
         
         if(changeToProposalAgent) {
+            changeToProposalAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
             await changeToProposalAgent.run();
         }
 
         if(proposalToFileChangesAgent) {
+            proposalToFileChangesAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
             await proposalToFileChangesAgent.run();
         }
 
