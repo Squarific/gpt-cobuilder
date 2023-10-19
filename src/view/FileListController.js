@@ -92,7 +92,7 @@ class FileListController {
         return fileListArray;
     }
   }
-  
+
   async addFileUI(filePath, file) {
     const fileEntry = document.createElement('div');
     fileEntry.className = 'file-entry';
@@ -116,6 +116,11 @@ class FileListController {
     // Create label for checkbox
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
+
+    // Conditional coloring based on token count 
+    if (file.size > 512) {
+      label.classList.add('token-warning');
+    }
 
     label.textContent = `${filePath} (${file.size})`;
 
