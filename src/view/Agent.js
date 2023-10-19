@@ -8,8 +8,8 @@ class Agent {
     }
 
     createTab() {
-        this.tabCreator.createTabButton(this.data); 
-        
+        this.tabCreator.createTabButton(this.data);
+      
         const {tabContent, generateButton} = this.tabCreator.createTabContent(this.data);
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
@@ -22,6 +22,17 @@ class Agent {
             this.data.fileList.element.addEventListener('filechange', this.updateFullMessage.bind(this));
         }
 
+        // Add a run agent button to the human inputs tab when an agent is created
+        let runAgentButton = document.createElement("button");
+        runAgentButton.textContent = "Run" + this.data.name;
+        document.getElementById('Inputs').appendChild(runAgentButton);
+
+        runAgentButton.onclick = async function() { 
+            this.data.fileList = fileListController.fileContentMap; // Set the selected files to be the same as the files in the human inputs tab
+            // Run the same code as if the generateButton was clicked
+            generateButton.dispatchEvent(new Event('click'));
+        }.bind(this);
+        
         generateButton.onclick = async function() {
             let systemMessage = this.data.systemMessageTextarea.value;
             let userMessage = this.data.fullMessageTextArea.value;

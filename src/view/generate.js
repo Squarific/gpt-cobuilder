@@ -48,8 +48,9 @@ projectDescriptionTextarea.addEventListener('input', async () => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  const fileListController = new FileListController();
-  const fileListElement = fileListController.createDOM();
+  // Make the fileListController global so it can be accessed in Agent.js
+  window.fileListController = new FileListController(); 
+  const fileListElement = window.fileListController.createDOM();
   const fileListContainer = document.getElementById('file-list');
   
   fileListContainer.appendChild(fileListElement);
