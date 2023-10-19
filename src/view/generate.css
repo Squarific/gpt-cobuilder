@@ -139,6 +139,11 @@ label {
     border: 1px solid #888;
     width: 80%;
 }
+
 .token-warning {
+  color: orange;
+}
+
+.token-serious-warning {
   color: red;
 }

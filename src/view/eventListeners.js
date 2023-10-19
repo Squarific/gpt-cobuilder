@@ -23,7 +23,7 @@ applyButton.addEventListener('click', async () => {
     }
   }
 
-  agents.agents.forEach((agent) => {
+  agents.forEach((agent) => {
     agent.data.fileList.refresh();
   });
 });

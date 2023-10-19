@@ -12,6 +12,7 @@ class FileListController {
 
     const refreshButton = document.createElement("button");
     refreshButton.innerText = "Refresh File List";
+    refreshButton.className = "button";
     
     targetDiv.appendChild(refreshButton);
     targetDiv.appendChild(this.element);
@@ -25,6 +26,7 @@ class FileListController {
   }
 
   async refresh() {
+    this.element.textContent = '';
     let fileList = await this.getFilesInFolderWithFilter(); 
     this.displayFileStructure(fileList);
     this.element.dispatchEvent(this.fileChange);
@@ -120,6 +122,10 @@ class FileListController {
     // Conditional coloring based on token count 
     if (file.size > 512) {
       label.classList.add('token-warning');
+    }
+
+    if (file.size > 1024) {
+      label.classList.add('token-serious-warning');
     }
 
     label.textContent = `${filePath} (${file.size})`;

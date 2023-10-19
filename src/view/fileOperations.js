@@ -40,7 +40,7 @@ async function updateFolder (folder) {
     }
 
     if (agents) {
-      agents.agents.forEach((agent) => { if (agent.fileList) agent.fileList.refresh(); });
+      agents.forEach((agent) => { if (agent.fileList) agent.fileList.refresh(); });
     }
     
     // Load the projectDescription
