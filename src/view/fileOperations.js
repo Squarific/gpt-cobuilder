@@ -53,6 +53,8 @@ async function updateFolder (folder) {
     if (settings && settings.modelSelection) {
         document.getElementById('model-selection').value = settings.modelSelection;
     }
+
+    updateRecentFolders();
   }
 };
 
