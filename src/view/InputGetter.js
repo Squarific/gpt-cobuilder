@@ -1,5 +1,5 @@
 class InputGetter {
-    getInput(input, agentData) {
+    async getInput(input, agentData) {
         if (input == "USER_CHANGE_REQUEST") {
             return document.getElementById("user-change-request").value || "Empty change request";
         } else if (input == "PROJECT_DESCRIPTION") {
@@ -8,6 +8,9 @@ class InputGetter {
             return this.fileContentMapToText(agentData.fileList.fileContentMap);
         } else if (input.startsWith("OUTPUT.")) {
             return savedOutputs.get(input);
+        } else if (input == "GIT_DIFF") {
+            const directory = '/path/to/your/git/repo';
+            return await window.gitCommands.gitDiff(directory);
         }
 
         console.error("Unknown input", input);

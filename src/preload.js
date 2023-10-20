@@ -2,6 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 const { contextBridge, ipcRenderer } = require('electron');
+const { exec } = require('child_process');
 
 const { getEncoding } = require("js-tiktoken");
 const enc = getEncoding("cl100k_base");
@@ -70,6 +71,24 @@ contextBridge.exposeInMainWorld('folderDialog', {
 
       ipcRenderer.on('selected-folder', (event, path) => {
         resolve(path);
+      });
+    });
+  }
+});
+
+contextBridge.exposeInMainWorld('gitCommands', {
+  gitDiff: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} diff`, (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error with git diff: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr with git diff: ${stderr}`);
+          return;
+        }
+        resolve(stdout);
       });
     });
   }
