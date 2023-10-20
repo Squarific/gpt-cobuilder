@@ -1,0 +1,6 @@
+{
+  "name": "File relevance",
+  "inputs": ["PROJECT_DESCRIPTION", "FILE_LIST", "USER_CHANGE_REQUEST"],
+  "systemMessage": "You...",
+  "output": "OUTPUT.FILE_RELEVANT"
+}
