@@ -25,19 +25,19 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 async function runFullWorkflow () {
-    const changeToProposalAgent = agents.find((agent) => agent.data.name === 'Change request to change proposal');
-    const proposalToFileChangesAgent = agents.find((agent) => agent.data.name === 'Change proposal to file changes');
+    const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
+    const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
 
     document.getElementById('run-full-workflow-button').disabled = true;
     
-    if(changeToProposalAgent) {
-        changeToProposalAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
-        await changeToProposalAgent.run();
+    if(SeniorDevAgent) {
+        SeniorDevAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
+        await SeniorDevAgent.run();
     }
 
-    if(proposalToFileChangesAgent) {
-        proposalToFileChangesAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
-        await proposalToFileChangesAgent.run();
+    if(JuniorDevAgent) {
+        JuniorDevAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
+        await JuniorDevAgent.run();
     }
 
     await applyFileChanges();

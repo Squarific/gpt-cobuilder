@@ -40,7 +40,8 @@ contextBridge.exposeInMainWorld('fs', {
   getFilesInDirectory,
   saveFile,
   exists: fsSync.existsSync,
-  mkdir: fs.mkdir
+  mkdir: fs.mkdir,
+  readdir: fs.readdir
 });
 
 contextBridge.exposeInMainWorld('path', {
