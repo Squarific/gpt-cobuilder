@@ -33,6 +33,7 @@ class FileListController {
 
   async refresh() {
     this.element.textContent = '';
+    this.totalTokenCount = 0;
     let fileList = await this.getFilesInFolderWithFilter(); 
     this.displayFileStructure(fileList);
     this.element.dispatchEvent(this.fileChange);

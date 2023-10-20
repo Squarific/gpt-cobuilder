@@ -158,9 +158,9 @@ label {
 }
 
 .token-warning {
-  color: orange;
+  color: orange !important;
 }
 
 .token-serious-warning {
-  color: red;
+  color: red !important;
 }
