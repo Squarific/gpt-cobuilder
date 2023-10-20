@@ -77,7 +77,7 @@ class Agent {
         this.data.fullMessageTextArea.value = "";
 
         for (const input of this.data.inputs) {
-            this.data.fullMessageTextArea.value += this.inputGetter.getInput(input, this.data) + "\n\n";
+            this.data.fullMessageTextArea.value += await this.inputGetter.getInput(input, this.data) + "\n\n";
         }
 
         try {
