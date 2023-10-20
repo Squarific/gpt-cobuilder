@@ -9,7 +9,7 @@ class InputGetter {
         } else if (input.startsWith("OUTPUT.")) {
             return savedOutputs.get(input);
         } else if (input == "GIT_DIFF") {
-            const directory = '/path/to/your/git/repo';
+            const directory = localStorage.getItem("folder");
             return await window.gitCommands.gitDiff(directory);
         }
 
