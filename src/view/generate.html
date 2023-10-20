@@ -49,6 +49,15 @@
       <label for="user-change-request">User change request</label>
       <textarea id="user-change-request" rows="5"></textarea>
 
+      <!-- Added dropdown with example user change requests -->
+      <label for="change-request-examples">Example Change Requests:</label>
+      <select id="change-request-examples">
+          <option value="">Choose an example...</option>
+          <option value="This file is too big">This file is too big</option>
+          <option value="Remove irrelevant and unhelpful comments">Remove irrelevant and unhelpful comments</option>
+          <option value="Implement a nice looking color scheme">Implement a nice looking color scheme</option>
+      </select>
+
       <!-- File List -->
       <div id="file-list"></div>
 
@@ -63,17 +72,14 @@
         <!-- Button to apply files automatically -->
         <button class="button" id="apply2-button">Apply generated file changes</button>
       </div>
-
     </div>
 
     <div id="Outputs" class="tabcontent">
-      <div id="saved-outputs-container">
-      </div>
+      <div id="saved-outputs-container"> </div>
       
       <!-- new code -->
       <div id="file-changes-container">
       </div>
-
       <div id="custom-buttons">
         <!-- Button to apply files automatically -->
         <button class="button" id="apply-button">Apply generated file changes</button>
@@ -108,4 +114,3 @@
     <script src="generate.js"></script>
   </body>
 </html>
-

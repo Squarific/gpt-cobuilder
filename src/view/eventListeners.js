@@ -32,6 +32,13 @@ applyButton.addEventListener('click', applyFileChanges);
 const apply2Button = document.getElementById('apply2-button');
 apply2Button.addEventListener('click', applyFileChanges);
 
+// Added event listener for example change requests dropdown
+const changeRequestExamples = document.getElementById('change-request-examples');
+const userChangeRequest = document.getElementById('user-change-request');
+changeRequestExamples.addEventListener('change', () => {
+  userChangeRequest.value = changeRequestExamples.value;
+});
+
 modelSelection.addEventListener('change', async () => {
     const settings = { modelSelection: modelSelection.value };
     await saveSettings(settings);
