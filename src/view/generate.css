@@ -3,22 +3,22 @@ body {
     Arial, sans-serif;
   margin: auto;
   padding: 2rem;
+  background-color: #f8f9fa;
+  color: #333;
 }
 
- /* Style for the input field */
- input[type="text"] {
+input[type="text"] {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 16px;
   width: 300px;
   margin-bottom: 10px;
 }
 
-/* Style for the textarea */
 textarea {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da;
   border-radius: 4px;
   font-size: 16px;
   width: 100%;
@@ -27,57 +27,53 @@ textarea {
   box-sizing: border-box;
 }
 
-/* Style for the label */
 label {
   display: block;
   margin-top: 10px;
+  color: #495057;
 }
 
-/* Style for the button */
 .button {
   display: block;
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #563d7c;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-/* Style for the new button */
 #run-full-workflow-button {
   display: block;
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: green;
+  background-color: #28a745;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-/* Hover effect for the new button */
 #run-full-workflow-button:hover {
-  background-color: darkgreen;
+  background-color: #218838;
 }
 
 #run-full-workflow-button:disabled {
-  background-color: #999;
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
 #run-full-workflow-button:disabled:hover {
-  background-color: #999;
+  background-color: #6c757d;
 }
 
-/* Hover effect for the button */
 .button:hover {
-  background-color: #0056b3;
+  background-color: #4e2a63;
 }
 
 #error-log, .error-log {
-  color: red;
+  color: #dc3545;
   font-weight: bold;
   margin-top: 10px;
 }
@@ -85,36 +81,34 @@ label {
 .file-entry label {
   margin-top:0;
   display: inline-block;
+  color: #495057;
 }
 
 #generated-message-div {
   display:none;
 }
 
-/* CSS styles for the token count */
 #token-count {
   margin-top: 10px;
   font-size: 14px;
-  color: #555;
+  color: #828282;
 }
 
 .button:disabled {
-  background-color: #999;
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
 .button:disabled:hover {
-  background-color: #999;
+  background-color: #6c757d;
 }
 
-/* Style the tab */
 .tab {
   overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
+  border: 1px solid #ced4da;
+  background-color: #e9ecef;
 }
 
-/* Style the buttons inside the tab */
 .tab button {
   background-color: inherit;
   float: left;
@@ -126,22 +120,20 @@ label {
   font-size: 17px;
 }
 
-/* Change background color of buttons on hover */
 .tab button:hover {
-  background-color: #ddd;
+  background-color: #dde2e6;
 }
 
-/* Create an active/current tablink class */
 .tab button.active {
-  background-color: #ccc;
+  background-color: #ced4da;
 }
 
-/* Style the tab content */
 .tabcontent {
   display: none;
   padding: 6px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da;
   border-top: none;
+  background-color: #ffffff;
 }
 
 .modal {
@@ -172,4 +164,3 @@ label {
 .token-serious-warning {
   color: red;
 }
-

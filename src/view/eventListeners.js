@@ -22,7 +22,7 @@ async function applyFileChanges () {
   }
 
   agents.forEach((agent) => {
-    agent.data.fileList.refresh();
+    if (agent.data.fileList) agent.data.fileList.refresh();
   });
 }
 
