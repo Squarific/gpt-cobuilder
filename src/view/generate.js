@@ -73,7 +73,28 @@ function updateRecentFolders () {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+async function loadExamples() {
+  const exampleDirectory = `gptcobuilder/prompts/examples`;
+
+  try {
+      if (await fs.exists(exampleDirectory)) {
+          const exampleFiles = await fs.readdir(exampleDirectory);
+          for (const file of exampleFiles) {
+              const filePath = exampleDirectory + "/" + file;
+              const fileContent = await fs.readFile(filePath);
+              const exampleOption = document.createElement('option');
+              exampleOption.value = fileContent;
+              exampleOption.innerText = fileContent;
+              document.getElementById('change-request-examples').appendChild(exampleOption);
+          }
+      }
+  } catch (error) {
+      console.error("Failed to load examples: ", error);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadExamples();
   updateRecentFolders();
 
   // Make the fileListController global so it can be accessed in Agent.js
@@ -83,4 +104,3 @@ window.addEventListener('DOMContentLoaded', () => {
   
   fileListContainer.appendChild(fileListElement);
 });
-
