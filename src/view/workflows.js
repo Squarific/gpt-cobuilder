@@ -51,5 +51,5 @@ async function runFullWorkflow () {
   await gitOperations();
 
   // Display total cost
-  document.getElementById('total-cost').textContent = `Total cost: $${totalCost.toFixed(2)}`;
+  document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
 }
