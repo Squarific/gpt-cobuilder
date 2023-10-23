@@ -4,6 +4,7 @@ class FileListController {
     this.fileContentMap = new Map(); // to hold selected files
     this.fileListMap = new Map(); // to hold all files
     this.totalTokenCount = 0;
+    this.selectedFiles = new Set(); // to hold selected files paths
     
     //Create a new Event named 'filechange'
     this.fileChange = new Event('filechange');
@@ -32,6 +33,9 @@ class FileListController {
   }
 
   async refresh() {
+    // Remember the selected files 
+    this.selectedFiles = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
+
     this.element.textContent = '';
     this.totalTokenCount = 0;
     let fileList = await this.getFilesInFolderWithFilter(); 
@@ -106,6 +110,12 @@ class FileListController {
         
     file.checkbox = checkbox; // store checkbox element in file object for future reference
 
+    // Check if the file was previously selected
+    if (this.selectedFiles.has(file.path)) {
+      checkbox.checked = true; // Restore the checkbox state
+      await this.updateFileSelection(file); // Handle the file selection
+    }
+    
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
 
