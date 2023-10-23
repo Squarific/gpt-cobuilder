@@ -154,12 +154,26 @@ class FileListController {
     }
   }
 
+  // Function that will find the file in our map based on the file path
+  findFileInMap(filePath) {
+    for (let file of this.fileContentMap.keys()) {
+        if (file.path === filePath) {
+            return file;
+        }
+    }
+  }
+
   // Function to set selected files from content map
   setFromContentMap(contentMap) {
     this.deselectAllFiles();
 
     for (let file of contentMap.keys()) {
-        this.selectFile(file);
+        const ourFile = this.findFileInMap(file.path);
+        
+        if(ourFile) {
+          // Use our file instead
+          this.selectFile(ourFile);
+        }
     }
   }
 

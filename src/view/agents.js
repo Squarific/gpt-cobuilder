@@ -31,12 +31,14 @@ async function runFullWorkflow () {
     document.getElementById('run-full-workflow-button').disabled = true;
     
     if(SeniorDevAgent) {
-        SeniorDevAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
+        console.log("Setting selected files", fileListController.fileContentMap.keys());
+        SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
         await SeniorDevAgent.run();
     }
 
     if(JuniorDevAgent) {
-        JuniorDevAgent.data.fileList.fileContentMap = fileListController.fileContentMap;
+        console.log("Setting selected files", fileListController.fileContentMap.keys());
+        JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
         await JuniorDevAgent.run();
     }
 
