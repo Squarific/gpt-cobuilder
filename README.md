@@ -7,8 +7,6 @@ Even later it should be able to automatically apply the changes it suggests.
 
 ## Screenshots
 ![Screen 1](readmeimages/screen1.png?raw=true)
- 
-![Screen 2](readmeimages/screen2.png?raw=true)
 
 ## Getting Started
 
