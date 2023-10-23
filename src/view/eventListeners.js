@@ -89,16 +89,3 @@ savedOutputs.addEventListener("change", ({ detail }) => {
   outputArea.value = detail.content;
 });
 
-async function gitOperations () {
-  try {
-    const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
-    await window.gitCommands.gitAdd(localStorage.getItem("folder"));
-    await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
-    await window.gitCommands.gitPush(localStorage.getItem("folder"));
-  } catch (error) {
-    console.log("Error performing git operations", error);
-  }
-}
-
-document.getElementById('git-operation-button').addEventListener('click', gitOperations);
-document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
