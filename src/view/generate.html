@@ -13,13 +13,10 @@
       <button class="tablinks" id="add-tab-button">+</button>
     </div>
     
-    <!-- Tab content -->
     <div id="Settings" class="tabcontent">
-      <!-- Input field for ChatGPT API key -->
       <label for="api-key">ChatGPT API Key:</label>
       <input type="text" id="api-key" />
 
-      <!-- Input field for folder selection -->
       <label for="folder-selection">Select a Folder:</label>
       <button id="folder-selection">Project folder</button>
       
@@ -27,10 +24,8 @@
         <ul id="recent-folders-list"></ul>
       </div>
       
-      <!-- Display Selected Folder -->
       <span id="folder-display"></span>
       
-      <!-- Dropdown for selecting a model -->
       <label for="model-selection">Select a model:</label>
       <select id="model-selection">
           <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
@@ -41,15 +36,12 @@
     </div>
 
     <div id="Inputs" class="tabcontent">
-      <!-- Textarea for project description -->
       <label for="project-description">Project Description:</label>
       <textarea id="project-description" rows="5">This is an electron project that aims to let users quickly create and iterate on applications.</textarea>
-      
-      <!-- Input field for user message -->
+
       <label for="user-change-request">User change request</label>
       <textarea id="user-change-request" rows="5"></textarea>
 
-      <!-- Added dropdown with example user change requests -->
       <label for="change-request-examples">Example Change Requests:</label>
       <select id="change-request-examples">
           <option value="">Choose an example...</option>
@@ -58,35 +50,28 @@
           <option value="Implement a nice looking color scheme">Implement a nice looking color scheme</option>
       </select>
 
-      <!-- File List -->
       <div id="file-list"></div>
 
-      <!-- New button for running full workflow -->
       <button class="button" id="run-full-workflow-button">Run full workflow</button>
 
-      <!-- new code -->
-      <div id="file-changes-container2">
-      </div>
+      <div id="file-changes-container2"></div>
 
       <div id="custom-buttons">
-        <!-- Button to apply files automatically -->
-        <button class="button" id="apply2-button">Apply generated file changes</button>
+        <button class="button" id="apply-button2">Apply generated file changes</button>
+        <button class="button" id="git-operation-button2">Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push</button>
       </div>
     </div>
 
     <div id="Outputs" class="tabcontent">
-      <div id="saved-outputs-container"> </div>
-      
-      <!-- new code -->
+      <div id="saved-outputs-container"></div>
       <div id="file-changes-container">
       </div>
       <div id="custom-buttons">
-        <!-- Button to apply files automatically -->
         <button class="button" id="apply-button">Apply generated file changes</button>
+        <button class="button" id="git-operation-button">Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push</button>
       </div>
     </div>
-    
-    <!-- Add Modal for tab naming -->
+
     <div id="tabNameModal" class="modal">
         <div class="modal-content">
             <label for="tabNameInput">Name of the tab:</label>

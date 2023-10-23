@@ -91,5 +91,50 @@ contextBridge.exposeInMainWorld('gitCommands', {
         resolve(stdout);
       });
     });
-  }
+  },
+  gitPush: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} push`, (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error with git push: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr with git push: ${stderr}`);
+          return;
+        }
+        resolve(stdout);
+      });
+    });
+  },
+  gitAdd: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} add .`, (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error with git add: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr with git add: ${stderr}`);
+          return;
+        }
+        resolve(stdout);
+      });
+    });
+  },
+  gitCommit: async (directory, commitMessage) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} commit -m "${commitMessage}"`, (error, stdout, stderr) => {
+        if (error) {
+          console.log(`error with git commit: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`stderr with git commit: ${stderr}`);
+          return;
+        }
+        resolve(stdout);
+      });
+    });
+  },
 });

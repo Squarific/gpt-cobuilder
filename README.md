@@ -25,28 +25,17 @@ To run the project, follow these steps:
 2. Select a folder by clicking the "Select a Folder" button and choosing the desired directory.
 3. Choose relevant files for what you are trying to accomplish.
 4. Enter a project description in the "Project Description" textarea. *Optional*
-5. Customize the system message *optional* and user message/request according to your needs.
-6. Click the "Generate GPT Completion" button to trigger GPT completion.
-7. The generated message will be displayed in the "Generated Message" textarea.
-
-## Tips
-
-- Sometimes less is more, but sometimes you may need to provide more context to get the desired output.
-- Review and edit the generated message to suit your specific requirements.
+5. Click the "Run full workflow button" or use one of the individual buttons
 
 ## Plans
-- Ask for clarification if it is not possible to generate a good request
-- Stream response
-- Read response and transform into a change suggestion
-- Maybe keep some statistics like total token count ever
-- Git integration including automatically committing/pushing
-- Save outputs to files or some kind of memory
-- Be able to put previous outputs back in
-- Make it easy to share prompts/outputs
-- Have a big library of prompts that can be picked from
-- Let GPT pick the prompts itself
-- Give access to library docs
-- Automatically give errors
+- Have multiple types of agents who do their own things
+- Agent asking clarification
+- Agent writing documentation
+- Agent writing change requests
+- Agent writing user stories
+- Agent simulating a user
+- Agent that debugs
+- Make it easy to share prompts/outputs/agents
 
 ## License
 

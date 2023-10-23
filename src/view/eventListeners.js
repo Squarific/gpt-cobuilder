@@ -1,4 +1,3 @@
-// Attach event listener to the button
 const generateButton = document.getElementById('generate-button');
 const convertButton = document.getElementById('convert-button');
 const errorLog = document.getElementById('error-log');
@@ -29,10 +28,9 @@ async function applyFileChanges () {
 const applyButton = document.getElementById('apply-button');
 applyButton.addEventListener('click', applyFileChanges);
 
-const apply2Button = document.getElementById('apply2-button');
-apply2Button.addEventListener('click', applyFileChanges);
+const applyButton2 = document.getElementById('apply-button2');
+applyButton2.addEventListener('click', applyFileChanges);
 
-// Added event listener for example change requests dropdown
 const changeRequestExamples = document.getElementById('change-request-examples');
 const userChangeRequest = document.getElementById('user-change-request');
 changeRequestExamples.addEventListener('change', () => {
@@ -74,34 +72,33 @@ async function updateFileList(targetElementId, fileChanges) {
     }
 }
 
-// Adding event listener for output saves.
 savedOutputs.addEventListener("change", ({ detail }) => {
-  // get the container for the saved outputs
   const savedOutputsContainer = document.getElementById('saved-outputs-container');
-
-  // Check if textarea already exists for the given output name
   let outputArea = document.getElementById('output-' + detail.name);
-
-  // If textarea doesn't exist, create new textarea and associated label
+  
   if (!outputArea) {
-      // create a new label and set the content to the output name
       let outputLabel = document.createElement('div');
       outputLabel.innerHTML = detail.name;
-
-      // create a new textarea 
       outputArea = document.createElement('textarea');
-
-      // Assign unique id to the textarea using output name
       outputArea.id = 'output-' + detail.name;
-
-      // prevent text from being edited 
       outputArea.disabled = true;
-
-      // add the new label and textarea to the saved outputs container.
       savedOutputsContainer.appendChild(outputLabel);
       savedOutputsContainer.appendChild(outputArea);
   }
 
-  // Whether textarea was existent or newly created, set/update its value
-outputArea.value = detail.content;
+  outputArea.value = detail.content;
 });
+
+async function gitOperations () {
+  try {
+    const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
+    await window.gitCommands.gitAdd(PROJECT_FOLDER);
+    await window.gitCommands.gitCommit(PROJECT_FOLDER, gptGitMessage);
+    await window.gitCommands.gitPush(PROJECT_FOLDER);
+  } catch (error) {
+    console.log("Error performing git operations", error);
+  }
+}
+
+document.getElementById('git-operation-button').addEventListener('click', gitOperations);
+document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
