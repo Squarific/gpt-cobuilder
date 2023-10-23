@@ -18,26 +18,38 @@ async function gitOperations () {
         await runFullWorkflow();
         document.getElementById('run-full-workflow-button').disabled = false;
     });
-  });
+});
+
+// Variable for total cost
+let totalCost = 0;
+
+async function runFullWorkflow () {
+  totalCost = 0; // reset total cost
   
-  async function runFullWorkflow () {
-    const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
-    const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
-    const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
-  
-    if(!SeniorDevAgent || !JuniorDevAgent || !GitMasterAgent) {
-        console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);
-    }
-    
-    console.log("Setting selected files", fileListController.fileContentMap.keys());
-    await SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
-    await SeniorDevAgent.run();
-  
-    console.log("Setting selected files", fileListController.fileContentMap.keys());
-    await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
-    await JuniorDevAgent.run();
-  
-    await applyFileChanges();
-    await GitMasterAgent.run();
-    await gitOperations();
+  const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
+  const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
+  const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
+
+  if(!SeniorDevAgent || !JuniorDevAgent || !GitMasterAgent) {
+    console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);
   }
+    
+  console.log("Setting selected files", fileListController.fileContentMap.keys());
+  await SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
+  let response = await SeniorDevAgent.run();
+  totalCost += calculateCostFromResponse(response);
+
+  console.log("Setting selected files", fileListController.fileContentMap.keys());
+  await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
+  response = await JuniorDevAgent.run();
+  totalCost += calculateCostFromResponse(response);
+  
+  await applyFileChanges();
+  response = await GitMasterAgent.run();
+  totalCost += calculateCostFromResponse(response);
+  
+  await gitOperations();
+
+  // Display total cost
+  document.getElementById('total-cost').textContent = `Total cost: $${totalCost.toFixed(2)}`;
+}

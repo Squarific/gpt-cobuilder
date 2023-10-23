@@ -1,4 +1,8 @@
-// Function to calculate the cost given counts of input and output tokens
+// This function is here to calculate cost given a response
+function calculateCostFromResponse(response) {
+  return calculateCost(response.usage.prompt_tokens, response.usage.completion_tokens);
+}
+
 const calculateCost = (inputTokens, outputTokens) => {
   const INPUT_TOKEN_COST = 0.03;  // Cost per 1k input tokens
   const OUTPUT_TOKEN_COST = 0.06; // Cost per 1k output tokens
