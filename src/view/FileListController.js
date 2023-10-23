@@ -1,4 +1,3 @@
-
 class FileListController {
   constructor() {
     this.element = document.createElement('pre');
@@ -94,26 +93,15 @@ class FileListController {
   }
 
   async addFileUI(filePath, file) {
-    const fileEntry = document.createElement('div');
-    fileEntry.className = 'file-entry';
+    const fileEntry = document.createElement("div");
+    fileEntry.className = "file-entry";
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
+    const checkbox = document.createElement("input");
     checkbox.id = Math.random() + "-checkbox";
-    
-    checkbox.addEventListener('change', async () => {
-      if (checkbox.checked) {
-        const content = await window.fs.readFile(file.path);
-        this.fileContentMap.set(file, content);
-        this.totalTokenCount += file.size;
-      } else {
-        this.fileContentMap.delete(file);
-        this.totalTokenCount -= file.size;
-      }
-
-      this.element.dispatchEvent(this.fileChange);
-      this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
-    });
+    checkbox.type = "checkbox";
+    checkbox.addEventListener("change", () => this.updateFileSelection(file)); //update event listener
+        
+    file.checkbox = checkbox; // store checkbox element in file object for future reference
 
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
@@ -133,4 +121,60 @@ class FileListController {
 
     this.element.appendChild(fileEntry);
   }
+
+  // Function to select a file
+  selectFile(file) {
+    this.checkbox(file).checked = true;
+    this.updateFileSelection(file);
+  }
+
+  // Function to deselect a file
+  deselectFile(file) {
+    this.checkbox(file).checked = false;
+    this.updateFileSelection(file);
+  }
+
+  async updateFileSelection(file) {
+    if (this.checkbox(file).checked) {
+        const content = await window.fs.readFile(file.path);
+        this.fileContentMap.set(file, content);
+    } else {
+        this.fileContentMap.delete(file);
+    }
+
+    this.totalTokenCount = this.calculateTotalTokenCount();
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+    this.element.dispatchEvent(this.fileChange);
+  }
+
+  // Function to deselect all files
+  deselectAllFiles() {
+    for (let fileEntry of this.fileContentMap.keys()) {
+        this.deselectFile(fileEntry);
+    }
+  }
+
+  // Function to set selected files from content map
+  setFromContentMap(contentMap) {
+    this.deselectAllFiles();
+
+    for (let file of contentMap.keys()) {
+        this.selectFile(file);
+    }
+  }
+
+  // Function to calculate total token count
+  calculateTotalTokenCount() {
+    let count = 0;
+
+    for (let fileEntry of this.fileContentMap.keys()) {
+      count += fileEntry.size;
+    }
+
+    return count;
+  } 
+
+  checkbox(file) {
+    return file.checkbox;
+  }  
 }

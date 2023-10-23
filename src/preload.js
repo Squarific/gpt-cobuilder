@@ -86,7 +86,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.log(`stderr with git diff: ${stderr}`);
-          return;
         }
         resolve(stdout);
       });
@@ -101,7 +100,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.log(`stderr with git push: ${stderr}`);
-          return;
         }
         resolve(stdout);
       });
@@ -116,7 +114,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.log(`stderr with git add: ${stderr}`);
-          return;
         }
         resolve(stdout);
       });
@@ -131,7 +128,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.log(`stderr with git commit: ${stderr}`);
-          return;
         }
         resolve(stdout);
       });
