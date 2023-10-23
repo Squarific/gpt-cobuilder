@@ -1,7 +1,8 @@
 class FileListController {
   constructor() {
     this.element = document.createElement('pre');
-    this.fileContentMap = new Map();
+    this.fileContentMap = new Map(); // to hold selected files
+    this.fileListMap = new Map(); // to hold all files
     this.totalTokenCount = 0;
     
     //Create a new Event named 'filechange'
@@ -40,6 +41,7 @@ class FileListController {
 
   async displayFileStructure(fileList) {
     this.fileContentMap.clear();
+    this.fileListMap.clear(); // clear out any old entries
     this.element.textContent = '';
 
     const savedFolder = localStorage.getItem('folder');
@@ -52,6 +54,7 @@ class FileListController {
         filePath = path.relative(savedFolder, filePath);
       }
 
+      this.fileListMap.set(file.path, file); // store file in fileListMap
       await this.addFileUI(filePath, file);
     }
   }
@@ -156,11 +159,7 @@ class FileListController {
 
   // Function that will find the file in our map based on the file path
   findFileInMap(filePath) {
-    for (let file of this.fileContentMap.keys()) {
-        if (file.path === filePath) {
-            return file;
-        }
-    }
+    return this.fileListMap.get(filePath);
   }
 
   // Function to set selected files from content map
