@@ -57,7 +57,7 @@ class Agent {
 
         runAgentButton.onclick = async function() {
             disableButtons();
-            this.data.fileList.setFromContentMap(fileListController.fileContentMap);
+            await this.data.fileList.setFromContentMap(fileListController.fileContentMap);
             this.run().finally(enableButtons);
         }.bind(this);
 

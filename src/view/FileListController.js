@@ -126,15 +126,15 @@ class FileListController {
   }
 
   // Function to select a file
-  selectFile(file) {
+  async selectFile(file) {
     this.checkbox(file).checked = true;
-    this.updateFileSelection(file);
+    await this.updateFileSelection(file);
   }
 
   // Function to deselect a file
-  deselectFile(file) {
+  async deselectFile(file) {
     this.checkbox(file).checked = false;
-    this.updateFileSelection(file);
+    await this.updateFileSelection(file);
   }
 
   async updateFileSelection(file) {
@@ -151,9 +151,9 @@ class FileListController {
   }
 
   // Function to deselect all files
-  deselectAllFiles() {
+  async deselectAllFiles() {
     for (let fileEntry of this.fileContentMap.keys()) {
-        this.deselectFile(fileEntry);
+        await this.deselectFile(fileEntry);
     }
   }
 
@@ -163,15 +163,14 @@ class FileListController {
   }
 
   // Function to set selected files from content map
-  setFromContentMap(contentMap) {
+  async setFromContentMap(contentMap) {
     this.deselectAllFiles();
 
     for (let file of contentMap.keys()) {
         const ourFile = this.findFileInMap(file.path);
         
         if(ourFile) {
-          // Use our file instead
-          this.selectFile(ourFile);
+          await this.selectFile(ourFile);
         }
     }
   }
