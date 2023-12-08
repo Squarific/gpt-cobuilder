@@ -19,6 +19,7 @@ class Agent {
             this.data.responseTokenCountElement.innerText = displayTokenCounts(response);
             savedOutputs.save(this.data.output, response.choices[0].message.content);
             savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
+            return response;
         } catch (error) {
             console.error('An error occurred while generating completion:', error);
             this.data.errorLogDiv.innerText = error;
