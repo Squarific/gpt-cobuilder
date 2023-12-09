@@ -8,6 +8,9 @@ class FileListController {
     
     //Create a new Event named 'filechange'
     this.fileChange = new Event('filechange');
+    
+    // New state variable to track whether all files are selected
+    this.allFilesSelected = false;
   }
 
   createDOM() {
@@ -18,9 +21,9 @@ class FileListController {
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
     const selectAllButton = document.createElement("button");
-    selectAllButton.innerText = "Select All Files";
+    selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
     selectAllButton.className = "button";
-    selectAllButton.addEventListener('click', this.selectAllFiles.bind(this));
+    selectAllButton.addEventListener('click', this.toggleAllFiles.bind(this));
     targetDiv.appendChild(selectAllButton);
     
     const refreshButton = document.createElement("button");
@@ -165,25 +168,38 @@ class FileListController {
     this.element.dispatchEvent(this.fileChange);
   }
 
+  // Function to toggle all files selection
+  async toggleAllFiles() {
+    // Call helper function based on allFilesSelected state
+    if (this.allFilesSelected) {
+      this.deselectAllFiles();
+    } else {
+      this.selectAllFiles();
+    }
+    // Update the allFilesSelected state
+    this.allFilesSelected = !this.allFilesSelected;
+    // Update the button text
+    const selectAllButton = document.querySelector(".file-entry button");
+    selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
+  }
+
   // Function to select all files in the file list
-  async selectAllFiles() {
-    // Select all checkboxes and update file selection
+  async setAllFilesSelected(selected) {
     const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
     for (let checkbox of checkboxes) {
-      if (!checkbox.checked) {
-        checkbox.checked = true;
-        const filePath = checkbox.getAttribute('data-filepath');
-        const file = this.fileListMap.get(filePath);
-        await this.updateFileSelection(file);
-      }
+      checkbox.checked = selected;
+      const filePath = checkbox.getAttribute('data-filepath');
+      const file = this.fileListMap.get(filePath);
+      await this.updateFileSelection(file);
     }
   }
 
-  // Function to deselect all files
+  async selectAllFiles() {
+    await this.setAllFilesSelected(true);
+  }
+
   async deselectAllFiles() {
-    for (let fileEntry of this.fileContentMap.keys()) {
-        await this.deselectFile(fileEntry);
-    }
+    await this.setAllFilesSelected(false);
   }
 
   // Function that will find the file in our map based on the file path
