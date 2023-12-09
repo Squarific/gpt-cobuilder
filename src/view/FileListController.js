@@ -17,15 +17,19 @@ class FileListController {
     targetDiv.appendChild(this.totalTokenLabel);
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
+    const selectAllButton = document.createElement("button");
+    selectAllButton.innerText = "Select All Files";
+    selectAllButton.className = "button";
+    selectAllButton.addEventListener('click', this.selectAllFiles.bind(this));
+    targetDiv.appendChild(selectAllButton);
+    
     const refreshButton = document.createElement("button");
     refreshButton.innerText = "Refresh File List";
     refreshButton.className = "button";
-    
-    targetDiv.appendChild(refreshButton);
-    targetDiv.appendChild(this.element);
-
-    // refresh the file list when the button is clicked
     refreshButton.addEventListener('click', this.refresh.bind(this));
+    targetDiv.appendChild(refreshButton);
+
+    targetDiv.appendChild(this.element);
 
     this.refresh();
 
@@ -92,7 +96,7 @@ class FileListController {
           gitIgnoredFiltered[k].size = await tiktoken.countTokens(content);
         }
         
-        return gitIgnoredFiltered.filter(file => file.size < 4048);
+        return gitIgnoredFiltered.filter(file => file.size < 8096);
     } catch (error) {
         console.error('Error reading .gitignore:', error);
         return fileListArray;
@@ -104,6 +108,7 @@ class FileListController {
     fileEntry.className = "file-entry";
 
     const checkbox = document.createElement("input");
+    checkbox.setAttribute("data-filepath", file.path);
     checkbox.id = Math.random() + "-checkbox";
     checkbox.type = "checkbox";
     checkbox.addEventListener("change", () => this.updateFileSelection(file)); //update event listener
@@ -119,11 +124,11 @@ class FileListController {
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
 
-    if (file.size > 512) {
+    if (file.size > 1024) {
       label.classList.add('token-warning');
     }
 
-    if (file.size > 1024) {
+    if (file.size > 2048) {
       label.classList.add('token-serious-warning');
     }
 
@@ -158,6 +163,20 @@ class FileListController {
     this.totalTokenCount = this.calculateTotalTokenCount();
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
     this.element.dispatchEvent(this.fileChange);
+  }
+
+  // Function to select all files in the file list
+  async selectAllFiles() {
+    // Select all checkboxes and update file selection
+    const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
+    for (let checkbox of checkboxes) {
+      if (!checkbox.checked) {
+        checkbox.checked = true;
+        const filePath = checkbox.getAttribute('data-filepath');
+        const file = this.fileListMap.get(filePath);
+        await this.updateFileSelection(file);
+      }
+    }
   }
 
   // Function to deselect all files
