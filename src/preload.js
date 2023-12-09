@@ -121,7 +121,8 @@ contextBridge.exposeInMainWorld('gitCommands', {
   },
   gitCommit: async (directory, commitMessage) => {
     return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} commit -m "${commitMessage}"`, (error, stdout, stderr) => {
+      const safeCommitMessage = commitMessage.replace(/"/g, '\\"');
+      exec(`git -C ${directory} commit -m "${safeCommitMessage}"`, (error, stdout, stderr) => {
         if (error) {
           console.log(`error with git commit: ${error.message}`);
           return;
