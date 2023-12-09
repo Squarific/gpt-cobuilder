@@ -11,6 +11,9 @@ class FileListController {
     
     // New state variable to track whether all files are selected
     this.allFilesSelected = false;
+
+    // Select all button reference
+    this.selectAllButton = null;
   }
 
   createDOM() {
@@ -20,11 +23,12 @@ class FileListController {
     targetDiv.appendChild(this.totalTokenLabel);
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
-    const selectAllButton = document.createElement("button");
-    selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
-    selectAllButton.className = "button";
-    selectAllButton.addEventListener('click', this.toggleAllFiles.bind(this));
-    targetDiv.appendChild(selectAllButton);
+    // Reference to the select all button is stored
+    this.selectAllButton = document.createElement("button");
+    this.selectAllButton.innerText = "Select All Files";
+    this.selectAllButton.className = "button";
+    this.selectAllButton.addEventListener('click', this.toggleAllFiles.bind(this));
+    targetDiv.appendChild(this.selectAllButton);
     
     const refreshButton = document.createElement("button");
     refreshButton.innerText = "Refresh File List";
@@ -170,30 +174,12 @@ class FileListController {
 
   // Function to toggle all files selection
   async toggleAllFiles() {
-    // Call helper function based on allFilesSelected state
-    if (this.allFilesSelected) {
-      this.deselectAllFiles();
-    } else {
-      this.selectAllFiles();
-    }
-    // Update the allFilesSelected state
     this.allFilesSelected = !this.allFilesSelected;
-    // Update the button text
-    const selectAllButton = document.querySelector(".file-entry button");
-    selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
+    await this.setAllFilesSelected(this.allFilesSelected);
+    this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files"; // Update button text
   }
 
   // Function to select all files in the file list
-  async setAllFilesSelected(selected) {
-    const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
-    for (let checkbox of checkboxes) {
-      checkbox.checked = selected;
-      const filePath = checkbox.getAttribute('data-filepath');
-      const file = this.fileListMap.get(filePath);
-      await this.updateFileSelection(file);
-    }
-  }
-
   async selectAllFiles() {
     await this.setAllFilesSelected(true);
   }
@@ -202,14 +188,25 @@ class FileListController {
     await this.setAllFilesSelected(false);
   }
 
-  // Function that will find the file in our map based on the file path
+  async setAllFilesSelected(selected) {
+    const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
+    for (let checkbox of checkboxes) {
+      checkbox.checked = selected;
+      const filePath = checkbox.getAttribute('data-filepath');
+      const file = this.fileListMap.get(filePath);
+      await this.updateFileSelection(file);
+    }
+    this.allFilesSelected = selected;
+  }
+
+  // Helper method that will find the file in our map based on the file path
   findFileInMap(filePath) {
     return this.fileListMap.get(filePath);
   }
 
-  // Function to set selected files from content map
+  // Helper method to set selected files from content map
   async setFromContentMap(contentMap) {
-    this.deselectAllFiles();
+    await this.deselectAllFiles();
 
     for (let file of contentMap.keys()) {
         const ourFile = this.findFileInMap(file.path);
@@ -220,7 +217,7 @@ class FileListController {
     }
   }
 
-  // Function to calculate total token count
+  // Helper method to calculate total token count
   calculateTotalTokenCount() {
     let count = 0;
 
