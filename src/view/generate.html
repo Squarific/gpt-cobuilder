@@ -10,6 +10,7 @@
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
       <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved GPT Outputs</button>
+      <button class="tablinks" onclick="openTab(event, 'Requests')">Requests</button>
       <button class="tablinks" id="add-tab-button">+</button>
     </div>
     
@@ -72,6 +73,18 @@
       </div>
     </div>
 
+    <div id="Requests" class="tabcontent">
+      <h2>Requests Log</h2>
+      <table id="requests-table">
+        <tr>
+          <th>Agent Name</th>
+          <th>Date/Time</th>
+          <th>Status</th>
+        </tr>
+        <!-- Rows will be added dynamically here -->
+      </table>
+    </div>
+
     <div id="tabNameModal" class="modal">
         <div class="modal-content">
             <label for="tabNameInput">Name of the tab:</label>
@@ -97,6 +110,8 @@
     <script src="eventListeners.js"></script>
     <script src="agents.js"></script>
     <script src="modalOperations.js"></script>
+    <script src="RequestLoader.js"></script>
     <script src="generate.js"></script>
   </body>
 </html>
+
