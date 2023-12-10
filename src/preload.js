@@ -134,4 +134,32 @@ contextBridge.exposeInMainWorld('gitCommands', {
       });
     });
   },
+  gitResetLastCommit: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} reset --soft HEAD~1`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error with git reset: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr with git reset: ${stderr}`);
+        }
+        resolve(stdout);
+      });
+    });
+  },
+  gitPushForce: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} push --force`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error with git push --force: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr with git push --force: ${stderr}`);
+        }
+        resolve(stdout);
+      });
+    });
+  },
 });
