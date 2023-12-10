@@ -28,7 +28,7 @@ class RequestLoader {
         const cellContent = row.insertCell();
         const contentDiv = document.createElement('div');
         contentDiv.innerHTML = this.truncateContent(JSON.stringify(requestLog, null, 2));
-        contentDiv.addEventListener('click', this.toggleContent.bind(contentDiv)); // Bind function to the content div
+        contentDiv.addEventListener('click', this.toggleContent.bind(this)); // Bind function to the content div
         cellContent.appendChild(contentDiv);
       });
     } catch (error) {
