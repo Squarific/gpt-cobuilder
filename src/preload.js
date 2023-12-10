@@ -81,11 +81,27 @@ contextBridge.exposeInMainWorld('gitCommands', {
     return new Promise((resolve, reject) => {
       exec(`git -C ${directory} diff`, (error, stdout, stderr) => {
         if (error) {
-          console.log(`error with git diff: ${error.message}`);
-          return;
+          console.error(`error with git diff: ${error.message}`);
+          reject(error);
         }
         if (stderr) {
-          console.log(`stderr with git diff: ${stderr}`);
+          console.error(`stderr with git diff: ${stderr}`);
+          reject(new Error(stderr));
+        }
+        resolve(stdout);
+      });
+    });
+  },
+  gitStatus: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} status`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error with git status: ${error.message}`);
+          reject(error);
+        }
+        if (stderr) {
+          console.error(`stderr with git status: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -95,11 +111,12 @@ contextBridge.exposeInMainWorld('gitCommands', {
     return new Promise((resolve, reject) => {
       exec(`git -C ${directory} push`, (error, stdout, stderr) => {
         if (error) {
-          console.log(`error with git push: ${error.message}`);
-          return;
+          console.error(`error with git push: ${error.message}`);
+          reject(error);
         }
         if (stderr) {
-          console.log(`stderr with git push: ${stderr}`);
+          console.error(`stderr with git push: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -109,11 +126,12 @@ contextBridge.exposeInMainWorld('gitCommands', {
     return new Promise((resolve, reject) => {
       exec(`git -C ${directory} add .`, (error, stdout, stderr) => {
         if (error) {
-          console.log(`error with git add: ${error.message}`);
-          return;
+          console.error(`error with git add: ${error.message}`);
+          reject(error);
         }
         if (stderr) {
-          console.log(`stderr with git add: ${stderr}`);
+          console.error(`stderr with git add: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -124,11 +142,12 @@ contextBridge.exposeInMainWorld('gitCommands', {
       const safeCommitMessage = commitMessage.replace(/"/g, '\\"');
       exec(`git -C ${directory} commit -m "${safeCommitMessage}"`, (error, stdout, stderr) => {
         if (error) {
-          console.log(`error with git commit: ${error.message}`);
-          return;
+          console.error(`error with git commit: ${error.message}`);
+          reject(error);
         }
         if (stderr) {
-          console.log(`stderr with git commit: ${stderr}`);
+          console.error(`stderr with git commit: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -139,10 +158,11 @@ contextBridge.exposeInMainWorld('gitCommands', {
       exec(`git -C ${directory} reset --soft HEAD~1`, (error, stdout, stderr) => {
         if (error) {
           console.error(`error with git reset: ${error.message}`);
-          return;
+          reject(error);
         }
         if (stderr) {
           console.error(`stderr with git reset: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -153,10 +173,11 @@ contextBridge.exposeInMainWorld('gitCommands', {
       exec(`git -C ${directory} push --force`, (error, stdout, stderr) => {
         if (error) {
           console.error(`error with git push --force: ${error.message}`);
-          return;
+          reject(error);
         }
         if (stderr) {
           console.error(`stderr with git push --force: ${stderr}`);
+          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -178,4 +199,3 @@ contextBridge.exposeInMainWorld('gitCommands', {
     });
   },
 });
-
