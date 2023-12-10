@@ -51,6 +51,9 @@
 
       <div id="file-list"></div>
 
+      <div id="git-warning" class="error-log" style="display:none;">There are uncommitted changes</div>
+      <button class="button" id="commit-push-button" style="display:none;">Generate commit message and commit and push changes</button>
+
       <button class="button" id="run-full-workflow-button">Run full workflow</button>
 
       <p id="total-cost">Total cost for previous full workflow run: $0</p>
@@ -113,6 +116,7 @@
     <script src="modalOperations.js"></script>
     <script src="RequestLoader.js"></script>
     <script src="generate.js"></script>
+    <script src="gitOperations.js"></script>
   </body>
 </html>
 
