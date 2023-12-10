@@ -21,10 +21,10 @@ async function gitOperations () {
 });
 
 // Variable for total cost
-let totalCost = 0;
+let totalCost = 0.0; // reset total cost as a number
 
 async function runFullWorkflow () {
-  totalCost = 0; // reset total cost
+  totalCost = 0.0; // reset total cost
   
   const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
   const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
@@ -53,3 +53,4 @@ async function runFullWorkflow () {
   // Display total cost
   document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
 }
+
