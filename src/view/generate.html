@@ -49,6 +49,12 @@
           <option value="">Choose an example...</option>
       </select>
 
+      <!-- Add a div for warning and the commit/push button -->
+      <div id="git-warning">
+        <div class="error-log" id="uncommitted-changes-warning" style="display: none;">There are uncommitted changes.</div>
+        <button class="button" id="commit-push-changes-button" style="display: none;">Generate commit message and commit and push changes</button>
+      </div>
+
       <div id="file-list"></div>
 
       <button class="button" id="run-full-workflow-button">Run full workflow</button>
@@ -115,4 +121,3 @@
     <script src="generate.js"></script>
   </body>
 </html>
-
