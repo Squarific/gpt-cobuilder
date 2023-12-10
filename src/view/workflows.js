@@ -1,45 +1,73 @@
-// ... existing code ...
+async function gitOperations () {
+    try {
+      const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
+      await window.gitCommands.gitAdd(localStorage.getItem("folder"));
+      await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
+      await window.gitCommands.gitPush(localStorage.getItem("folder"));
+    } catch (error) {
+      console.log("Error performing git operations", error);
+    }
+  }
+  
+  document.getElementById('git-operation-button').addEventListener('click', gitOperations);
+  document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
+  
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('run-full-workflow-button').addEventListener('click', async () => {
+        document.getElementById('run-full-workflow-button').disabled = true;
+        await runFullWorkflow();
+        document.getElementById('run-full-workflow-button').disabled = false;
+    });
+});
 
-// This function will check for uncommitted changes and display the warning/button if necessary
-async function checkForUncommittedChanges() {
-  const directory = localStorage.getItem('folder');
-  const gitDiff = await window.gitCommands.gitDiff(directory);
+// Variable for total cost
+let totalCost = 0.0; // reset total cost as a number
 
-  if (gitDiff.trim() !== '') {
-    // Uncommitted changes found
-    document.getElementById('uncommitted-changes-warning').style.display = 'block';
-    document.getElementById('commit-push-changes-button').style.display = 'block';
-  } else {
-    // No uncommitted changes
-    document.getElementById('uncommitted-changes-warning').style.display = 'none';
-    document.getElementById('commit-push-changes-button').style.display = 'none';
+async function runFullWorkflow () {
+  totalCost = 0.0; // reset total cost
+  
+  const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
+  const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
+  const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
+
+  if(!SeniorDevAgent || !JuniorDevAgent || !GitMasterAgent) {
+    console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);
+  }
+    
+  console.log("Setting selected files", fileListController.fileContentMap.keys());
+  await SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
+  let response = await SeniorDevAgent.run();
+  totalCost += parseFloat(calculateCostFromResponse(response));
+
+  console.log("Setting selected files", fileListController.fileContentMap.keys());
+  await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
+  response = await JuniorDevAgent.run();
+  totalCost += parseFloat(calculateCostFromResponse(response));
+  
+  await applyFileChanges();
+  response = await GitMasterAgent.run();
+  totalCost += parseFloat(calculateCostFromResponse(response));
+  
+  await gitOperations();
+
+  // Display total cost
+  document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
+}
+
+async function gitUndoLastCommitAndPush() {
+  try {
+    const directory = localStorage.getItem('folder');
+    // Run git revert on the last commit without creating a new commit
+    // It should automatically revert the changes made by the last commit
+    await window.gitCommands.gitRevertLastCommit(directory);
+    // Push the changes after reverting
+    await window.gitCommands.gitPush(directory);
+    alert('The last commit has been successfully undone and the changes have been pushed.');
+  } catch (error) {
+    console.error('Error reverting the last commit and pushing:', error);
+    alert('An error occurred while reverting the last commit and pushing changes.');
   }
 }
 
-// Event listener for the new button
-document.getElementById('commit-push-changes-button').addEventListener('click', async () => {
-  const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
+document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 
-  if (!GitMasterAgent) {
-    console.error("Git Master Agent is missing.");
-    return;
-  }
-
-  // Generate and use the commit message from the Git Master agent
-  const response = await GitMasterAgent.run();
-  if (response) {
-    const commitMessage = response.choices[0].message.content;
-
-    // Perform git add, commit, and push
-    const directory = localStorage.getItem('folder');
-    await window.gitCommands.gitAdd(directory);
-    await window.gitCommands.gitCommit(directory, commitMessage);
-    await window.gitCommands.gitPush(directory);
-  }
-});
-
-// Call this function on page load and whenever the project folder is changed
-window.addEventListener('DOMContentLoaded', checkForUncommittedChanges);
-document.getElementById('folder-selection').addEventListener('click', () => setTimeout(checkForUncommittedChanges, 1000));
-
-// ... existing code ...
