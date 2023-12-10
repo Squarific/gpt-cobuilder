@@ -37,16 +37,16 @@ async function runFullWorkflow () {
   console.log("Setting selected files", fileListController.fileContentMap.keys());
   await SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
   let response = await SeniorDevAgent.run();
-  totalCost += calculateCostFromResponse(response);
+  totalCost += parseFloat(calculateCostFromResponse(response));
 
   console.log("Setting selected files", fileListController.fileContentMap.keys());
   await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
   response = await JuniorDevAgent.run();
-  totalCost += calculateCostFromResponse(response);
+  totalCost += parseFloat(calculateCostFromResponse(response));
   
   await applyFileChanges();
   response = await GitMasterAgent.run();
-  totalCost += calculateCostFromResponse(response);
+  totalCost += parseFloat(calculateCostFromResponse(response));
   
   await gitOperations();
 
