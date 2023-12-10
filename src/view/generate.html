@@ -25,7 +25,7 @@
         <ul id="recent-folders-list"></ul>
       </div>
       
-      <span id="folder-display"></span>
+      <span id="folder-display"> Selected Folder: </span>
       
       <label for="model-selection">Select a model:</label>
       <select id="model-selection">
@@ -35,6 +35,9 @@
           <option value="gpt-4-32k">gpt-4-32k</option>
           <option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
       </select>
+
+      <!-- Add this div to show Git warnings -->
+      <div id="git-warning-container"></div>
     </div>
 
     <div id="Inputs" class="tabcontent">
@@ -115,4 +118,3 @@
     <script src="generate.js"></script>
   </body>
 </html>
-
