@@ -1,9 +1,9 @@
 async function gitOperations () {
     try {
       const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
-      await window.gitCommands.gitAdd(localStorage.getItem("folder"));
-      await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
-      await window.gitCommands.gitPush(localStorage.getItem("folder"));
+      await window.gitCommands.gitAdd(localStorage.getItem('folder'));
+      await window.gitCommands.gitCommit(localStorage.getItem('folder'), gptGitMessage);
+      await window.gitCommands.gitPush(localStorage.getItem('folder'));
     } catch (error) {
       console.log("Error performing git operations", error);
     }
@@ -42,32 +42,4 @@ async function runFullWorkflow () {
   console.log("Setting selected files", fileListController.fileContentMap.keys());
   await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
   response = await JuniorDevAgent.run();
-  totalCost += parseFloat(calculateCostFromResponse(response));
-  
-  await applyFileChanges();
-  response = await GitMasterAgent.run();
-  totalCost += parseFloat(calculateCostFromResponse(response));
-  
-  await gitOperations();
-
-  // Display total cost
-  document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
-}
-
-async function gitUndoLastCommitAndPush() {
-  try {
-    const directory = localStorage.getItem('folder');
-    // Run git revert on the last commit without creating a new commit
-    // It should automatically revert the changes made by the last commit
-    await window.gitCommands.gitRevertLastCommit(directory);
-    // Push the changes after reverting
-    await window.gitCommands.gitPush(directory);
-    alert('The last commit has been successfully undone and the changes have been pushed.');
-  } catch (error) {
-    console.error('Error reverting the last commit and pushing:', error);
-    alert('An error occurred while reverting the last commit and pushing changes.');
-  }
-}
-
-document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
-
+  totalCost +=

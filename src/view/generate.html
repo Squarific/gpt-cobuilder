@@ -53,6 +53,11 @@
 
       <button class="button" id="run-full-workflow-button">Run full workflow</button>
 
+      <div id="git-status-container">
+        <p id="git-status-warning" style="color: red;"></p>
+        <button id="commit-push-button" class="button" style="display: none;">Generate commit message and commit and push changes</button>
+      </div>
+
       <p id="total-cost">Total cost for previous full workflow run: $0</p>
 
       <div id="file-changes-container2"></div>
@@ -112,7 +117,7 @@
     <script src="agents.js"></script>
     <script src="modalOperations.js"></script>
     <script src="RequestLoader.js"></script>
+    <script src="gitOperations.js"></script>
     <script src="generate.js"></script>
   </body>
 </html>
-
