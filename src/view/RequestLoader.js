@@ -23,9 +23,35 @@ class RequestLoader {
 
         const cellStatus = row.insertCell();
         cellStatus.textContent = 'DONE'; // Since all requests are considered DONE for now
+
+        // Make long contents collapsible in the table cell
+        const cellContent = row.insertCell();
+        const contentDiv = document.createElement('div');
+        contentDiv.innerHTML = this.truncateContent(JSON.stringify(requestLog, null, 2));
+        contentDiv.addEventListener('click', this.toggleContent.bind(contentDiv)); // Bind function to the content div
+        cellContent.appendChild(contentDiv);
       });
     } catch (error) {
       console.error('Error loading requests:', error);
+    }
+  }
+
+  // Function to truncate content for display in the requests table
+  truncateContent(content, maxLength = 500) {
+    if (content.length <= maxLength) {
+      return content;
+    }
+    return `${content.substring(0, maxLength)}... <span style="color:blue;cursor:pointer;">[more]</span>`;
+  }
+
+  // Function to toggle display of full content in table cell
+  toggleContent(event) {
+    const content = event.target.parentElement.innerText;
+    if (content.endsWith('... [more]')) {
+      event.target.parentElement.innerHTML = content.replace(' ... [more]', '') +
+        ' <span style="color:blue;cursor:pointer;">[less]</span>';
+    } else {
+      event.target.parentElement.innerHTML = this.truncateContent(content);
     }
   }
 }
