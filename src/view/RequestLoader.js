@@ -16,8 +16,10 @@ class RequestLoader {
         const cellAgentName = row.insertCell();
         cellAgentName.textContent = requestLog.response.model;
 
+        // Extract the date/time from the file name by removing the file extension first
+        const dateTimeString = fileName.split('.')[0].replace(/-/g, ':');
         const cellDateTime = row.insertCell();
-        cellDateTime.textContent = new Date(fileName.split('.')[0]).toLocaleString();
+        cellDateTime.textContent = new Date(dateTimeString).toLocaleString();
 
         const cellStatus = row.insertCell();
         cellStatus.textContent = 'DONE'; // Since all requests are considered DONE for now
