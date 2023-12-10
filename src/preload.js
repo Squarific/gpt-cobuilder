@@ -86,7 +86,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git diff: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -101,7 +100,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git status: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -116,7 +114,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git push: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -131,7 +128,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git add: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -147,7 +143,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git commit: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -162,22 +157,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git reset: ${stderr}`);
-          reject(new Error(stderr));
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitPushForce: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} push --force`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git push --force: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git push --force: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
@@ -192,7 +171,6 @@ contextBridge.exposeInMainWorld('gitCommands', {
         }
         if (stderr) {
           console.error(`stderr with git revert HEAD: ${stderr}`);
-          reject(new Error(stderr));
         }
         resolve(stdout);
       });
