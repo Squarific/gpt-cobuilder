@@ -54,3 +54,16 @@ async function runFullWorkflow () {
   document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
 }
 
+async function gitUndoLastCommitAndPush() {
+  try {
+    const directory = localStorage.getItem('folder');
+    await window.gitCommands.gitResetLastCommit(directory);
+    await window.gitCommands.gitPushForce(directory);
+    alert('The last commit has been successfully undone and the changes have been pushed.');
+  } catch (error) {
+    console.error('Error undoing last commit and pushing:', error);
+    alert('An error occurred while undoing the last commit and pushing changes.');
+  }
+}
+
+document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
