@@ -57,13 +57,17 @@ async function runFullWorkflow () {
 async function gitUndoLastCommitAndPush() {
   try {
     const directory = localStorage.getItem('folder');
-    await window.gitCommands.gitResetLastCommit(directory);
-    await window.gitCommands.gitPushForce(directory);
+    // Run git revert on the last commit without creating a new commit
+    // It should automatically revert the changes made by the last commit
+    await window.gitCommands.gitRevertLastCommit(directory);
+    // Push the changes after reverting
+    await window.gitCommands.gitPush(directory);
     alert('The last commit has been successfully undone and the changes have been pushed.');
   } catch (error) {
-    console.error('Error undoing last commit and pushing:', error);
-    alert('An error occurred while undoing the last commit and pushing changes.');
+    console.error('Error reverting the last commit and pushing:', error);
+    alert('An error occurred while reverting the last commit and pushing changes.');
   }
 }
 
 document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
+

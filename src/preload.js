@@ -162,4 +162,20 @@ contextBridge.exposeInMainWorld('gitCommands', {
       });
     });
   },
+  gitRevertLastCommit: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} revert HEAD`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error with git revert HEAD: ${error.message}`);
+          reject(error);
+        }
+        if (stderr) {
+          console.error(`stderr with git revert HEAD: ${stderr}`);
+          reject(new Error(stderr));
+        }
+        resolve(stdout);
+      });
+    });
+  },
 });
+
