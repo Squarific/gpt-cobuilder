@@ -34,7 +34,6 @@ folderSelectionInput.addEventListener('click', async (event) => {
 
   updateFolder(folder);
   event.preventDefault();
-  await checkForUncommittedChanges();
 });
 
 const projectDescriptionTextarea = document.getElementById('project-description');
@@ -104,24 +103,4 @@ window.addEventListener('DOMContentLoaded', async () => {
   const fileListContainer = document.getElementById('file-list');
   
   fileListContainer.appendChild(fileListElement);
-  await checkForUncommittedChanges();
 });
-
-async function checkForUncommittedChanges() {
-  const directory = localStorage.getItem('folder');
-  try {
-    const gitStatus = await window.gitCommands.gitStatus(directory);
-    if (gitStatus.includes("nothing to commit, working tree clean")) {
-      // Hide the warning and button since there are no uncommitted changes
-      document.getElementById('git-status-warning').textContent = '';
-      document.getElementById('commit-push-button').style.display = 'none';
-    } else {
-      // Show the warning and button since there are uncommitted changes
-      document.getElementById('git-status-warning').textContent = 'There are uncommitted changes.';
-      document.getElementById('commit-push-button').style.display = 'block';
-    }
-  } catch (error) {
-    console.error('Error checking git status:', error);
-    document.getElementById('git-status-warning').textContent = 'Error checking git status.';
-  }
-}
