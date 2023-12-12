@@ -39,8 +39,9 @@ class PaginatedTable {
     const headers = ["Agent Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", "Cost", "Finish Reason", "Request Content", "Response Content"];
     const headerRow = table.insertRow();
     for (const headerText of headers) {
-      const headerCell = headerRow.insertCell();
+      const headerCell = document.createElement('th'); // Using `th` element for header
       headerCell.textContent = headerText;
+      headerRow.appendChild(headerCell); // Append `th` element to the row
     }
   }
 
