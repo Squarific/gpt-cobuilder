@@ -46,7 +46,7 @@
 
       <label for="change-request-examples">Example Change Requests:</label>
       <select id="change-request-examples">
-          <option value="">Choose an example...</option>
+        <option value="">Choose an example...</option>
       </select>
 
       <div id="file-list"></div>
@@ -94,6 +94,20 @@
         </div>
     </div>
 
+    <!-- Add this modal structure near the end of your body tag -->
+    <div id="requestDetailsModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Request Details</h2>
+        <p id="modal-apiKey"></p>
+        <p id="modal-model"></p>
+        <p id="modal-role"></p>
+        <p id="modal-requestContent"></p>
+        <p id="modal-responseContent"></p>
+        <p id="modal-cost"></p>
+      </div>
+    </div>
+
     <!-- Classes -->
     <script src="TabCreator.js"></script>
     <script src="InputGetter.js"></script>
@@ -101,7 +115,7 @@
     <script src="Agent.js"></script>
     <script src="FileListController.js"></script>
     <script src="SavedOutputs.js"></script>
-    <script src="PaginatedTable.js"></script> <!-- Add this line -->
+    <script src="PaginatedTable.js"></script>
 
     <!-- Operations -->
     <script src="workflows.js"></script>
@@ -112,7 +126,6 @@
     <script src="eventListeners.js"></script>
     <script src="agents.js"></script>
     <script src="modalOperations.js"></script>
-    <script src="RequestLoader.js"></script>
     <script src="generate.js"></script>
     <script src="gitOperations.js"></script>
   </body>

@@ -68,7 +68,36 @@ class PaginatedTable {
       
       this.fillCell(row, requestContent);
       this.fillCell(row, responseContent);
+
+      row.setAttribute('data-request', filePath); // Set the data attribute for row
+      row.classList.add('request-entry'); // Add class for event listener
+
+      row.addEventListener('click', this.openRequestDetails.bind(this));
     }
+  }
+
+  async openRequestDetails(event) {
+    const filePath = event.currentTarget.getAttribute('data-request');
+    const fileContent = await window.fs.readFile(filePath);
+    const requestLog = JSON.parse(fileContent);
+
+    // Now use the JSON to update the modal content
+    const modal = document.getElementById('requestDetailsModal');
+    const apiKeyParagraph = modal.querySelector('#modal-apiKey');
+    const modelParagraph = modal.querySelector('#modal-model');
+    const roleParagraph = modal.querySelector('#modal-role');
+    const requestContentParagraph = modal.querySelector('#modal-requestContent');
+    const responseContentParagraph = modal.querySelector('#modal-responseContent');
+    const costParagraph = modal.querySelector('#modal-cost');
+
+    apiKeyParagraph.textContent = `API Key: ${requestLog.request.apiKey}`;
+    modelParagraph.textContent = `Model: ${requestLog.response.model}`;
+    roleParagraph.textContent = `Role: ${requestLog.request.role}`;
+    requestContentParagraph.textContent = `Request: ${requestLog.request.content}`;
+    responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
+    costParagraph.textContent = `Cost: $${this.calculateCostFromResponse(requestLog.response)}`;
+
+    modal.style.display = 'block';
   }
 
   fillCell(row, text) {
