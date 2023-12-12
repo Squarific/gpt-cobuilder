@@ -24,11 +24,11 @@ class RequestLoader {
         // Truncate and add ellipsis at the end for long content if needed
         let requestContent = requestLog.request.content;
         let responseContent = requestLog.response.choices[0].message.content;
-        const maxContentLength = 100;
+        const maxContentLength = 256;
         requestContent = requestContent.length > maxContentLength ?
-          requestContent.slice(-maxContentLength) + "..." : requestContent;
+        "..." + requestContent.slice(-maxContentLength) : requestContent;
         responseContent = responseContent.length > maxContentLength ?
-          responseContent.slice(-maxContentLength) + "..." : responseContent;
+        "..." + responseContent.slice(-maxContentLength) : responseContent;
         
         this.fillCell(row, requestContent);      
         this.fillCell(row, responseContent);
@@ -62,9 +62,3 @@ class RequestLoader {
     return cost.toFixed(2); // Returns the cost with 2 decimal places
   }
 }
-
-// Instantiate and call loadRequests on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-  const requestLoader = new RequestLoader();
-  requestLoader.loadRequests();
-});

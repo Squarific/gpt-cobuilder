@@ -78,21 +78,12 @@
     </div>
 
     <div id="Requests" class="tabcontent">
-      <h2>Requests Log</h2>
-      <table id="requests-table">
-        <tr>
-          <th>Agent Name</th>
-          <th>Date/Time</th>
-          <th>Status</th>
-          <th>Input Tokens</th>
-          <th>Completion Tokens</th>
-          <th>Cost</th>
-          <th>Finish Reason</th>
-          <th>Request Content</th>
-          <th>Response Content</th>
-        </tr>
-        <!-- Rows will be added dynamically here -->
-      </table>
+      <div id="requests-table-container">
+        <h2>Requests Log</h2>
+        <table id="requests-table">
+        </table>
+        <!-- Pagination controls will be added here programmatically -->
+      </div>
     </div>
 
     <div id="tabNameModal" class="modal">
@@ -110,6 +101,7 @@
     <script src="Agent.js"></script>
     <script src="FileListController.js"></script>
     <script src="SavedOutputs.js"></script>
+    <script src="PaginatedTable.js"></script> <!-- Add this line -->
 
     <!-- Operations -->
     <script src="workflows.js"></script>
