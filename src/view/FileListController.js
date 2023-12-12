@@ -1,21 +1,14 @@
 class FileListController {
   constructor() {
     this.element = document.createElement('pre');
-    this.fileContentMap = new Map(); // to hold selected files
-    this.fileListMap = new Map(); // to hold all files
+    this.fileContentMap = new Map();
+    this.fileListMap = new Map();
     this.totalTokenCount = 0;
-    this.selectedFiles = new Set(); // to hold selected files paths
+    this.selectedFiles = new Set();
     
-    //Create a new Event named 'filechange'
     this.fileChange = new Event('filechange');
-    
-    // New state variable to track whether all files are selected
     this.allFilesSelected = false;
-
-    // Select all button reference
     this.selectAllButton = null;
-    
-    // Flag to indicate a batch update is in progress (new change)
     this.isBatchUpdating = false;
   }
 
@@ -26,7 +19,6 @@ class FileListController {
     targetDiv.appendChild(this.totalTokenLabel);
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
-    // Reference to the select all button is stored
     this.selectAllButton = document.createElement("button");
     this.selectAllButton.innerText = "Select All Files";
     this.selectAllButton.className = "button";
@@ -47,7 +39,6 @@ class FileListController {
   }
 
   async refresh() {
-    // Remember the selected files 
     this.selectedFiles = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
 
     this.element.textContent = '';
@@ -59,7 +50,7 @@ class FileListController {
 
   async displayFileStructure(fileList) {
     this.fileContentMap.clear();
-    this.fileListMap.clear(); // clear out any old entries
+    this.fileListMap.clear();
     this.element.textContent = '';
 
     const savedFolder = localStorage.getItem('folder');
@@ -72,7 +63,7 @@ class FileListController {
         filePath = path.relative(savedFolder, filePath);
       }
 
-      this.fileListMap.set(file.path, file); // store file in fileListMap
+      this.fileListMap.set(file.path, file);
       await this.addFileUI(filePath, file);
     }
   }
@@ -121,24 +112,23 @@ class FileListController {
     checkbox.setAttribute("data-filepath", file.path);
     checkbox.id = Math.random() + "-checkbox";
     checkbox.type = "checkbox";
-    checkbox.addEventListener("change", () => this.updateFileSelection(file)); //update event listener
+    checkbox.addEventListener("change", () => this.updateFileSelection(file));
         
-    file.checkbox = checkbox; // store checkbox element in file object for future reference
+    file.checkbox = checkbox;
 
-    // Check if the file was previously selected
     if (this.selectedFiles.has(file.path)) {
-      checkbox.checked = true; // Restore the checkbox state
-      await this.updateFileSelection(file); // Handle the file selection
+      checkbox.checked = true;
+      await this.updateFileSelection(file);
     }
     
     const label = document.createElement('label');
     label.setAttribute("for", checkbox.id);
 
-    if (file.size > 1024) {
+    if (file.size > 700) {
       label.classList.add('token-warning');
     }
 
-    if (file.size > 2048) {
+    if (file.size > 1000) {
       label.classList.add('token-serious-warning');
     }
 
@@ -150,15 +140,8 @@ class FileListController {
     this.element.appendChild(fileEntry);
   }
 
-  // Function to select a file
   async selectFile(file) {
     this.checkbox(file).checked = true;
-    await this.updateFileSelection(file);
-  }
-
-  // Function to deselect a file
-  async deselectFile(file) {
-    this.checkbox(file).checked = false;
     await this.updateFileSelection(file);
   }
 
@@ -170,27 +153,17 @@ class FileListController {
         this.fileContentMap.delete(file);
     }
 
-    if (!this.isBatchUpdating) { // Check if a batch update is not in progress
+    if (!this.isBatchUpdating) {
         this.totalTokenCount = this.calculateTotalTokenCount();
         this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
         this.element.dispatchEvent(this.fileChange);
     }
   }
 
-  // Function to toggle all files selection
   async toggleAllFiles() {
     this.allFilesSelected = !this.allFilesSelected;
     await this.setAllFilesSelected(this.allFilesSelected);
     this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files"; // Update button text
-  }
-
-  // Function to select all files in the file list
-  async selectAllFiles() {
-    await this.setAllFilesSelected(true);
-  }
-
-  async deselectAllFiles() {
-    await this.setAllFilesSelected(false);
   }
 
   async setAllFilesSelected(selected) {
@@ -201,7 +174,6 @@ class FileListController {
       updatePromises.push(this.handleCheckboxChange(checkbox, selected));
     }
 
-    // Wait for all the change handling promises to resolve before updating totals
     await Promise.all(updatePromises);
 
     this.totalTokenCount = this.calculateTotalTokenCount();
@@ -211,12 +183,11 @@ class FileListController {
     this.element.dispatchEvent(this.fileChange);
   }
 
-  // Helper method to set selected files from content map
   async setFromContentMap(contentMap) {
     // This will prevent firing events for each file selection during batch updates
     this.isBatchUpdating = true;
 
-    await this.deselectAllFiles();
+    await this.setAllFilesSelected(false);
 
     for (let file of contentMap.keys()) {
       const ourFile = this.findFileInMap(file.path);
@@ -240,20 +211,18 @@ class FileListController {
       const file = this.fileListMap.get(filePath);
       if (selected) {
         const content = await window.fs.readFile(file.path);
-        this.fileContentMap.set(file, content); // Set file content in fileContentMap
+        this.fileContentMap.set(file, content);
       } else {
-        this.fileContentMap.delete(file); // Remove file from fileContentMap
+        this.fileContentMap.delete(file);
       }
       resolve();
     });
   }
 
-  // Helper method that will find the file in our map based on the file path
   findFileInMap(filePath) {
     return this.fileListMap.get(filePath);
   }
 
-  // Helper method to calculate total token count
   calculateTotalTokenCount() {
     let count = 0;
 
