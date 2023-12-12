@@ -6,47 +6,42 @@ class RequestLoader {
 
     try {
       const requestFiles = await window.fs.readdir(requestsPath);
-      requestFiles.forEach(async (fileName) => {
+      for (const fileName of requestFiles) {
         const filePath = `${requestsPath}/${fileName}`;
         const fileContent = await window.fs.readFile(filePath);
         const requestLog = JSON.parse(fileContent);
 
         const row = table.insertRow();
 
-        const cellAgentName = row.insertCell();
-        cellAgentName.textContent = requestLog.response.model;
-
-        // Extract the date/time from the file name by removing the file extension first
-        const dateTimeString = fileName.split('.')[0].replace(/-/g, ':');
-        const cellDateTime = row.insertCell();
-        cellDateTime.textContent = new Date(dateTimeString).toLocaleString();
-
-        const cellStatus = row.insertCell();
-        cellStatus.textContent = 'DONE'; // Since all requests are considered DONE for now
-
-        // Additional data columns
-        const cellInputTokens = row.insertCell();
-        cellInputTokens.textContent = requestLog.response.usage.prompt_tokens;
-
-        const cellCompletionTokens = row.insertCell();
-        cellCompletionTokens.textContent = requestLog.response.usage.completion_tokens;
-
-        const cellCost = row.insertCell();
-        const cost = this.calculateCostFromResponse(requestLog.response);
-        cellCost.textContent = `$${cost}`;
-
-        const cellFinishReason = row.insertCell();
-        cellFinishReason.textContent = requestLog.response.choices[0].finish_reason;
-
-        const cellRequestContent = row.insertCell();
-        cellRequestContent.textContent = requestLog.request.content.substring(0, 100) + "...";
-
-        const cellResponseContent = row.insertCell();
-        cellResponseContent.textContent = requestLog.response.choices[0].message.content.substring(0, 100) + "...";
-      });
+        this.fillCell(row, requestLog.response.model);
+        this.fillCell(row, new Date(fileName.split('.')[0].replace(/-/g, ':')).toLocaleString());
+        this.fillCell(row, 'DONE');
+        this.fillCell(row, requestLog.response.usage.prompt_tokens);
+        this.fillCell(row, requestLog.response.usage.completion_tokens);
+        this.fillCell(row, `$${this.calculateCostFromResponse(requestLog.response)}`);
+        this.fillCell(row, requestLog.response.choices[0].finish_reason);
+ 
+        // Truncate and add ellipsis at the end for long content if needed
+        let requestContent = requestLog.request.content;
+        let responseContent = requestLog.response.choices[0].message.content;
+        const maxContentLength = 100;
+        requestContent = requestContent.length > maxContentLength ?
+          requestContent.slice(-maxContentLength) + "..." : requestContent;
+        responseContent = responseContent.length > maxContentLength ?
+          responseContent.slice(-maxContentLength) + "..." : responseContent;
+        
+        this.fillCell(row, requestContent);      
+        this.fillCell(row, responseContent);
+      }
     } catch (error) {
       console.error('Error loading requests:', error);
     }
+  }
+  
+  // Helper function to create and fill a cell in a row
+  fillCell(row, content) {
+    const cell = row.insertCell();
+    cell.textContent = content;
   }
 
   calculateCostFromResponse(response) {
