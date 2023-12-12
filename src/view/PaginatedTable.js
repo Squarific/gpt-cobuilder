@@ -60,7 +60,7 @@ class PaginatedTable {
       this.fillCell(row, 'DONE');
       this.fillCell(row, requestLog.response.usage.prompt_tokens);
       this.fillCell(row, requestLog.response.usage.completion_tokens);
-      this.fillCell(row, `$${this.calculateCostFromResponse(requestLog.response)}`);
+      this.fillCell(row, `$${calculateCostFromResponse(requestLog.response)}`);
       this.fillCell(row, requestLog.response.choices[0].finish_reason);
 
       let requestContent = requestLog.request.content.slice(-256);
@@ -95,7 +95,7 @@ class PaginatedTable {
     roleParagraph.textContent = `Role: ${requestLog.request.role}`;
     requestContentParagraph.textContent = `Request: ${requestLog.request.content}`;
     responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
-    costParagraph.textContent = `Cost: $${this.calculateCostFromResponse(requestLog.response)}`;
+    costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
 
     modal.style.display = 'block';
   }
@@ -103,12 +103,6 @@ class PaginatedTable {
   fillCell(row, text) {
     const cell = row.insertCell();
     cell.textContent = text;
-  }
-
-  calculateCostFromResponse(response) {
-    // Assume you have some logic to calculate cost based on response tokens
-    const cost = response.usage.total_tokens * 0.0006; // Example cost calculation
-    return cost.toFixed(2);
   }
 
   // Add pagination controls below the table
