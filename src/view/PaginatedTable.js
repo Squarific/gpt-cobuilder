@@ -97,6 +97,10 @@ class PaginatedTable {
     responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
     costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
 
+    // Used textarea for request and response details
+    requestContentParagraph.value = requestLog.request.content; // Set the content of the request
+    responseContentParagraph.value = requestLog.response.choices[0].message.content; // Set the content of the response
+
     modal.style.display = 'block';
   }
 
