@@ -128,12 +128,6 @@ class PaginatedTable {
     prevButton.addEventListener('click', () => this.changePage(-1));
     container.appendChild(prevButton);
 
-    // Add page number display
-    const pageNumDisplay = document.createElement('span');
-    pageNumDisplay.textContent = `Page ${this.currentPage} of ${this.totalPages}`;
-    pageNumDisplay.className = 'pagination-control';
-    container.appendChild(pageNumDisplay);
-
     // Add "Next" button
     const nextButton = document.createElement('button');
     nextButton.textContent = 'Next';
@@ -141,12 +135,58 @@ class PaginatedTable {
     nextButton.disabled = this.currentPage >= this.totalPages;
     nextButton.addEventListener('click', () => this.changePage(1));
     container.appendChild(nextButton);
+
+    // Add "First" button
+    const firstButton = document.createElement('button');
+    firstButton.textContent = 'First';
+    firstButton.className = 'button pagination-control';
+    firstButton.disabled = this.currentPage === 1;
+    firstButton.addEventListener('click', () => this.goToFirstPage());
+    container.insertBefore(firstButton, prevButton); // Insert before 'Previous' button
+
+    // Add "Last" button
+    const lastButton = document.createElement('button');
+    lastButton.textContent = 'Last';
+    lastButton.className = 'button pagination-control';
+    lastButton.disabled = this.currentPage === this.totalPages;
+    lastButton.addEventListener('click', () => this.goToLastPage());
+    container.appendChild(lastButton);
+
+    // Add input field to jump to a page
+    const pageInput = document.createElement('input');
+    pageInput.type = 'number';
+    pageInput.min = '1';
+    pageInput.max = `${this.totalPages}`;
+    pageInput.value = this.currentPage;
+    pageInput.className = 'pagination-control';
+    pageInput.addEventListener('change', () => this.goToPage(pageInput.value));
+    container.appendChild(pageInput);
   }
 
   // Change to previous or next page
   changePage(direction) {
     this.currentPage += direction;
     this.loadTable(); // Reload the table content
+  }
+
+  goToFirstPage() {
+    this.currentPage = 1;
+    this.loadTable();
+  }
+
+  goToLastPage() {
+    this.currentPage = this.totalPages;
+    this.loadTable();
+  }
+
+  goToPage(pageNumber) {
+    pageNumber = parseInt(pageNumber, 10);
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
+      this.currentPage = pageNumber;
+      this.loadTable();
+    } else {
+      alert(`Invalid page number. Please enter a number between 1 and ${this.totalPages}.`);
+    }
   }
 }
 
