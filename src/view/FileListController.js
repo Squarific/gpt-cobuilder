@@ -14,6 +14,9 @@ class FileListController {
 
     // Select all button reference
     this.selectAllButton = null;
+    
+    // Flag to indicate a batch update is in progress (new change)
+    this.isBatchUpdating = false;
   }
 
   createDOM() {
@@ -167,23 +170,11 @@ class FileListController {
         this.fileContentMap.delete(file);
     }
 
-    this.totalTokenCount = this.calculateTotalTokenCount();
-    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
-    this.element.dispatchEvent(this.fileChange);
-  }
-  async handleCheckboxChange(checkbox, selected) {
-    return new Promise(async (resolve) => {
-      checkbox.checked = selected;
-      const filePath = checkbox.getAttribute('data-filepath');
-      const file = this.fileListMap.get(filePath);
-      if (selected) {
-        const content = await window.fs.readFile(file.path);
-        this.fileContentMap.set(file, content); // Set file content in fileContentMap
-      } else {
-        this.fileContentMap.delete(file); // Remove file from fileContentMap
-      }
-      resolve();
-    });
+    if (!this.isBatchUpdating) { // Check if a batch update is not in progress
+        this.totalTokenCount = this.calculateTotalTokenCount();
+        this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+        this.element.dispatchEvent(this.fileChange);
+    }
   }
 
   // Function to toggle all files selection
@@ -220,22 +211,46 @@ class FileListController {
     this.element.dispatchEvent(this.fileChange);
   }
 
-  // Helper method that will find the file in our map based on the file path
-  findFileInMap(filePath) {
-    return this.fileListMap.get(filePath);
-  }
-
   // Helper method to set selected files from content map
   async setFromContentMap(contentMap) {
+    // This will prevent firing events for each file selection during batch updates
+    this.isBatchUpdating = true;
+
     await this.deselectAllFiles();
 
     for (let file of contentMap.keys()) {
-        const ourFile = this.findFileInMap(file.path);
-        
-        if(ourFile) {
-          await this.selectFile(ourFile);
-        }
+      const ourFile = this.findFileInMap(file.path);
+      if (ourFile) {
+        await this.selectFile(ourFile);
+      }
     }
+
+    this.totalTokenCount = this.calculateTotalTokenCount();
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+    
+    // Now that batch updating is done, reset the flag and fire the event once
+    this.isBatchUpdating = false;
+    this.element.dispatchEvent(this.fileChange);
+  }
+
+  async handleCheckboxChange(checkbox, selected) {
+    return new Promise(async (resolve) => {
+      checkbox.checked = selected;
+      const filePath = checkbox.getAttribute('data-filepath');
+      const file = this.fileListMap.get(filePath);
+      if (selected) {
+        const content = await window.fs.readFile(file.path);
+        this.fileContentMap.set(file, content); // Set file content in fileContentMap
+      } else {
+        this.fileContentMap.delete(file); // Remove file from fileContentMap
+      }
+      resolve();
+    });
+  }
+
+  // Helper method that will find the file in our map based on the file path
+  findFileInMap(filePath) {
+    return this.fileListMap.get(filePath);
   }
 
   // Helper method to calculate total token count
@@ -253,4 +268,3 @@ class FileListController {
     return file.checkbox;
   }  
 }
-
