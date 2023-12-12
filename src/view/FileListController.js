@@ -171,6 +171,20 @@ class FileListController {
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
     this.element.dispatchEvent(this.fileChange);
   }
+  async handleCheckboxChange(checkbox, selected) {
+    return new Promise(async (resolve) => {
+      checkbox.checked = selected;
+      const filePath = checkbox.getAttribute('data-filepath');
+      const file = this.fileListMap.get(filePath);
+      if (selected) {
+        const content = await window.fs.readFile(file.path);
+        this.fileContentMap.set(file, content); // Set file content in fileContentMap
+      } else {
+        this.fileContentMap.delete(file); // Remove file from fileContentMap
+      }
+      resolve();
+    });
+  }
 
   // Function to toggle all files selection
   async toggleAllFiles() {
@@ -190,13 +204,20 @@ class FileListController {
 
   async setAllFilesSelected(selected) {
     const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
+    const updatePromises = [];
+
     for (let checkbox of checkboxes) {
-      checkbox.checked = selected;
-      const filePath = checkbox.getAttribute('data-filepath');
-      const file = this.fileListMap.get(filePath);
-      await this.updateFileSelection(file);
+      updatePromises.push(this.handleCheckboxChange(checkbox, selected));
     }
+
+    // Wait for all the change handling promises to resolve before updating totals
+    await Promise.all(updatePromises);
+
+    this.totalTokenCount = this.calculateTotalTokenCount();
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
     this.allFilesSelected = selected;
+    this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
+    this.element.dispatchEvent(this.fileChange);
   }
 
   // Helper method that will find the file in our map based on the file path
@@ -232,3 +253,4 @@ class FileListController {
     return file.checkbox;
   }  
 }
+
