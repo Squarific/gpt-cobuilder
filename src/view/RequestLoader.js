@@ -39,19 +39,10 @@ class RequestLoader {
         cellFinishReason.textContent = requestLog.response.choices[0].finish_reason;
 
         const cellRequestContent = row.insertCell();
-        const requestText = requestLog.request.content;
-        cellRequestContent.textContent = requestText.substring(Math.max(requestText.length - 100, 0));
-        cellRequestContent.classList.add('request-content');
-        cellRequestContent.setAttribute('data-request', fileContent);
-        
+        cellRequestContent.textContent = requestLog.request.content.substring(0, 100) + "...";
+
         const cellResponseContent = row.insertCell();
-        const responseText = requestLog.response.choices[0].message.content;
-        cellResponseContent.textContent = responseText.substring(Math.max(responseText.length - 100, 0));
-        cellResponseContent.classList.add('response-content');
-        cellResponseContent.setAttribute('data-response', JSON.stringify(requestLog.response, null, 2));
-        
-        cellRequestContent.addEventListener('click', this.showModal);
-        cellResponseContent.addEventListener('click', this.showModal);
+        cellResponseContent.textContent = requestLog.response.choices[0].message.content.substring(0, 100) + "...";
       });
     } catch (error) {
       console.error('Error loading requests:', error);
@@ -75,22 +66,6 @@ class RequestLoader {
     const cost = (inputTokens * inputTokenCost / 1000) + (outputTokens * outputTokenCost / 1000);
     return cost.toFixed(2); // Returns the cost with 2 decimal places
   }
-
-  showModal(event) {
-    const target = event.target;
-    const modalContent = target.getAttribute(target.classList.contains('request-content') ? 'data-request' : 'data-response');
-
-    // Get the modal and modal content elements
-    const modal = document.getElementById('modal');
-    const modalText = document.getElementById('modal-text');
-    
-    // Set the content of the modal
-    modalText.textContent = '';
-    modalText.textContent = modalContent;
-
-    // Display the modal
-    modal.style.display = 'block';
-  }
 }
 
 // Instantiate and call loadRequests on DOMContentLoaded
@@ -98,17 +73,3 @@ document.addEventListener('DOMContentLoaded', () => {
   const requestLoader = new RequestLoader();
   requestLoader.loadRequests();
 });
-
-// Listen for clicks anywhere in the window to close the modal
-window.addEventListener('click', (event) => {
-  const modal = document.getElementById('modal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
-  }
-});
-
-const closeModal = document.getElementById('close-modal');
-closeModal.onclick = () => {
-  const modal = document.getElementById('modal');
-  modal.style.display = "none";
-}
