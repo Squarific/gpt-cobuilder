@@ -17,7 +17,7 @@ class AgentTabCreator {
         agentData.systemMessageTextarea.value = agentData.systemMessage;
         tabContent.appendChild(systemMessage);
 
-        var fullMessage = this.htmlCreator.createTextAreaWithLabel("Full Message:", agentData.name + "-full-message", true, 20);
+        var fullMessage = this.htmlCreator.createTextAreaWithLabel("Full Message:", agentData.name + "-full-message", true, 50);
         agentData.fullMessageTextArea = fullMessage.querySelector("textarea");
         tabContent.appendChild(fullMessage);
 
@@ -28,7 +28,7 @@ class AgentTabCreator {
         const generateButton = this.htmlCreator.createButton("button", "Generate GPT Completion");
         tabContent.appendChild(generateButton);
 
-        const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.output}):`, agentData.name + '-model-response', true, 20);
+        const responseDiv = this.htmlCreator.createTextAreaWithLabel(`Model Response (saved as ${agentData.output}):`, agentData.name + '-model-response', true, 50);
         agentData.modelResponseTextArea = responseDiv.querySelector('textarea');
         tabContent.appendChild(responseDiv);
 

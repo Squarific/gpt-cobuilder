@@ -58,7 +58,7 @@ const sendMessageToChatGPT = async (systemMessage, userMessage) => {
   };
 
   try {
-      const response = await fetch(url, requestOptions);
+      const response = await fetch(OPENAI_URL, requestOptions);
   
       if (!response.ok) {
         let errorMessage = `HTTP error! Status: ${response.status}`;
