@@ -88,8 +88,3 @@ class CustomWorkflows {
     localStorage.setItem('workflows', JSON.stringify(this.workflows));
   }
 }
-
-// Usage of Custom Workflows in generate.js
-// const customWorkflowsManager = new CustomWorkflows();
-// customWorkflowsManager.loadAgents(agents);
-// customWorkflowsManager.attachDOM();
