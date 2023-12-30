@@ -118,21 +118,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  // Adding Custom Workflow Tab
-  const customWorkflowTabCreator = new TabCreator();
-  customWorkflowTabCreator.createTabButton({
-      name: 'Custom Workflows',
-      systemMessage: '',
-      output: 'OUTPUT.CUSTOM_WORKFLOWS'
-  });
-  const { tabContent: customWorkflowTabContent } = customWorkflowTabCreator.createTabContent({
-      name: 'Custom Workflows',
-      systemMessage: '',
-      output: 'OUTPUT.CUSTOM_WORKFLOWS'
-  });
   // Create instance for managing custom workflows
-  const customWorkflowsManager = new CustomWorkflows(customWorkflowTabContent);
+  const customWorkflowsManager = new CustomWorkflows();
   customWorkflowsManager.attachDOM();
   customWorkflowsManager.loadAgents(agents);
-  document.body.appendChild(customWorkflowTabContent);
 });

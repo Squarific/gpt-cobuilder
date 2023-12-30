@@ -1,16 +1,15 @@
 class CustomWorkflows {
-  constructor(tabContent) {
-    this.tabContent = tabContent;
+  constructor() {
     this.workflows = [];
   }
 
   attachDOM() {
-    // A simple button to illustrate the feature.
     const addWorkflowButton = document.createElement("button");
     addWorkflowButton.textContent = "Add New Workflow";
     addWorkflowButton.className = "button";
     addWorkflowButton.addEventListener('click', this.createNewWorkflow.bind(this));
-    this.tabContent.appendChild(addWorkflowButton);
+
+    // Todo add to DOM
   }
 
   loadAgents(availableAgents) {
@@ -32,7 +31,8 @@ class CustomWorkflows {
     runWorkflowButton.textContent = `Run ${workflowName}`;
     runWorkflowButton.className = "button";
     runWorkflowButton.addEventListener('click', () => this.runWorkflow(newWorkflow));
-    this.tabContent.appendChild(runWorkflowButton);
+    
+    // Todo add to DOM
   }
 
   async runWorkflow(workflow) {

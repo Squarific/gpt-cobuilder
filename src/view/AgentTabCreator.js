@@ -1,4 +1,4 @@
-class TabCreator {
+class AgentTabCreator {
     constructor() {
         this.htmlCreator = new HtmlElementCreator();
     }

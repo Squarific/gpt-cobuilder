@@ -3,7 +3,7 @@ class Agent {
         this.data = agentData;
         this.projectDescriptionTextArea = document.getElementById('project-description');
         this.userChangeRequestTextArea = document.getElementById('user-change-request');
-        this.tabCreator = new TabCreator();
+        this.agentTabCreator = new AgentTabCreator();
         this.inputGetter = new InputGetter();
     }
 
@@ -27,9 +27,9 @@ class Agent {
     }
 
     createTab() {
-        this.tabCreator.createTabButton(this.data);
+        this.agentTabCreator.createTabButton(this.data);
      
-        const {tabContent, generateButton} = this.tabCreator.createTabContent(this.data);
+        const {tabContent, generateButton} = this.agentTabCreator.createTabContent(this.data);
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
 
