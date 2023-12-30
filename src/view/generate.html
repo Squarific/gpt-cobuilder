@@ -9,6 +9,7 @@
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
+      <button class="tablinks" onclick="openTab(event, 'CustomWorkflows')">Custom Workflows</button>
       <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved GPT Outputs</button>
       <button class="tablinks" onclick="openTab(event, 'Requests')">Requests</button>
       <button class="tablinks" id="add-tab-button">+</button>
@@ -109,8 +110,10 @@
       </div>
     </div>
 
-    <div id="Custom Workflows" class="tabcontent">
+    <div id="CustomWorkflows" class="tabcontent">
       <h2>Manage Custom Workflows:</h2>
+      <button class="button" id="add-custom-workflow-button">Add New Workflow</button>
+      <div id="custom-workflows-list"></div>
     </div>
 
     <!-- Classes -->

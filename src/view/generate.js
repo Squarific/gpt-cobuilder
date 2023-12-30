@@ -120,6 +120,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // Create instance for managing custom workflows
   const customWorkflowsManager = new CustomWorkflows();
-  customWorkflowsManager.attachDOM();
   customWorkflowsManager.loadAgents(agents);
+  customWorkflowsManager.attachDOM();
 });

@@ -4,12 +4,14 @@ class CustomWorkflows {
   }
 
   attachDOM() {
-    const addWorkflowButton = document.createElement("button");
-    addWorkflowButton.textContent = "Add New Workflow";
-    addWorkflowButton.className = "button";
-    addWorkflowButton.addEventListener('click', this.createNewWorkflow.bind(this));
-
-    // Todo add to DOM
+    const addWorkflowButton = document.getElementById('add-custom-workflow-button');
+    
+    if (addWorkflowButton) {
+      addWorkflowButton.addEventListener('click', this.createNewWorkflow.bind(this));
+    }
+    
+    this.loadWorkflowsFromLocalStorage();
+    this.updateWorkflowList();
   }
 
   loadAgents(availableAgents) {
@@ -23,26 +25,71 @@ class CustomWorkflows {
     const newWorkflow = { name: workflowName, agents: [] };
     this.workflows.push(newWorkflow);
     
-    // Just add all agents for the example purpose
-    newWorkflow.agents = this.availableAgents.map(agent => agent.data.name);
-    
-    // Create a button to execute the workflow
-    const runWorkflowButton = document.createElement("button");
-    runWorkflowButton.textContent = `Run ${workflowName}`;
-    runWorkflowButton.className = "button";
-    runWorkflowButton.addEventListener('click', () => this.runWorkflow(newWorkflow));
-    
-    // Todo add to DOM
+    this.saveWorkflowsToLocalStorage();
+    this.updateWorkflowList();
   }
 
-  async runWorkflow(workflow) {
-    for (const agentName of workflow.agents) {
-      const agent = this.availableAgents.find(a => a.data.name === agentName);
-      if (agent) {
-        await agent.run();
-        // Error handling or delays could be added if necessary.
-      }
+  updateWorkflowList() {
+    const listElem = document.getElementById('custom-workflows-list');
+    listElem.innerHTML = '';
+    
+    this.workflows.forEach(workflow => {
+      const workflowElem = document.createElement('div');
+      workflowElem.className = "workflow-item";
+      workflowElem.textContent = workflow.name;
+      
+      const runButton = document.createElement('button');
+      runButton.className = "button";
+      runButton.textContent = "Run";
+      runButton.onclick = () => this.runWorkflow(workflow);
+
+      const editButton = document.createElement('button');
+      editButton.className = "button";
+      editButton.textContent = "Edit";
+      editButton.onclick = () => this.editWorkflow(workflow);
+
+      const removeButton = document.createElement('button');
+      removeButton.className = "button";
+      removeButton.textContent = "Remove";
+      removeButton.onclick = () => this.removeWorkflow(workflow);
+
+      workflowElem.appendChild(runButton);
+      workflowElem.appendChild(editButton);
+      workflowElem.appendChild(removeButton);
+      listElem.appendChild(workflowElem);
+    });
+  }
+
+  runWorkflow(workflow) {
+    // Implement workflow running logic
+  }
+
+  editWorkflow(workflow) {
+    // Implement workflow editing logic
+  }
+
+  removeWorkflow(workflow) {
+    const index = this.workflows.indexOf(workflow);
+    if (index > -1) {
+      this.workflows.splice(index, 1);
     }
-    alert(`Workflow ${workflow.name} completed.`);
+    this.saveWorkflowsToLocalStorage();
+    this.updateWorkflowList();
+  }
+
+  loadWorkflowsFromLocalStorage() {
+    const storedWorkflows = localStorage.getItem('workflows');
+    if (storedWorkflows) {
+      this.workflows = JSON.parse(storedWorkflows);
+    }
+  }
+
+  saveWorkflowsToLocalStorage() {
+    localStorage.setItem('workflows', JSON.stringify(this.workflows));
   }
 }
+
+// Usage of Custom Workflows in generate.js
+// const customWorkflowsManager = new CustomWorkflows();
+// customWorkflowsManager.loadAgents(agents);
+// customWorkflowsManager.attachDOM();
