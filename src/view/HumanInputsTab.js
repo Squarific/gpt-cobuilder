@@ -5,6 +5,8 @@ function createElement(type, attributes, parent) {
       element.innerText = attributes[key];
     } else if (key === 'event') {
       element.addEventListener(attributes.event.name, attributes.event.handler);
+    } else if (key === 'className') {
+      element.className = attributes[key];
     } else {
       element.setAttribute(key, attributes[key]);
     }
