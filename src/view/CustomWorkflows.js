@@ -7,21 +7,28 @@ class CustomWorkflows {
     const addWorkflowButton = document.getElementById('add-custom-workflow-button');
     
     if (addWorkflowButton) {
-      addWorkflowButton.addEventListener('click', this.createNewWorkflow.bind(this));
+      addWorkflowButton.addEventListener('click', this.showCreateWorkflowModal.bind(this));
     }
     
     this.loadWorkflowsFromLocalStorage();
     this.updateWorkflowList();
   }
 
+  showCreateWorkflowModal() {
+    const customWorkflowModal = document.getElementById('customWorkflowModal');
+    customWorkflowModal.style.display = "block";
+  }
+
   loadAgents(availableAgents) {
     this.availableAgents = availableAgents;
   }
 
-  createNewWorkflow() {
-    const workflowName = prompt("Enter the name for the new workflow:");
-    if (!workflowName) return;
-    
+  createNewWorkflow(workflowName) {
+    if (this.workflows.some(wf => wf.name === workflowName)) {
+      alert("A workflow with this name already exists.");
+      return;
+    }
+
     const newWorkflow = { name: workflowName, agents: [] };
     this.workflows.push(newWorkflow);
     
@@ -89,7 +96,8 @@ class CustomWorkflows {
   }
 }
 
-// Usage of Custom Workflows in generate.js
-// const customWorkflowsManager = new CustomWorkflows();
-// customWorkflowsManager.loadAgents(agents);
-// customWorkflowsManager.attachDOM();
+// Instantiate and call loadTable on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  const customWorkflows = new CustomWorkflows();
+  customWorkflows.attachDOM();
+});
