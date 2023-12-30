@@ -40,7 +40,7 @@ const displayFilesTokenCounts = (response) => {
 };
 
 const sendMessageToChatGPT = async (systemMessage, userMessage) => {
-  const apiKey = apiKeyInput.value;
+  const apiKey = document.getElementById('api-key').value;
 
   const requestOptions = {
     method: 'POST',

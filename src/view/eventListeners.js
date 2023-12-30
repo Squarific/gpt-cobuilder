@@ -37,11 +37,6 @@ changeRequestExamples.addEventListener('change', () => {
   userChangeRequest.value = changeRequestExamples.value;
 });
 
-modelSelection.addEventListener('change', async () => {
-    const settings = { modelSelection: modelSelection.value };
-    await saveSettings(settings);
-});
-
 savedOutputs.addEventListener('change', (event) => {
     if(event.detail.name === "OUTPUT.GPT_FILE_CHANGES"){
         updateFileList('file-changes-container', event.detail.content);

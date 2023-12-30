@@ -1,3 +1,22 @@
+function updateRecentFolders () {
+  const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
+  const recentFoldersList = document.getElementById('recent-folders-list');
+
+  recentFoldersList.textContent = "";
+
+  recentFolders.forEach(folder => {
+    const listItem = document.createElement('li');
+    listItem.textContent = folder;
+    listItem.className = "button";
+    listItem.addEventListener('click', () => {
+      updateFolder(folder);
+      location = location;
+    });
+
+    recentFoldersList.appendChild(listItem);
+  });
+}
+
 const settingsTabContent = document.getElementById('Settings');
 
 // Function to create and append settings elements
@@ -48,9 +67,9 @@ function createSettingsElements() {
   settingsTabContent.appendChild(modelSelectionSelect);
   
   // Folder Display
-  const folderDisplaySpan = document.createElement('span');
-  folderDisplaySpan.id = 'folder-display';
-  settingsTabContent.appendChild(folderDisplaySpan);
+  const folderDisplay = document.createElement('div');
+  folderDisplay.id = 'folder-display';
+  settingsTabContent.appendChild(folderDisplay);
 
   // Recent Folders List
   const recentFoldersListUl = document.createElement('ul');
