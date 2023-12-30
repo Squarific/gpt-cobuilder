@@ -10,15 +10,6 @@ async function gitOperations () {
   }
   
   document.getElementById('git-operation-button').addEventListener('click', gitOperations);
-  document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
-  
-  window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('run-full-workflow-button').addEventListener('click', async () => {
-        document.getElementById('run-full-workflow-button').disabled = true;
-        await runFullWorkflow();
-        document.getElementById('run-full-workflow-button').disabled = false;
-    });
-});
 
 // Variable for total cost
 let totalCost = 0.0; // reset total cost as a number
@@ -69,5 +60,19 @@ async function gitUndoLastCommitAndPush() {
   }
 }
 
-document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
+async function applyFileChanges () {
+  const parsedFiles = parseResponse(savedOutputs.get("OUTPUT.GPT_FILE_CHANGES"));
 
+  for (const file of parsedFiles) {
+    try {
+      await window.fs.saveFile(file.path, file.content);
+      console.log(`Saved file: ${file.path}`);
+    } catch (error) {
+      console.error(`Error saving file ${file.path}: `, error);
+    }
+  }
+
+  agents.forEach((agent) => {
+    if (agent.data.fileList) agent.data.fileList.refresh();
+  });
+}

@@ -44,9 +44,11 @@ async function updateFolder (folder) {
     }
     
     // Load the projectDescription
-    const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
-    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
-    document.getElementById('project-description').value = projectDescription;
+    if (document.getElementById('project-description')) {
+      const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
+      const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+      document.getElementById('project-description').value = projectDescription;
+    }
 
     // Load the settings
     const settings = await loadSettings();

@@ -1,6 +1,5 @@
-const projectDescriptionTextarea = document.getElementById('project-description');
-projectDescriptionTextarea.addEventListener('input', async () => {
-  const projectDescription = projectDescriptionTextarea.value;
+async function updateProjectDescription () {
+  const projectDescription = document.getElementById('project-description').value;
   const folderPath = localStorage.getItem('folder');
   const dirPath = `${folderPath}/${GPT_COBUILDER_FOLDER_NAME}`;
   const projectDescriptionFilePath = `${folderPath}/${PROJECT_DESCRIPTION_FILE}`;
@@ -15,7 +14,7 @@ projectDescriptionTextarea.addEventListener('input', async () => {
   } catch(error){
     console.error("Failed to save project description to the file: ", error);
   }
-});
+}
 
 async function loadExamples() {
   try {
@@ -35,7 +34,7 @@ async function loadExamples() {
   }
 }
 
-function createHumanInputTab() {
+async function createHumanInputTab() {
   const inputsTab = document.getElementById('Inputs');
   
   // Clear existing content if any
@@ -50,8 +49,8 @@ function createHumanInputTab() {
   const projectDescTextarea = document.createElement('textarea');
   projectDescTextarea.id = 'project-description';
   projectDescTextarea.rows = 5;
-  projectDescTextarea.value = 'This is an electron project that aims to let users quickly create and iterate on applications.';
   inputsTab.appendChild(projectDescTextarea);
+  projectDescTextarea.addEventListener('input', updateProjectDescription)
 
   // User Change Request
   const userChangeRequestLabel = document.createElement('label');
@@ -78,6 +77,10 @@ function createHumanInputTab() {
   changeRequestExamplesSelect.appendChild(defaultOption);
   inputsTab.appendChild(changeRequestExamplesSelect);
 
+  changeRequestExamplesSelect.addEventListener('change', () => {
+    userChangeRequestTextarea.value = changeRequestExamples.value;
+  });
+
   // File List Container
   const fileListContainer = document.createElement('div');
   fileListContainer.id = 'file-list';
@@ -98,6 +101,7 @@ function createHumanInputTab() {
   commitPushButton.style.display = 'none';
   commitPushButton.innerText = 'Generate commit message and commit and push changes';
   inputsTab.appendChild(commitPushButton);
+  commitPushButton.addEventListener('click', generateAndPushCommit)
 
   // Run Full Workflow Button
   const runFullWorkflowButton = document.createElement('button');
@@ -105,6 +109,12 @@ function createHumanInputTab() {
   runFullWorkflowButton.id = 'run-full-workflow-button';
   runFullWorkflowButton.innerText = 'Run full workflow';
   inputsTab.appendChild(runFullWorkflowButton);
+
+  runFullWorkflowButton.addEventListener('click', async () => {
+    runFullWorkflowButton.disabled = true;
+    await runFullWorkflow();
+    runFullWorkflowButton.disabled = false;
+  });
 
   // Total Cost
   const totalCostP = document.createElement('p');
@@ -126,18 +136,21 @@ function createHumanInputTab() {
   applyButton2.id = 'apply-button2';
   applyButton2.innerText = 'Apply generated file changes';
   customButtonsDiv.appendChild(applyButton2);
+  applyButton2.addEventListener('click', applyFileChanges);
 
   const gitOperationButton2 = document.createElement('button');
   gitOperationButton2.className = 'button';
   gitOperationButton2.id = 'git-operation-button2';
   gitOperationButton2.innerText = 'Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push';
   customButtonsDiv.appendChild(gitOperationButton2);
+  gitOperationButton2.addEventListener('click', gitOperations)
 
   const gitUndoLastCommitButton = document.createElement('button');
   gitUndoLastCommitButton.className = 'button';
   gitUndoLastCommitButton.id = 'git-undo-last-commit-button';
   gitUndoLastCommitButton.innerText = 'Undo last commit and push';
   customButtonsDiv.appendChild(gitUndoLastCommitButton);
+  gitUndoLastCommitButton.addEventListener('click', gitUndoLastCommitAndPush)
 
   inputsTab.appendChild(customButtonsDiv);
 
@@ -145,9 +158,13 @@ function createHumanInputTab() {
   window.fileListController = new FileListController(); 
   const fileListElement = window.fileListController.createDOM();
   fileListContainer.appendChild(fileListElement);
+
+  // Load project description
+  const folder = localStorage.getItem('folder');
+  const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
+  const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+  projectDescTextarea.value = projectDescription;
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-  createHumanInputTab();
-  loadExamples();
-});
+createHumanInputTab();
+loadExamples();

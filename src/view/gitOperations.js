@@ -1,5 +1,3 @@
-// New file: src/view/gitOperations.js
-
 async function checkUncommittedChanges() {
     const directory = localStorage.getItem('folder');
     const gitStatus = await window.gitCommands.gitStatus(directory);
@@ -25,9 +23,6 @@ async function generateAndPushCommit() {
     await window.gitCommands.gitPush(directory);
 }
 
-// Add this function call at the end of your window onload or DOMContentLoaded event handler
-checkUncommittedChanges();
-
-// Attach event listener to the new button for committing and pushing
-document.getElementById('commit-push-button').addEventListener('click', generateAndPushCommit);
-
+setInterval(() => {
+    checkUncommittedChanges();
+}, 30000);

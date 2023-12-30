@@ -1,8 +1,6 @@
 class Agent {
     constructor(agentData) {
         this.data = agentData;
-        this.projectDescriptionTextArea = document.getElementById('project-description');
-        this.userChangeRequestTextArea = document.getElementById('user-change-request');
         this.agentTabCreator = new AgentTabCreator();
         this.inputGetter = new InputGetter();
     }
@@ -34,8 +32,8 @@ class Agent {
         document.getElementsByTagName("body")[0].appendChild(tabContent);
 
         savedOutputs.addEventListener("change", this.updateFullMessage.bind(this));
-        this.projectDescriptionTextArea.addEventListener('change', this.updateFullMessage.bind(this));
-        this.userChangeRequestTextArea.addEventListener('change', this.updateFullMessage.bind(this));
+        document.getElementById('project-description').addEventListener('change', this.updateFullMessage.bind(this));
+        document.getElementById('user-change-request').addEventListener('change', this.updateFullMessage.bind(this));
 
         if (this.data.inputs && this.data.inputs.includes("FILE_LIST")) {
             this.data.fileList.element.addEventListener('filechange', this.updateFullMessage.bind(this));
