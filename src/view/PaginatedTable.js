@@ -1,4 +1,4 @@
-const ITEMS_PER_PAGE = 10; // Number of items per page
+const ITEMS_PER_PAGE = 50; // Number of items per page
 
 class PaginatedTable {
   constructor(tableId) {
