@@ -117,4 +117,22 @@ window.addEventListener('DOMContentLoaded', async () => {
       modal.style.display = "none";
     }
   }
+
+  // Adding Custom Workflow Tab
+  const customWorkflowTabCreator = new TabCreator();
+  customWorkflowTabCreator.createTabButton({
+      name: 'Custom Workflows',
+      systemMessage: '',
+      output: 'OUTPUT.CUSTOM_WORKFLOWS'
+  });
+  const { tabContent: customWorkflowTabContent } = customWorkflowTabCreator.createTabContent({
+      name: 'Custom Workflows',
+      systemMessage: '',
+      output: 'OUTPUT.CUSTOM_WORKFLOWS'
+  });
+  // Create instance for managing custom workflows
+  const customWorkflowsManager = new CustomWorkflows(customWorkflowTabContent);
+  customWorkflowsManager.attachDOM();
+  customWorkflowsManager.loadAgents(agents);
+  document.body.appendChild(customWorkflowTabContent);
 });
