@@ -1,3 +1,20 @@
+function createElement(type, attributes, parent) {
+  const element = document.createElement(type);
+  for (const key in attributes) {
+    if (key === 'innerText') {
+      element.innerText = attributes[key];
+    } else if (key === 'event') {
+      element.addEventListener(attributes.event.name, attributes.event.handler);
+    } else {
+      element.setAttribute(key, attributes[key]);
+    }
+  }
+  if (parent) {
+    parent.appendChild(element);
+  }
+  return element;
+}
+
 async function updateProjectDescription () {
   const projectDescription = document.getElementById('project-description').value;
   const folderPath = localStorage.getItem('folder');
@@ -5,11 +22,9 @@ async function updateProjectDescription () {
   const projectDescriptionFilePath = `${folderPath}/${PROJECT_DESCRIPTION_FILE}`;
 
   try {
-    // Checking if the directory 'gptcobuilder' exists & creating if it doesn't exist
     if(!await fs.exists(dirPath)){
       await fs.mkdir(dirPath);
     }
-    // Save the projectDescription string into the project_description.txt file
     await window.fs.saveFile(projectDescriptionFilePath,  projectDescription);
   } catch(error){
     console.error("Failed to save project description to the file: ", error);
@@ -36,130 +51,53 @@ async function loadExamples() {
 
 async function createHumanInputTab() {
   const inputsTab = document.getElementById('Inputs');
-  
-  // Clear existing content if any
   inputsTab.innerHTML = '';
 
-  // Project Description
-  const projectDescLabel = document.createElement('label');
-  projectDescLabel.setAttribute('for', 'project-description');
-  projectDescLabel.innerText = 'Project Description:';
-  inputsTab.appendChild(projectDescLabel);
+  // Project Description elements
+  createElement('label', { for: 'project-description', innerText: 'Project Description:' }, inputsTab);
+  const projectDescTextarea = createElement('textarea', { id: 'project-description', rows: 5, event: { name: 'input', handler: updateProjectDescription }}, inputsTab);
 
-  const projectDescTextarea = document.createElement('textarea');
-  projectDescTextarea.id = 'project-description';
-  projectDescTextarea.rows = 5;
-  inputsTab.appendChild(projectDescTextarea);
-  projectDescTextarea.addEventListener('input', updateProjectDescription)
+  // User Change Request elements
+  createElement('label', { for: 'user-change-request', innerText: 'User change request:' }, inputsTab);
+  const userChangeRequestTextarea = createElement('textarea', { id: 'user-change-request', rows: 5 }, inputsTab);
 
-  // User Change Request
-  const userChangeRequestLabel = document.createElement('label');
-  userChangeRequestLabel.setAttribute('for', 'user-change-request');
-  userChangeRequestLabel.innerText = 'User change request:';
-  inputsTab.appendChild(userChangeRequestLabel);
-
-  const userChangeRequestTextarea = document.createElement('textarea');
-  userChangeRequestTextarea.id = 'user-change-request';
-  userChangeRequestTextarea.rows = 5;
-  inputsTab.appendChild(userChangeRequestTextarea);
-
-  // Example Change Requests
-  const changeRequestExamplesLabel = document.createElement('label');
-  changeRequestExamplesLabel.setAttribute('for', 'change-request-examples');
-  changeRequestExamplesLabel.innerText = 'Example Change Requests:';
-  inputsTab.appendChild(changeRequestExamplesLabel);
-
-  const changeRequestExamplesSelect = document.createElement('select');
-  changeRequestExamplesSelect.id = 'change-request-examples';
-  const defaultOption = document.createElement('option');
-  defaultOption.value = "";
-  defaultOption.innerText = 'Choose an example...';
-  changeRequestExamplesSelect.appendChild(defaultOption);
-  inputsTab.appendChild(changeRequestExamplesSelect);
-
-  changeRequestExamplesSelect.addEventListener('change', () => {
-    userChangeRequestTextarea.value = changeRequestExamples.value;
-  });
+  // Example Change Requests elements
+  createElement('label', { for: 'change-request-examples', innerText: 'Example Change Requests:' }, inputsTab);
+  const changeRequestExamplesSelect = createElement('select', { id: 'change-request-examples', event: { name: 'change', handler: () => userChangeRequestTextarea.value = changeRequestExamplesSelect.value }}, inputsTab);
+  createElement('option', { value: "", innerText: 'Choose an example...' }, changeRequestExamplesSelect);
 
   // File List Container
-  const fileListContainer = document.createElement('div');
-  fileListContainer.id = 'file-list';
-  inputsTab.appendChild(fileListContainer);
+  const fileListContainer = createElement('div', { id: 'file-list' }, inputsTab);
 
   // Git Warning
-  const gitWarningDiv = document.createElement('div');
-  gitWarningDiv.id = 'git-warning';
-  gitWarningDiv.className = 'error-log';
-  gitWarningDiv.style.display = 'none';
-  gitWarningDiv.innerText = 'There are uncommitted changes';
-  inputsTab.appendChild(gitWarningDiv);
+  createElement('div', { id: 'git-warning', className: 'error-log', innerText: 'There are uncommitted changes', style: 'display: none' }, inputsTab);
 
   // Commit Push Button
-  const commitPushButton = document.createElement('button');
-  commitPushButton.className = 'button';
-  commitPushButton.id = 'commit-push-button';
-  commitPushButton.style.display = 'none';
-  commitPushButton.innerText = 'Generate commit message and commit and push changes';
-  inputsTab.appendChild(commitPushButton);
-  commitPushButton.addEventListener('click', generateAndPushCommit)
+  createElement('button', { className: 'button', id: 'commit-push-button', innerText: 'Generate commit message and commit and push changes', style: 'display: none', event: { name: 'click', handler: generateAndPushCommit }}, inputsTab);
 
   // Run Full Workflow Button
-  const runFullWorkflowButton = document.createElement('button');
-  runFullWorkflowButton.className = 'button';
-  runFullWorkflowButton.id = 'run-full-workflow-button';
-  runFullWorkflowButton.innerText = 'Run full workflow';
-  inputsTab.appendChild(runFullWorkflowButton);
-
-  runFullWorkflowButton.addEventListener('click', async () => {
+  const runFullWorkflowButton = createElement('button', { className: 'button', id: 'run-full-workflow-button', innerText: 'Run full workflow', event: { name: 'click', handler: async () => {
     runFullWorkflowButton.disabled = true;
     await runFullWorkflow();
     runFullWorkflowButton.disabled = false;
-  });
+  } }}, inputsTab);
 
   // Total Cost
-  const totalCostP = document.createElement('p');
-  totalCostP.id= 'total-cost';
-  totalCostP.innerText = 'Total cost for previous full workflow run: $0';
-  inputsTab.appendChild(totalCostP);
+  createElement('p', { id: 'total-cost', innerText: 'Total cost for previous full workflow run: $0' }, inputsTab);
 
   // File Changes Container 2
-  const fileChangesContainer2 = document.createElement('div');
-  fileChangesContainer2.id = 'file-changes-container2';
-  inputsTab.appendChild(fileChangesContainer2);
+  createElement('div', { id: 'file-changes-container2' }, inputsTab);
 
   // Custom Buttons
-  const customButtonsDiv = document.createElement('div');
-  customButtonsDiv.id = 'custom-buttons';
+  const customButtonsDiv = createElement('div', { id: 'custom-buttons' }, inputsTab);
+  createElement('button', { className: 'button', id: 'apply-button2', innerText: 'Apply generated file changes', event: { name: 'click', handler: applyFileChanges }}, customButtonsDiv);
+  createElement('button', { className: 'button', id: 'git-operation-button2', innerText: 'Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push', event: { name: 'click', handler: gitOperations }}, customButtonsDiv);
+  createElement('button', { className: 'button', id: 'git-undo-last-commit-button', innerText: 'Undo last commit and push', event: { name: 'click', handler: gitUndoLastCommitAndPush }}, customButtonsDiv);
 
-  const applyButton2 = document.createElement('button');
-  applyButton2.className = 'button';
-  applyButton2.id = 'apply-button2';
-  applyButton2.innerText = 'Apply generated file changes';
-  customButtonsDiv.appendChild(applyButton2);
-  applyButton2.addEventListener('click', applyFileChanges);
-
-  const gitOperationButton2 = document.createElement('button');
-  gitOperationButton2.className = 'button';
-  gitOperationButton2.id = 'git-operation-button2';
-  gitOperationButton2.innerText = 'Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push';
-  customButtonsDiv.appendChild(gitOperationButton2);
-  gitOperationButton2.addEventListener('click', gitOperations)
-
-  const gitUndoLastCommitButton = document.createElement('button');
-  gitUndoLastCommitButton.className = 'button';
-  gitUndoLastCommitButton.id = 'git-undo-last-commit-button';
-  gitUndoLastCommitButton.innerText = 'Undo last commit and push';
-  customButtonsDiv.appendChild(gitUndoLastCommitButton);
-  gitUndoLastCommitButton.addEventListener('click', gitUndoLastCommitAndPush)
-
-  inputsTab.appendChild(customButtonsDiv);
-
-  // Init the FileListController
   window.fileListController = new FileListController(); 
   const fileListElement = window.fileListController.createDOM();
   fileListContainer.appendChild(fileListElement);
 
-  // Load project description
   const folder = localStorage.getItem('folder');
   const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
   const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
