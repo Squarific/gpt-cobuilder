@@ -87,14 +87,27 @@
       </div>
     </div>
 
-    <div id="customWorkflowModal" class="modal">
+    <div id="tabNameModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Create a New Custom Workflow:</h2>
-            <label for="customWorkflowNameInput">Workflow Name:</label>
-            <input type="text" id="customWorkflowNameInput" required />
-            <button id="submitCustomWorkflowNameButton" class="button">Create Workflow</button>
+            <label for="tabNameInput">Name of the tab:</label>
+            <input type="text" id="tabNameInput" />
+            <button id="submitTabNameButton">Submit</button>
         </div>
+    </div>
+
+    <div id="requestDetailsModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Request Details</h2>
+        <p id="modal-apiKey"></p>
+        <p id="modal-model"></p>
+        <p id="modal-role"></p>
+        <label for="modal-requestContent">Request Content:</label>
+        <textarea id="modal-requestContent" rows="5" readonly></textarea>
+        <label for="modal-responseContent">Response Content:</label>
+        <textarea id="modal-responseContent" rows="5" readonly></textarea>
+        <p id="modal-cost"></p>
+      </div>
     </div>
 
     <div id="CustomWorkflows" class="tabcontent">

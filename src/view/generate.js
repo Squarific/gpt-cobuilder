@@ -122,39 +122,4 @@ window.addEventListener('DOMContentLoaded', async () => {
   const customWorkflowsManager = new CustomWorkflows();
   customWorkflowsManager.loadAgents(agents);
   customWorkflowsManager.attachDOM();
-
-  // Get modal elements for custom workflows
-  const customWorkflowModal = document.getElementById('customWorkflowModal');
-  const closeCustomWorkflowModalButton = customWorkflowModal.querySelector('.close');
-  const customWorkflowNameInput = document.getElementById('customWorkflowNameInput');
-  const submitCustomWorkflowNameButton = document.getElementById('submitCustomWorkflowNameButton');
-
-  // Bind event to add workflow button
-  document.getElementById('add-custom-workflow-button').addEventListener('click', () => {
-      customWorkflowModal.style.display = "block";
-  });
-
-  // Bind event to close button of the modal
-  closeCustomWorkflowModalButton.addEventListener('click', () => {
-      customWorkflowModal.style.display = "none";
-  });
-
-  // Bind event to submit button of the modal
-  submitCustomWorkflowNameButton.addEventListener('click', () => {
-      const workflowName = customWorkflowNameInput.value.trim();
-      if (workflowName === "") {
-          alert("Workflow name cannot be empty.");
-          return;
-      }
-      customWorkflowsManager.createNewWorkflow(workflowName);
-      customWorkflowModal.style.display = "none";
-      customWorkflowNameInput.value = ""; // Reset the value once submitted
-  });
-
-  // Close the modal when the user clicks anywhere outside of it
-  window.onclick = (event) => {
-      if (event.target == customWorkflowModal) {
-          customWorkflowModal.style.display = "none";
-      }
-  };
 });
