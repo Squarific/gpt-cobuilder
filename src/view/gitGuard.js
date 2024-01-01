@@ -30,6 +30,8 @@ async function generateAndPushCommit() {
         await window.gitCommands.gitCommit(directory, commitMessage);
         // Push changes to the repository
         await window.gitCommands.gitPush(directory);
+
+        checkUncommittedChanges();
     } else {
       console.error("Failed to generate commit message");
     }
