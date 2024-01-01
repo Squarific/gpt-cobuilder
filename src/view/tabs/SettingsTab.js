@@ -36,7 +36,8 @@ async function createSettingsTab() {
 
   document.getElementById('model-selection').addEventListener('change', () => {
     const model = document.getElementById('model-selection').value;
-    localStorage.setItem('modelSelection', model);
+    const settings = { modelSelection: model };
+    saveSettings(settings);
   });
 
   updateRecentFolders();
