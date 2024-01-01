@@ -1,16 +1,3 @@
-const generateButton = document.getElementById('generate-button');
-const convertButton = document.getElementById('convert-button');
-const errorLog = document.getElementById('error-log');
-const reponseField = document.getElementById('model-response');
-const modelSelection = document.getElementById('model-selection');
-
-function clearErrorLog() {
-  errorLog.textContent = "";
-}
-
-const applyButton = document.getElementById('apply-button');
-applyButton.addEventListener('click', applyFileChanges);
-
 savedOutputs.addEventListener('change', (event) => {
     if(event.detail.name === "OUTPUT.GPT_FILE_CHANGES"){
         updateFileList('file-changes-container', event.detail.content);

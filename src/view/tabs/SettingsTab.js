@@ -55,4 +55,4 @@ async function createSettingsTab() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', createSettingsTab);
+createSettingsTab();
