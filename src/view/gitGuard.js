@@ -5,44 +5,40 @@ async function checkUncommittedChanges() {
     const hasUncommittedChanges = gitStatus.includes('Changes to be committed:') || gitStatus.includes('Changes not staged for commit:');
     const warningElement = document.getElementById('git-warning');
 
-    if (hasUncommittedChanges) {
-        const modifiedFiles = parseGitStatus(gitStatus);
-        const modifiedFilesList = document.createElement('ul');
-        modifiedFiles.forEach(file => {
-            const fileItem = document.createElement('li');
-            fileItem.textContent = file;
-            modifiedFilesList.appendChild(fileItem);
-        });
-
-        warningElement.innerHTML = 'There are uncommitted changes:<br/>';
-        warningElement.appendChild(modifiedFilesList);
-        warningElement.style.display = 'block';
-        warningElement.appendChild(document.getElementById('commit-push-button'));
-    } else {
-        warningElement.style.display = 'none';
-    }
+    warningElement.style.display = hasUncommittedChanges ? "block" : "none";
 }
 
-// Parse git status output to extract modified files
-function parseGitStatus(gitStatus) {
-    const lines = gitStatus.split('\n');
-    const modifiedFiles = [];
+async function generateAndPushCommit() {
+    const directory = localStorage.getItem('folder');
 
-    let capture = false; // Flag to capture modified files
-    for (const line of lines) {
-        if (line.startsWith('Changes to be committed:') || line.startsWith('Changes not staged for commit:')) {
-            capture = true; // Start capturing modified files
-        } else if (line === '') {
-            capture = false; // Stop capturing modified files
-        } else if (capture && (line.startsWith('\tmodified:') || line.startsWith('\tnew file:'))) {
-            const filePath = line.substring(line.indexOf(':') + 1).trim();
-            modifiedFiles.push(filePath); // Add file path to the list
-        }
+    // Retrieve GitMaster agent
+    const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
+    if (!GitMasterAgent) {
+      console.error("Git Master agent not found");
+      return;
     }
-    return modifiedFiles;
+
+    // Run GitMaster agent to generate commit message
+    const response = await GitMasterAgent.run();
+
+    // Check if the generation was successful
+    if (response && response.choices && response.choices.length > 0) {
+        const commitMessage = response.choices[0].message.content;
+        // The files should first be added using gitAdd
+        await window.gitCommands.gitAdd(directory);
+        // Commit changes with generated message
+        await window.gitCommands.gitCommit(directory, commitMessage);
+        // Push changes to the repository
+        await window.gitCommands.gitPush(directory);
+
+        checkUncommittedChanges();
+    } else {
+      console.error("Failed to generate commit message");
+    }
 }
 
 document.getElementById('commit-push-button').addEventListener('click', generateAndPushCommit);
+
 setInterval(() => {
     checkUncommittedChanges();
 }, 30000);
