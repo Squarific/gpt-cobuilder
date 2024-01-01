@@ -44,14 +44,10 @@ function createGitWarningElement(hasUncommittedChanges, modifiedFiles) {
 }
 
 function extractModifiedFiles(gitStatus) {
-  // Updated regex to match both "modified:" and "M" prefixes with optional whitespace before
   const fileRegex = /^(?:\s*modified:|\s*M)\s*(.+)$/mg;
   let match;
   const files = [];
-  console.log(gitStatus);
   while ((match = fileRegex.exec(gitStatus)) !== null) {
-    console.log(match);
-    // Stripping potential leading and trailing whitespace
     files.push(match[1].trim());
   }
   return files;
