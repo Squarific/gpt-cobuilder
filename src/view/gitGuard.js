@@ -44,11 +44,13 @@ function createGitWarningElement(hasUncommittedChanges, modifiedFiles) {
 }
 
 function extractModifiedFiles(gitStatus) {
-  const fileRegex = /^ M (.+)$/mg;
+  // Updated regex to match both "modified:" and "M" prefixes with optional whitespace before
+  const fileRegex = /^(?:modified:|\s*M)\s*(.+)$/mg;
   let match;
   const files = [];
   while ((match = fileRegex.exec(gitStatus)) !== null) {
-    files.push(match[1]);
+    // Stripping potential leading and trailing whitespace
+    files.push(match[1].trim());
   }
   return files;
 }
@@ -74,3 +76,4 @@ async function generateAndPushCommit() {
 
 setInterval(checkUncommittedChanges, 30000);
 window.addEventListener('load', checkUncommittedChanges);
+
