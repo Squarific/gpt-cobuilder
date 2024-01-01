@@ -4,8 +4,27 @@
   color: #495057;
 }
 
-#generated-message-div {
-  display:none;
+/* Update existing .error-log class with general error styling */
+.error-log {
+  margin: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  display: none; /* Keep the existing display none to control visibility via JavaScript */
+}
+
+/* Add specific styling for the #git-warning element */
+#git-warning {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  background-color: #f8d7da; /* Red-ish background for warning */
+  border-color: #f5c6cb;
+  color: #721c24;
 }
 
 #token-count {
