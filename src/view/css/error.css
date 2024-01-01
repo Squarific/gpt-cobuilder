@@ -1,0 +1,13 @@
+#error-log, .error-log {
+  color: #dc3545;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.token-warning {
+  color: orange !important;
+}
+
+.token-serious-warning {
+  color: red !important;
+}
