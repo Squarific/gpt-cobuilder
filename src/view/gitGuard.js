@@ -36,4 +36,8 @@ async function generateAndPushCommit() {
 }
 
 document.getElementById('commit-push-button').addEventListener('click', generateAndPushCommit);
+
+setInterval(() => {
+    checkUncommittedChanges();
+}, 30000);
 checkUncommittedChanges();
