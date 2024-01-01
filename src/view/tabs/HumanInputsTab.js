@@ -42,12 +42,7 @@ async function createHumanInputTab() {
     <select id="change-request-examples"></select>
 
     <div id="file-list"></div>
-    <div id="git-warning" class="error-log" style="display: none">
-      There are uncommitted changes
-    </div>
-    <button class="button" id="commit-push-button" style="display: none">
-      Generate commit message and commit and push changes
-    </button>
+    
     <button class="button" id="run-full-workflow-button">Run full workflow</button>
     <p id="total-cost">Total cost for previous full workflow run: $0</p>
     <div id="file-changes-container2"></div>
@@ -70,8 +65,6 @@ async function createHumanInputTab() {
   changeRequestExamplesSelect.addEventListener('change', () => {
     document.getElementById('user-change-request').value = changeRequestExamplesSelect.value;
   });
-
-  document.getElementById('commit-push-button').addEventListener('click', generateAndPushCommit);
 
   const runFullWorkflowButton = document.getElementById('run-full-workflow-button');
   runFullWorkflowButton.addEventListener('click', async () => {
@@ -100,3 +93,4 @@ async function createHumanInputTab() {
 }
 
 createHumanInputTab();
+

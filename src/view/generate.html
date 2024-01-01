@@ -13,6 +13,13 @@
     <link rel="stylesheet" href="css/generate.css" />
   </head>
   <body>
+    <div id="git-warning" class="error-log" style="display: none">
+      There are uncommitted changes
+      
+      <button class="button" id="commit-push-button">
+        Generate commit message and commit and push changes
+      </button>
+    </div>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
@@ -86,7 +93,7 @@
 
     <!-- Operations -->
     <script src="workflows.js"></script>
-    <script src="gitOperations.js"></script>
+    <script src="gitGuard.js"></script>
     <script src="tabs/SettingsTab.js"></script>
     <script src="tabs/HumanInputsTab.js"></script>
     <script src="apiOperations.js"></script>
