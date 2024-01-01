@@ -1,34 +1,15 @@
-function createElement(type, attributes, parent) {
-  const element = document.createElement(type);
-  for (const key in attributes) {
-    if (key === 'innerText') {
-      element.innerText = attributes[key];
-    } else if (key === 'event') {
-      element.addEventListener(attributes.event.name, attributes.event.handler);
-    } else if (key === 'className') {
-      element.className = attributes[key];
-    } else {
-      element.setAttribute(key, attributes[key]);
-    }
-  }
-  if (parent) {
-    parent.appendChild(element);
-  }
-  return element;
-}
-
-async function updateProjectDescription () {
+async function updateProjectDescription() {
   const projectDescription = document.getElementById('project-description').value;
   const folderPath = localStorage.getItem('folder');
   const dirPath = `${folderPath}/${GPT_COBUILDER_FOLDER_NAME}`;
   const projectDescriptionFilePath = `${folderPath}/${PROJECT_DESCRIPTION_FILE}`;
 
   try {
-    if(!await fs.exists(dirPath)){
+    if (!await fs.exists(dirPath)) {
       await fs.mkdir(dirPath);
     }
-    await window.fs.saveFile(projectDescriptionFilePath,  projectDescription);
-  } catch(error){
+    await window.fs.saveFile(projectDescriptionFilePath, projectDescription);
+  } catch (error) {
     console.error("Failed to save project description to the file: ", error);
   }
 }
@@ -40,10 +21,7 @@ async function loadExamples() {
       for (const file of exampleFiles) {
         const filePath = EXAMPLE_DIRECTORY + "/" + file;
         const fileContent = await fs.readFile(filePath);
-        const exampleOption = document.createElement('option');
-        exampleOption.value = fileContent;
-        exampleOption.innerText = fileContent;
-        document.getElementById('change-request-examples').appendChild(exampleOption);
+        document.getElementById('change-request-examples').innerHTML += `<option value="${fileContent}">${fileContent}</option>`;
       }
     }
   } catch (error) {
@@ -53,58 +31,72 @@ async function loadExamples() {
 
 async function createHumanInputTab() {
   const inputsTab = document.getElementById('Inputs');
-  inputsTab.innerHTML = '';
+  inputsTab.innerHTML = `
+    <label for="project-description">Project Description:</label>
+    <textarea id="project-description" rows="5"></textarea>
 
-  // Project Description elements
-  createElement('label', { for: 'project-description', innerText: 'Project Description:' }, inputsTab);
-  const projectDescTextarea = createElement('textarea', { id: 'project-description', rows: 5, event: { name: 'input', handler: updateProjectDescription }}, inputsTab);
+    <label for="user-change-request">User change request:</label>
+    <textarea id="user-change-request" rows="5"></textarea>
 
-  // User Change Request elements
-  createElement('label', { for: 'user-change-request', innerText: 'User change request:' }, inputsTab);
-  const userChangeRequestTextarea = createElement('textarea', { id: 'user-change-request', rows: 5 }, inputsTab);
+    <label for="change-request-examples">Example Change Requests:</label>
+    <select id="change-request-examples"></select>
 
-  // Example Change Requests elements
-  createElement('label', { for: 'change-request-examples', innerText: 'Example Change Requests:' }, inputsTab);
-  const changeRequestExamplesSelect = createElement('select', { id: 'change-request-examples', event: { name: 'change', handler: () => userChangeRequestTextarea.value = changeRequestExamplesSelect.value }}, inputsTab);
-  createElement('option', { value: "", innerText: 'Choose an example...' }, changeRequestExamplesSelect);
+    <div id="file-list"></div>
+    <div id="git-warning" class="error-log" style="display: none">
+      There are uncommitted changes
+    </div>
+    <button class="button" id="commit-push-button" style="display: none">
+      Generate commit message and commit and push changes
+    </button>
+    <button class="button" id="run-full-workflow-button">Run full workflow</button>
+    <p id="total-cost">Total cost for previous full workflow run: $0</p>
+    <div id="file-changes-container2"></div>
 
-  // File List Container
-  const fileListContainer = createElement('div', { id: 'file-list' }, inputsTab);
+    <div id="custom-buttons">
+      <button class="button" id="apply-button2">Apply generated file changes</button>
+      <button class="button" id="git-operation-button2">
+        Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push
+      </button>
+      <button class="button" id="git-undo-last-commit-button">
+        Undo last commit and push
+      </button>
+    </div>
+  `;
 
-  // Git Warning
-  createElement('div', { id: 'git-warning', className: 'error-log', innerText: 'There are uncommitted changes', style: 'display: none' }, inputsTab);
+  const projectDescriptionTextarea = document.getElementById('project-description');
+  projectDescriptionTextarea.addEventListener('input', updateProjectDescription);
 
-  // Commit Push Button
-  createElement('button', { className: 'button', id: 'commit-push-button', innerText: 'Generate commit message and commit and push changes', style: 'display: none', event: { name: 'click', handler: generateAndPushCommit }}, inputsTab);
+  const changeRequestExamplesSelect = document.getElementById('change-request-examples');
+  changeRequestExamplesSelect.addEventListener('change', () => {
+    document.getElementById('user-change-request').value = changeRequestExamplesSelect.value;
+  });
 
-  // Run Full Workflow Button
-  const runFullWorkflowButton = createElement('button', { className: 'button', id: 'run-full-workflow-button', innerText: 'Run full workflow', event: { name: 'click', handler: async () => {
+  document.getElementById('commit-push-button').addEventListener('click', generateAndPushCommit);
+
+  const runFullWorkflowButton = document.getElementById('run-full-workflow-button');
+  runFullWorkflowButton.addEventListener('click', async () => {
     runFullWorkflowButton.disabled = true;
     await runFullWorkflow();
     runFullWorkflowButton.disabled = false;
-  } }}, inputsTab);
+  });
 
-  // Total Cost
-  createElement('p', { id: 'total-cost', innerText: 'Total cost for previous full workflow run: $0' }, inputsTab);
+  document.getElementById('apply-button2').addEventListener('click', applyFileChanges);
+  document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
+  document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 
-  // File Changes Container 2
-  createElement('div', { id: 'file-changes-container2' }, inputsTab);
-
-  // Custom Buttons
-  const customButtonsDiv = createElement('div', { id: 'custom-buttons' }, inputsTab);
-  createElement('button', { className: 'button', id: 'apply-button2', innerText: 'Apply generated file changes', event: { name: 'click', handler: applyFileChanges }}, customButtonsDiv);
-  createElement('button', { className: 'button', id: 'git-operation-button2', innerText: 'Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push', event: { name: 'click', handler: gitOperations }}, customButtonsDiv);
-  createElement('button', { className: 'button', id: 'git-undo-last-commit-button', innerText: 'Undo last commit and push', event: { name: 'click', handler: gitUndoLastCommitAndPush }}, customButtonsDiv);
-
-  window.fileListController = new FileListController(); 
+  window.fileListController = new FileListController();
   const fileListElement = window.fileListController.createDOM();
-  fileListContainer.appendChild(fileListElement);
+  document.getElementById('file-list').appendChild(fileListElement);
 
+  // Loading existing data
   const folder = localStorage.getItem('folder');
   const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
-  const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
-  projectDescTextarea.value = projectDescription;
+  if (await window.fs.exists(projectDescriptionFilePath)) {
+    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+    projectDescriptionTextarea.value = projectDescription;
+  }
+
+  loadExamples();
 }
 
 createHumanInputTab();
-loadExamples();
