@@ -56,7 +56,14 @@ async function updateFolder (folder) {
         document.getElementById('model-selection').value = settings.modelSelection;
     }
 
-    updateRecentFolders();
+    // Save the new folder as a recent folder
+    const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
+    recentFolders.push(folder);
+    const uniqueFolders = [...new Set(recentFolders)];
+    localStorage.setItem('recentFolders', JSON.stringify(uniqueFolders.slice(-5)));
+    
+    // Display the new recent folders
+    updateRecentFoldersList();
   }
 };
 

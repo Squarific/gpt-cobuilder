@@ -27,11 +27,6 @@ async function createSettingsTab() {
   document.getElementById('folder-selection').addEventListener('click', async () => {
     const folder = await folderDialog.open();
     updateFolder(folder);
-    const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
-    recentFolders.push(folder);
-    const uniqueFolders = [...new Set(recentFolders)];
-    localStorage.setItem('recentFolders', JSON.stringify(uniqueFolders.slice(-5)));
-    updateRecentFolders();
   });
 
   document.getElementById('model-selection').addEventListener('change', () => {
@@ -40,17 +35,9 @@ async function createSettingsTab() {
     saveSettings(settings);
   });
 
-  updateRecentFolders();
-  
-  function updateFolder(folder) {
-    if (folder) {
-      localStorage.setItem('folder', folder);
-      document.getElementById('folder-display').textContent = `Selected folder: ${folder}`;
-      location.reload(true);
-    }
-  }
+  updateRecentFoldersList();
 
-  function updateRecentFolders() {
+  function updateRecentFoldersList() {
     const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
     const recentFoldersList = document.getElementById('recent-folders-list');
     recentFoldersList.innerHTML = "";
