@@ -1,1 +1,1 @@
-This is an electron project that aims to let users quickly create and iterate on applications.
+This is an electron project that aims to let users quickly create and iterate on applications using LLMs in this case chat GPT.
