@@ -10,6 +10,7 @@ class Agent {
         
         let systemMessage = this.data.systemMessageTextarea.value;
         let userMessage = this.data.fullMessageTextArea.value;
+        this.data.modelResponseTextArea.value = "";
         
         try {
             var response = await sendMessageToChatGPTStreamed(systemMessage, userMessage, (chunk) => {
