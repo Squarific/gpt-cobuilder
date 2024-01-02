@@ -1,4 +1,4 @@
-class AgentTabCreator {
+class AgentTab {
     constructor() {
         this.htmlCreator = new HtmlElementCreator();
     }
@@ -37,4 +37,4 @@ class AgentTabCreator {
     } 
 }
 
-agentTabCreator = new AgentTabCreator();
+agentTab = new AgentTab();
