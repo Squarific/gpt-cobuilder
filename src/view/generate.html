@@ -25,7 +25,6 @@
     <div id="Settings" class="tabcontent"></div>
     <div id="Inputs" class="tabcontent"></div>
     <div id="Outputs" class="tabcontent"></div>
-
     <div id="Requests" class="tabcontent">
       <div id="requests-table-container">
         <h2>Requests Log</h2>
@@ -34,6 +33,7 @@
         <!-- Pagination controls will be added here programmatically -->
       </div>
     </div>
+    <div id="CustomWorkflows" class="tabcontent"></div>
 
     <div id="tabNameModal" class="modal">
         <div class="modal-content">
@@ -56,12 +56,6 @@
         <textarea id="modal-responseContent" rows="5" readonly></textarea>
         <p id="modal-cost"></p>
       </div>
-    </div>
-
-    <div id="CustomWorkflows" class="tabcontent">
-      <h2>Manage Custom Workflows:</h2>
-      <button class="button" id="add-custom-workflow-button">Add New Workflow</button>
-      <div id="custom-workflows-list"></div>
     </div>
 
     <!-- Classes -->
@@ -87,8 +81,8 @@
     <script src="savedOutputsEventListeners.js"></script>
     <script src="agents.js"></script>
     <script src="modalOperations.js"></script>
-    <script src="generate.js"></script>
-    <!-- Include the Outputs Tab script -->
     <script src="tabs/OutputsTab.js"></script>
+    <script src="tabs/CustomWorkflowsTab.js"></script>
+    <script src="generate.js"></script>
   </body>
 </html>
