@@ -1,11 +1,23 @@
 async function gitOperations () {
+  // Get buttons by their IDs
+  const gitOperationButton1 = document.getElementById('git-operation-button');
+  const gitOperationButton2 = document.getElementById('git-operation-button2');
+
   try {
+    // Disable the buttons
+    gitOperationButton1.disabled = true;
+    gitOperationButton2.disabled = true;
+
     const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
     await window.gitCommands.gitAdd(localStorage.getItem("folder"));
     await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
     await window.gitCommands.gitPush(localStorage.getItem("folder"));
   } catch (error) {
     console.log("Error performing git operations", error);
+  } finally {
+    // Re-enable the buttons
+    gitOperationButton1.disabled = false;
+    gitOperationButton2.disabled = false;
   }
 }
 

@@ -54,21 +54,32 @@ function extractModifiedFiles(gitStatus) {
 }
 
 async function generateAndPushCommit() {
-  const directory = localStorage.getItem('folder');
-  const GitMasterAgent = agents.find(agent => agent.data.name === 'Git Master');
-  if (!GitMasterAgent) {
-    console.error('Git Master agent not found');
-    return;
-  }
-  const response = await GitMasterAgent.run();
-  if (response && response.choices && response.choices.length > 0) {
-    const commitMessage = response.choices[0].message.content;
-    await window.gitCommands.gitAdd(directory);
-    await window.gitCommands.gitCommit(directory, commitMessage);
-    await window.gitCommands.gitPush(directory);
-    checkUncommittedChanges();
-  } else {
-    console.error('Failed to generate commit message');
+  // Get the Git Master agent button
+  const commitPushButton = document.getElementById('commit-push-button');
+  try {
+    // Disable the button
+    commitPushButton.disabled = true;
+
+    const GitMasterAgent = agents.find(agent => agent.data.name === 'Git Master');
+    if (!GitMasterAgent) {
+      console.error('Git Master agent not found');
+      return;
+    }
+    const response = await GitMasterAgent.run();
+    if (response && response.choices && response.choices.length > 0) {
+      const commitMessage = response.choices[0].message.content;
+      await window.gitCommands.gitAdd(localStorage.getItem("folder"));
+      await window.gitCommands.gitCommit(localStorage.getItem("folder"), commitMessage);
+      await window.gitCommands.gitPush(localStorage.getItem("folder"));
+      checkUncommittedChanges();
+    } else {
+      console.error('Failed to generate commit message');
+    }
+  } catch (error) {
+    console.error('Error during commit and push', error);
+  } finally {
+    // Re-enable the button
+    commitPushButton.disabled = false;
   }
 }
 
