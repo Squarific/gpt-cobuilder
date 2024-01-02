@@ -23,6 +23,7 @@
     "gitignore-parser": "^0.0.2",
     "js-tiktoken": "^1.0.7",
     "markdown-it": "^13.0.1",
+    "openai": "^4.24.1",
     "tiktoken": "^1.0.10"
   },
   "devDependencies": {
