@@ -1,18 +1,34 @@
 let agents = [];
 
+function elementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstChild;
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
   const agentsDirPath = `gptcobuilder/agents/`;
-  const agentsFiles = await window.fs.readdir(agentsDirPath);
+  const agentNames = await window.fs.readdir(agentsDirPath);
   
-  // Load each agent file
-  for (let i = 0; i < agentsFiles.length; i++) {
-    let agentFilePath = `${agentsDirPath}${agentsFiles[i]}`;
-    const agentFile = await window.fs.readFile(agentFilePath);
-  
-    let agentData = JSON.parse(agentFile);
-    let agent = new Agent(agentData);
+  for (let i = 0; i < agentNames.length; i++) {
+    let agentDirPath = `${agentsDirPath}${agentNames[i]}`;
 
+    const systemMessage = await window.fs.readFile(agentDirPath + '/SystemMessage');
+    const userMessage = await window.fs.readFile(agentDirPath + '/UserMessage');
+
+    let agent = new Agent(agentNames[i], systemMessage, userMessage);
     agents.push(agent);
-    agent.createTab();
+    agentTabCreator.createTab(agent);
+
+    var runAgentButton = elementFromHTML(`<button class="button">Run ${agent.name}</button>`);
+    document.getElementById('custom-buttons').appendChild(runAgentButton);
+
+    runAgentButton.onclick = () => {
+      runAgentButton.disabled = true;
+
+      agent.run(new PromptParameters(fileListController, {})).finally(() => {
+        runAgentButton.disabled = false;
+      });
+    };
   }
 });

@@ -1,4 +1,5 @@
 // This function is here to calculate cost given a response
+// It gives back a string with a precision of two decimal places
 function calculateCostFromResponse(response) {
   let model = response.model;
   return calculateCost(response.usage.prompt_tokens, response.usage.completion_tokens, model);
@@ -48,7 +49,7 @@ const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCal
     { role: 'system', content: systemMessage },
     { role: 'user', content: userMessage }
   ];
-
+  
   var response = await openAiNpmApi.chatCompletion(apiKey, model, messages, chunkCallback);
 
   await logRequestAndResponse({ apiKey, model, messages }, response);

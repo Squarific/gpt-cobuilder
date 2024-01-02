@@ -56,6 +56,9 @@ async function createHumanInputTab() {
         Undo last commit and push
       </button>
     </div>
+
+    <textarea id="last-response" rows="40"></textarea>
+    <div id="token-counts"></div>
   `;
 
   const projectDescriptionTextarea = document.getElementById('project-description');

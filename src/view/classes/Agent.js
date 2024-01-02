@@ -1,27 +1,26 @@
 class Agent {
-    constructor(agentData) {
-        this.data = agentData;
-        this.agentTabCreator = new AgentTabCreator();
-        this.inputGetter = new InputGetter();
+    constructor(name, systemMessage, userMessage) {
+        this.name = name;
+        this.systemMessage = systemMessage;
+        this.userMessage = userMessage;
     }
 
-    async run() {
-        await this.updateFullMessage();
-        
-        let systemMessage = this.data.systemMessageTextarea.value;
-        let userMessage = this.data.fullMessageTextArea.value;
-        this.data.modelResponseTextArea.value = "";
+    async run(promptParameters, chunkCallback) {
+        /*
+        try {
+            const tokenCountFullMessage = await tiktoken.countTokens(this.data.fullMessageTextArea.value);
+            const tokenCountSystemMessage = await tiktoken.countTokens(this.data.systemMessageTextarea.value);
+            this.data.tokenCountElement.textContent = `Total Tokens: ${tokenCountSystemMessage + tokenCountFullMessage}`;
+        } catch(error) {
+            console.error('Failed to count tokens:', error);
+        }*/
         
         try {
-            var response = await sendMessageToChatGPTStreamed(systemMessage, userMessage, (chunk) => {
-                this.data.modelResponseTextArea.value += chunk.choices[0]?.delta?.content || '';
-            });
-            
-            this.data.modelResponseTextArea.value = response.choices[0].message.content;
-            this.data.responseTokenCountElement.innerText = displayTokenCounts(response);
-
-            savedOutputs.save(this.data.output, response.choices[0].message.content);
-            savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
+            var response = await sendMessageToChatGPTStreamed(
+                await this.parsedSystemMessage(promptParameters),
+                await this.parsedUserMessage(promptParameters),
+                chunkCallback
+            );
 
             return response;
         } catch (error) {
@@ -29,71 +28,17 @@ class Agent {
         }
     }
 
-    createTab() {
-        this.agentTabCreator.createTabButton(this.data);
-     
-        const {tabContent, generateButton} = this.agentTabCreator.createTabContent(this.data);
-
-        document.getElementsByTagName("body")[0].appendChild(tabContent);
-
-        savedOutputs.addEventListener("change", this.updateFullMessage.bind(this));
-        document.getElementById('project-description').addEventListener('change', this.updateFullMessage.bind(this));
-        document.getElementById('user-change-request').addEventListener('change', this.updateFullMessage.bind(this));
-
-        if (this.data.inputs && this.data.inputs.includes("FILE_LIST")) {
-            this.data.fileList.element.addEventListener('filechange', this.updateFullMessage.bind(this));
-        }
-
-        let runAgentButton = document.createElement("button");
-        runAgentButton.textContent = "Run " + this.data.name;
-        runAgentButton.className = "button";
-        document.getElementById('Inputs').appendChild(runAgentButton);
-
-        function disableButtons () {
-            generateButton.disabled = true;
-            runAgentButton.disabled = true;
-        }
-
-        function enableButtons () {
-            generateButton.disabled = false;
-            runAgentButton.disabled = false;
-        }
-
-        runAgentButton.onclick = async function() {
-            disableButtons();
-            
-            if (this.data.fileList) {
-                await this.data.fileList.setFromContentMap(fileListController.fileContentMap);
-            }
-            
-            this.run().finally(enableButtons);
-        }.bind(this);
-
-        generateButton.onclick = async function() {
-            disableButtons();
-            this.run().finally(enableButtons);
-        }.bind(this);
-
-        this.updateFullMessage();
+    async countPromptTokens (promptParameters) {
+        const tokenCountUserMessage = await tiktoken.countTokens(this.parsedUserMessage(promptParameters));
+        const tokenCountSystemMessage = await tiktoken.countTokens(this.parsedSystemMessage(promptParameters));
+        return tokenCountUserMessage + tokenCountSystemMessage;
     }
 
-    fileContentMapToText(fileContentMap) {
-        return this.inputGetter.fileContentMapToText(fileContentMap);
+    async parsedSystemMessage (promptParameters) {
+        return await promptParameters.parsePrompt(this.systemMessage);
     }
 
-    async updateFullMessage() {
-        this.data.fullMessageTextArea.value = "";
-
-        for (const input of this.data.inputs) {
-            this.data.fullMessageTextArea.value += await this.inputGetter.getInput(input, this.data) + "\n\n";
-        }
-
-        try {
-            const tokenCountFullMessage = await tiktoken.countTokens(this.data.fullMessageTextArea.value);
-            const tokenCountSystemMessage = await tiktoken.countTokens(this.data.systemMessageTextarea.value);
-            this.data.tokenCountElement.textContent = `Total Tokens: ${tokenCountSystemMessage + tokenCountFullMessage}`;
-        } catch(error) {
-            console.error('Failed to count tokens:', error);
-        }
+    async parsedUserMessage(promptParameters) {
+        return await promptParameters.parsePrompt(this.userMessage);
     }
 }

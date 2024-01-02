@@ -21,33 +21,38 @@ async function gitOperations () {
   }
 }
 
-// Variable for total cost
-let totalCost = 0.0; // reset total cost as a number
+let chunkCallback = (chunk) => {
+  document.getElementById('last-response').value += chunk.choices[0]?.delta?.content || '';
+}
 
 async function runFullWorkflow () {
-  totalCost = 0.0; // reset total cost
+  let totalCost = 0;
   
-  const SeniorDevAgent = agents.find((agent) => agent.data.name === 'Senior Dev');
-  const JuniorDevAgent = agents.find((agent) => agent.data.name === 'Junior Dev');
-  const GitMasterAgent = agents.find((agent) => agent.data.name === 'Git Master');
+  const SeniorDevAgent = agents.find((agent) => agent.name === 'Senior Dev');
+  const JuniorDevAgent = agents.find((agent) => agent.name === 'Junior Dev');
+  const GitMasterAgent = agents.find((agent) => agent.name === 'Git Master');
 
   if(!SeniorDevAgent || !JuniorDevAgent || !GitMasterAgent) {
     console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);
   }
-    
-  console.log("Setting selected files", fileListController.fileContentMap.keys());
-  await SeniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
-  let response = await SeniorDevAgent.run();
-  totalCost += parseFloat(calculateCostFromResponse(response));
+  
+  document.getElementById('last-response').value = "";
+  let seniorResponse = await SeniorDevAgent.run(new PromptParameters(fileListController), chunkCallback);
+  document.getElementById('token-counts').innerText = displayTokenCounts(seniorResponse);
+  totalCost += parseFloat(calculateCostFromResponse(seniorResponse));
 
-  console.log("Setting selected files", fileListController.fileContentMap.keys());
-  await JuniorDevAgent.data.fileList.setFromContentMap(fileListController.fileContentMap);
-  response = await JuniorDevAgent.run();
-  totalCost += parseFloat(calculateCostFromResponse(response));
+  document.getElementById('last-response').value = "";
+  let juniorResponse = await JuniorDevAgent.run(new PromptParameters(fileListController, {
+    HIGH_LEVEL_CHANGE_REQUEST: seniorResponse.choices[0].message.content
+  }), chunkCallback);
+  document.getElementById('token-counts').innerText = displayTokenCounts(juniorResponse);
+  totalCost += parseFloat(calculateCostFromResponse(juniorResponse));
   
   await applyFileChanges();
-  response = await GitMasterAgent.run();
-  totalCost += parseFloat(calculateCostFromResponse(response));
+  document.getElementById('last-response').value = "";
+  let gitResponse = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
+  document.getElementById('token-counts').innerText = displayTokenCounts(gitResponse);
+  totalCost += parseFloat(calculateCostFromResponse(gitResponse));
   
   await gitOperations();
 
@@ -82,7 +87,5 @@ async function applyFileChanges () {
     }
   }
 
-  agents.forEach((agent) => {
-    if (agent.data.fileList) agent.data.fileList.refresh();
-  });
+  fileListController.refresh();
 }

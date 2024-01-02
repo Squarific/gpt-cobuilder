@@ -38,10 +38,6 @@ async function updateFolder (folder) {
     if(!await fs.exists(dirPathRequests)){
       await fs.mkdir(dirPathRequests);
     }
-
-    if (agents) {
-      agents.forEach((agent) => { if (agent.fileList) agent.fileList.refresh(); });
-    }
     
     // Load the projectDescription
     if (document.getElementById('project-description')) {

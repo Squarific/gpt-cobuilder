@@ -60,12 +60,15 @@ async function generateAndPushCommit() {
     // Disable the button
     commitPushButton.disabled = true;
 
-    const GitMasterAgent = agents.find(agent => agent.data.name === 'Git Master');
+    const GitMasterAgent = agents.find(agent => agent.name === 'Git Master');
     if (!GitMasterAgent) {
       console.error('Git Master agent not found');
       return;
     }
-    const response = await GitMasterAgent.run();
+
+    document.getElementById('last-response').value = "";
+    const response = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
+    
     if (response && response.choices && response.choices.length > 0) {
       const commitMessage = response.choices[0].message.content;
       await window.gitCommands.gitAdd(localStorage.getItem("folder"));

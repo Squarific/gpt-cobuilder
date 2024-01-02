@@ -1,4 +1,6 @@
 class HtmlElementCreator {
+    constructor(){}
+
     createButton(className, innerText, onclickString = '') {
         const button = document.createElement("button");
         button.className = className;
@@ -17,18 +19,19 @@ class HtmlElementCreator {
     }
 
     createTextAreaWithLabel(labelmessage, id, disabled, rows) {
-        const details = document.createElement("details");
+        var div = document.createElement("div");
 
-        const summary = document.createElement("summary");
-        summary.innerText = labelmessage;
-        details.appendChild(summary);
+        const label = document.createElement("label");
+        label.innerText = labelmessage;
+        label.for = id;
+        div.appendChild(label);
 
         const textarea = document.createElement("textarea");
         textarea.id = id;
         textarea.setAttribute("rows", rows);
         textarea.disabled = disabled;
-        details.appendChild(textarea);
+        div.appendChild(textarea);
 
-        return details;
+        return div;
     }
 }
