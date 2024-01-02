@@ -9,7 +9,7 @@ class CustomWorkflowModal {
     initModal() {
         this.modalDiv = document.createElement('div');
         this.modalDiv.innerHTML = `
-            <div id="workflow-modal" class="modal">
+            <div class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
                     <input 
@@ -26,7 +26,7 @@ class CustomWorkflowModal {
         `;
 
         document.body.appendChild(this.modalDiv);
-        this.modalDiv.style.display = "block";
+        this.modalDiv.querySelector('.modal').style.display = "block";
 
         this.assignEventListeners();
         this.refreshStepsList();
@@ -55,10 +55,6 @@ class CustomWorkflowModal {
         this.steps.forEach((step, index) => {
             const agentDropdown = this.createAgentDropdown(step, index);
             const customCodeTextarea = this.createCustomCodeTextarea(step, index);
-            
-            // Removing existing elements to avoid id conflicts
-            if(agentDropdown.id) agentDropdown.removeAttribute('id');
-            if(customCodeTextarea.id) customCodeTextarea.removeAttribute('id');
 
             const removeStepButton = document.createElement('button');
             removeStepButton.textContent = 'Remove';
