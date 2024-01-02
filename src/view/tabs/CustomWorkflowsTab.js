@@ -7,7 +7,7 @@ async function createCustomWorkflowsTab() {
   `;
 
   document.getElementById('add-custom-workflow-button').addEventListener('click', () => {
-    // Add code to handle adding a new workflow
+    new CustomWorkflowModal(agents);
   });
 }
 
