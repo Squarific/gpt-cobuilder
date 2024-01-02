@@ -1,7 +1,5 @@
 class AgentTab {
-    constructor() {
-        this.htmlCreator = new HtmlElementCreator();
-    }
+    constructor() {}
 
     createTab(agent) {
         this.createTabButton(agent.name);
@@ -9,32 +7,32 @@ class AgentTab {
     }
 
     createTabContent(agent) {
-        const tabContent = this.htmlCreator.createDiv("tabcontent");
-        tabContent.id = agent.name;
+        const tabContent = elementFromHTML(`<div class="tabcontent" id="${agent.name}"></div>`);
+        
+        tabContent.innerHTML = `
+            <label for="${agent.name}-system-message">System Message:</label>
+            <textarea id="${agent.name}-system-message" rows="20">${agent.systemMessage}</textarea>
+            <div class="token-count" id="${agent.name}-system-message-token-count">
+                Token count: 0
+            </div>
 
-        const systemMessage = this.htmlCreator.createTextAreaWithLabel("System Message:", agent.name + "-system-message", false, 20);
-        const systemMessageTextarea = systemMessage.querySelector("textarea");
-        systemMessageTextarea.value = agent.systemMessage;
-        tabContent.appendChild(systemMessage);
-
-        const systemMessageTokenCountDiv = this.htmlCreator.createDiv("token-count", "Token count: 0");
-        tabContent.appendChild(systemMessageTokenCountDiv);
-
-        const userMessage = this.htmlCreator.createTextAreaWithLabel("User Message:", agent.name + "-user-message", false, 10);
-        const userMessageTextArea = userMessage.querySelector("textarea");
-        userMessageTextArea.value = agent.userMessage;
-        tabContent.appendChild(userMessage);
-
-        const userMessageTokenCountDiv = this.htmlCreator.createDiv("token-count", "Token count: 0");
-        tabContent.appendChild(userMessageTokenCountDiv);
+            <label for="${agent.name}-user-message">User Message:</label>
+            <textarea id="${agent.name}-user-message" rows="10">${agent.userMessage}</textarea>
+            <div class="token-count" id="${agent.name}-user-message-token-count">
+                Token count: 0
+            </div>
+        `;
 
         document.getElementsByTagName("body")[0].appendChild(tabContent);
     }
 
     createTabButton(name) {
-        const tabButton = this.htmlCreator.createButton("tablinks", name, `openTab(event, '${name}')`);
+        const tabButton = document.createElement("button");
+        tabButton.className = "tablinks";
+        tabButton.innerText = name;
+        tabButton.onclick = (event) => openTab(event, name);
         document.getElementsByClassName("tab")[0].insertBefore(tabButton, document.getElementById("add-tab-button"));
-    } 
+    }
 }
 
 agentTab = new AgentTab();

@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     let agent = new Agent(agentNames[i], systemMessage, userMessage);
     agents.push(agent);
-    agentTabCreator.createTab(agent);
+    agentTab.createTab(agent);
 
     var runAgentButton = elementFromHTML(`<button class="button">Run ${agent.name}</button>`);
     document.getElementById('custom-buttons').appendChild(runAgentButton);
@@ -26,7 +26,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     runAgentButton.onclick = () => {
       runAgentButton.disabled = true;
 
-      agent.run(new PromptParameters(fileListController, {})).finally(() => {
+      agent.run(new PromptParameters(fileListController, {
+        HIGH_LEVEL_CHANGE_REQUEST: document.getElementById('last-response').value
+      }), chunkCallback).finally(() => {
         runAgentButton.disabled = false;
       });
     };
