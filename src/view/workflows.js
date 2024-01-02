@@ -28,9 +28,9 @@ let chunkCallback = (chunk) => {
 async function runFullWorkflow () {
   let totalCost = 0;
   
-  const SeniorDevAgent = agents.find((agent) => agent.name === 'Senior Dev');
-  const JuniorDevAgent = agents.find((agent) => agent.name === 'Junior Dev');
-  const GitMasterAgent = agents.find((agent) => agent.name === 'Git Master');
+  const SeniorDevAgent = agents.find((agent) => agent.name === 'SeniorDev');
+  const JuniorDevAgent = agents.find((agent) => agent.name === 'JuniorDev');
+  const GitMasterAgent = agents.find((agent) => agent.name === 'GitMaster');
 
   if(!SeniorDevAgent || !JuniorDevAgent || !GitMasterAgent) {
     console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);

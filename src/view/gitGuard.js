@@ -60,7 +60,7 @@ async function generateAndPushCommit() {
     // Disable the button
     commitPushButton.disabled = true;
 
-    const GitMasterAgent = agents.find(agent => agent.name === 'Git Master');
+    const GitMasterAgent = agents.find(agent => agent.name === 'GitMaster');
     if (!GitMasterAgent) {
       console.error('Git Master agent not found');
       return;
