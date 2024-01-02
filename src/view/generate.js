@@ -12,9 +12,4 @@ window.addEventListener('DOMContentLoaded', async () => {
       modal.style.display = "none";
     }
   }
-
-  // Create instance for managing custom workflows
-  const customWorkflowsManager = new CustomWorkflows();
-  customWorkflowsManager.loadAgents(agents);
-  customWorkflowsManager.attachDOM();
 });
