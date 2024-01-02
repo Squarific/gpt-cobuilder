@@ -32,10 +32,10 @@ async function loadExamples() {
 async function createHumanInputTab() {
   const inputsTab = document.getElementById('Inputs');
   inputsTab.innerHTML = `
-    <label for="project-description">Project Description:</label>
+    <label for="project-description">Project Description</label>
     <textarea id="project-description" rows="5"></textarea>
 
-    <label for="user-change-request">User change request:</label>
+    <label for="user-change-request">User change request</label>
     <textarea id="user-change-request" rows="5"></textarea>
 
     <label for="change-request-examples">Example Change Requests:</label>
@@ -57,7 +57,8 @@ async function createHumanInputTab() {
       </button>
     </div>
 
-    <textarea id="last-response" rows="40"></textarea>
+    <label for="last-response">Last GPT completion</label>
+    <textarea id="last-response" rows="40" disabled></textarea>
     <div id="token-counts"></div>
   `;
 
