@@ -39,44 +39,19 @@ const displayFilesTokenCounts = (response) => {
   tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
-const sendMessageToChatGPT = async (systemMessage, userMessage) => {
+const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCallback) => {
   const apiKey = document.getElementById('api-key').value;
 
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: (await loadSettings()).modelSelection,
-      messages: [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: userMessage }
-        ]
-    })
-  };
+  const model = (await loadSettings()).modelSelection;
 
-  try {
-      const response = await fetch(OPENAI_URL, requestOptions);
-  
-      if (!response.ok) {
-        let errorMessage = `HTTP error! Status: ${response.status}`;
-        const errorData = await response.json();
-        if (errorData.error && errorData.error.message) {
-          errorMessage += ` Message: ${errorData.error.message}`;
-        }
-        throw new Error(errorMessage);
-      }
-  
-      const data = await response.json();
+  const messages = [
+    { role: 'system', content: systemMessage },
+    { role: 'user', content: userMessage }
+  ];
 
-      // Log the request and response
-      await logRequestAndResponse(apiKey, (await loadSettings()).modelSelection, 'user', userMessage, data);
+  var response = await openAiNpmApi.chatCompletion(apiKey, model, messages, chunkCallback);
 
-      return data;
-    } catch (error) {
-      throw new Error(`Request failed! ${error.message}`);
-    }
+  await logRequestAndResponse({ apiKey, model, messages }, response);
+
+  return response;
 };
-

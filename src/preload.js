@@ -9,6 +9,8 @@ const enc = getEncoding("cl100k_base");
 
 const parser = require("@gerhobbelt/gitignore-parser");
 
+const OpenAI = require('openai');
+
 const markdownIt = require('markdown-it');
 const md = new markdownIt();
 
@@ -175,5 +177,31 @@ contextBridge.exposeInMainWorld('gitCommands', {
         resolve(stdout);
       });
     });
+  },
+});
+
+contextBridge.exposeInMainWorld('openAiNpmApi', {
+  chatCompletion: async (apiKey, model, messages, chunkCallback) => {
+    const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true });
+
+    const completionStream = await openai.beta.chat.completions.stream({
+      model: model,
+      messages: messages,
+      stream: true,
+    });
+
+    for await (const chunk of completionStream) {
+      chunkCallback(chunk);
+    }
+
+    var response = await completionStream.finalChatCompletion();
+    response.usage = {
+      prompt_tokens: enc.encode(messages[0].content + messages[1].content).length,
+      completion_tokens: enc.encode(response.choices[0].message.content).length
+    };
+
+    response.usage.total_tokens = response.usage.prompt_tokens + response.usage.completion_tokens;
+
+    return response;
   },
 });

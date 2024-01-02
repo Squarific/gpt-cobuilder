@@ -5,7 +5,7 @@ const toLocalISOString = (date) => {
 };
 
 // Function to save HTTP request and response to a file
-async function logRequestAndResponse(apiKey, model, role, content, response) {
+async function logRequestAndResponse(request, response) {
   try {
     const currentTime = new Date(); // Get current date and time
     let formattedTime = toLocalISOString(currentTime); // Format the time in the required format
@@ -13,7 +13,7 @@ async function logRequestAndResponse(apiKey, model, role, content, response) {
     const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
     
     const fileContent = {};
-    fileContent['request'] = {apiKey, model, role, content};
+    fileContent['request'] = request;
     fileContent['response'] = response;
 
     // Save the request and response to the file

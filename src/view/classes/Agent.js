@@ -12,15 +12,19 @@ class Agent {
         let userMessage = this.data.fullMessageTextArea.value;
         
         try {
-            let response = await sendMessageToChatGPT(systemMessage, userMessage);
+            var response = await sendMessageToChatGPTStreamed(systemMessage, userMessage, (chunk) => {
+                this.data.modelResponseTextArea.value += chunk.choices[0]?.delta?.content || '';
+            });
+            
             this.data.modelResponseTextArea.value = response.choices[0].message.content;
             this.data.responseTokenCountElement.innerText = displayTokenCounts(response);
+
             savedOutputs.save(this.data.output, response.choices[0].message.content);
             savedOutputs.save("LAST_GPT_OUTPUT", response.choices[0].message.content);
+
             return response;
         } catch (error) {
             console.error('An error occurred while generating completion:', error);
-            this.data.errorLogDiv.innerText = error;
         }
     }
 
