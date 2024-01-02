@@ -8,80 +8,66 @@ class CustomWorkflowModal {
 
     initModal() {
         this.modalDiv = document.createElement('div');
-        this.modalDiv.id = 'workflow-modal';
-        this.modalDiv.className = 'modal';
+        this.modalDiv.innerHTML = `
+            <div id="workflow-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <input 
+                        type="text" 
+                        class="workflow-name" 
+                        placeholder="Enter Workflow Name">
+                    <div class="steps-section">
+                        <div class="steps-list"></div>
+                        <button class="button add-step-button">Add Step</button>
+                    </div>
+                    <button class="button save-workflow-button">Save Workflow</button>
+                </div>
+            </div>
+        `;
 
-        // Modal Content
-        const modalContentDiv = document.createElement('div');
-        modalContentDiv.className = 'modal-content';
-
-        // Close Button
-        const closeButton = document.createElement('span');
-        closeButton.className = 'close';
-        closeButton.innerHTML = '&times;';
-        closeButton.onclick = () => (this.modalDiv.style.display = 'none');
-
-        // Name Input
-        const nameInput = document.createElement('input');
-        nameInput.type = 'text';
-        nameInput.id = 'workflow-name';
-        nameInput.placeholder = 'Enter Workflow Name';
-
-        // Steps Section
-        const stepsSectionDiv = document.createElement('div');
-        stepsSectionDiv.id = 'steps-section';
-
-        // Steps List
-        const stepsListDiv = document.createElement('div');
-        stepsListDiv.id = 'steps-list';
-
-        // Add Step Button
-        const addStepButton = document.createElement('button');
-        addStepButton.className = 'button';
-        addStepButton.textContent = 'Add Step';
-        addStepButton.onclick = () => this.addStep(stepsListDiv);
-
-        // Save Button
-        const saveButton = document.createElement('button');
-        saveButton.className = 'button';
-        saveButton.textContent = 'Save Workflow';
-        saveButton.onclick = () => this.saveWorkflow();
-
-        // Append everything
-        stepsSectionDiv.appendChild(stepsListDiv);
-        stepsSectionDiv.appendChild(addStepButton);
-        modalContentDiv.appendChild(closeButton);
-        modalContentDiv.appendChild(nameInput);
-        modalContentDiv.appendChild(stepsSectionDiv);
-        modalContentDiv.appendChild(saveButton);
-        this.modalDiv.appendChild(modalContentDiv);
         document.body.appendChild(this.modalDiv);
-
         this.modalDiv.style.display = "block";
 
-        this.refreshStepsList(stepsListDiv);
+        this.assignEventListeners();
+        this.refreshStepsList();
     }
 
-    addStep(stepsListDiv) {
+    assignEventListeners() {
+        const closeButton = this.modalDiv.querySelector('.close');
+        closeButton.onclick = () => this.modalDiv.remove();
+
+        const addStepButton = this.modalDiv.querySelector('.add-step-button');
+        addStepButton.onclick = () => this.addStep();
+
+        const saveButton = this.modalDiv.querySelector('.save-workflow-button');
+        saveButton.onclick = () => this.saveWorkflow();
+    }
+
+    addStep() {
         this.steps.push({type: 'agent', agentName: '', customCode: ''});
-        this.refreshStepsList(stepsListDiv);
+        this.refreshStepsList();
     }
 
-    refreshStepsList(stepsListDiv) {
+    refreshStepsList() {
+        const stepsListDiv = this.modalDiv.querySelector('.steps-list');
         stepsListDiv.innerHTML = '';
 
         this.steps.forEach((step, index) => {
-            const stepDiv = document.createElement('div');
             const agentDropdown = this.createAgentDropdown(step, index);
             const customCodeTextarea = this.createCustomCodeTextarea(step, index);
+            
+            // Removing existing elements to avoid id conflicts
+            if(agentDropdown.id) agentDropdown.removeAttribute('id');
+            if(customCodeTextarea.id) customCodeTextarea.removeAttribute('id');
 
             const removeStepButton = document.createElement('button');
             removeStepButton.textContent = 'Remove';
             removeStepButton.onclick = () => {
                 this.steps.splice(index, 1);
-                this.refreshStepsList(stepsListDiv);
+                this.refreshStepsList();
             };
 
+            const stepDiv = document.createElement('div');
             stepDiv.appendChild(agentDropdown);
             stepDiv.appendChild(customCodeTextarea);
             stepDiv.appendChild(removeStepButton);
@@ -91,8 +77,6 @@ class CustomWorkflowModal {
 
     createAgentDropdown(step, index) {
         const dropdown = document.createElement('select');
-
-        // Agent options
         this.agents.forEach(agent => {
             const option = document.createElement('option');
             option.value = agent.data.name;
@@ -100,18 +84,16 @@ class CustomWorkflowModal {
             dropdown.appendChild(option);
         });
 
-        // Custom JS option
         const customJsOption = document.createElement('option');
         customJsOption.value = 'custom';
         customJsOption.textContent = 'Custom JavaScript Code';
         dropdown.appendChild(customJsOption);
 
-        // Set selected value
         dropdown.value = step.type === 'agent' ? step.agentName : 'custom';
         dropdown.onchange = () => {
             step.type = dropdown.value === 'custom' ? 'custom' : 'agent';
             step.agentName = dropdown.value;
-            this.refreshStepsList(document.getElementById('steps-list'));
+            this.refreshStepsList();
         };
 
         return dropdown;
@@ -130,7 +112,8 @@ class CustomWorkflowModal {
     }
 
     saveWorkflow() {
-        const workflowName = document.getElementById('workflow-name').value;
+        const workflowNameInput = this.modalDiv.querySelector('.workflow-name');
+        const workflowName = workflowNameInput.value;
         if (!workflowName) {
             alert('Please enter a name for the workflow.');
             return;
@@ -139,9 +122,9 @@ class CustomWorkflowModal {
             alert('Please add at least one step to the workflow.');
             return;
         }
+        // Save the workflow logic as before
+        // ...
 
-        // Save the workflow
-        
-        this.modalDiv.parentNode.removeChild(this.modalDiv);
+        this.modalDiv.remove();
     }
 }
