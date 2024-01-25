@@ -23,25 +23,24 @@ class PaginatedTable {
     }
   }
 
-  // Update display for the current page
   async updateTable(table, requestFiles) {
     // Only get files for the current page
     const start = (this.currentPage - 1) * ITEMS_PER_PAGE;
     const end = this.currentPage * ITEMS_PER_PAGE;
     const pageFiles = requestFiles.slice(start, end);
 
-    table.innerHTML = ''; // clear table content
-    this.createTableHeaders(table); // Add table headers
+    table.innerHTML = '';
+    this.createTableHeaders(table);
     await this.populateTableWithPageFiles(table, pageFiles);
   }
 
   createTableHeaders(table) {
-    const headers = ["Agent Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", "Cost", "Finish Reason", "Request Content", "Response Content"];
+    const headers = ["Model Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", "Cost", "Finish Reason", "Request Content", "Response Content"];
     const headerRow = table.insertRow();
     for (const headerText of headers) {
-      const headerCell = document.createElement('th'); // Using `th` element for header
+      const headerCell = document.createElement('th');
       headerCell.textContent = headerText;
-      headerRow.appendChild(headerCell); // Append `th` element to the row
+      headerRow.appendChild(headerCell);
     }
   }
 
@@ -63,7 +62,7 @@ class PaginatedTable {
       this.fillCell(row, `$${calculateCostFromResponse(requestLog.response)}`);
       this.fillCell(row, requestLog.response.choices[0].finish_reason);
 
-      let requestContent = requestLog.request.content.slice(-256);
+      let requestContent = (requestLog.request.content || requestLog.request.messages[1].content).slice(-256);
       let responseContent = requestLog.response.choices[0].message.content.slice(0, 256);
       
       this.fillCell(row, requestContent);

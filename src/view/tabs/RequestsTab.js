@@ -4,7 +4,6 @@ async function createRequestsTab() {
     <div id="requests-table-container">
       <h2>Requests Log</h2>
       <table id="requests-table"></table>
-      <!-- Pagination controls will be added here programmatically -->
     </div>
   `;
 
