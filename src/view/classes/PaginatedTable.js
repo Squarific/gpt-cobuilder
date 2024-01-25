@@ -92,7 +92,7 @@ class PaginatedTable {
     apiKeyParagraph.textContent = `API Key: ${requestLog.request.apiKey}`;
     modelParagraph.textContent = `Model: ${requestLog.response.model}`;
     roleParagraph.textContent = `Role: ${requestLog.request.role}`;
-    requestContentParagraph.textContent = `Request: ${requestLog.request.content}`;
+    requestContentParagraph.textContent = `Request: ${requestLog.request.content || requestLog.request.messages[1].content}`;
     responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
     costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
 
