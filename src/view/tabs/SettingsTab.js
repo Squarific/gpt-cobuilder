@@ -36,23 +36,23 @@ async function createSettingsTab() {
   });
 
   updateRecentFoldersList();
+}
 
-  function updateRecentFoldersList() {
-    const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
-    const recentFoldersList = document.getElementById('recent-folders-list');
-    recentFoldersList.innerHTML = "";
+function updateRecentFoldersList() {
+  const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
+  const recentFoldersList = document.getElementById('recent-folders-list');
+  recentFoldersList.innerHTML = "";
 
-    recentFolders.forEach(folder => {
-      const listItem = document.createElement('li');
-      listItem.textContent = folder;
-      listItem.className = "button";
-      listItem.addEventListener('click', () => {
-        updateFolder(folder);
-      });
-
-      recentFoldersList.appendChild(listItem);
+  recentFolders.forEach(folder => {
+    const listItem = document.createElement('li');
+    listItem.textContent = folder;
+    listItem.className = "button";
+    listItem.addEventListener('click', () => {
+      updateFolder(folder);
     });
-  }
+
+    recentFoldersList.appendChild(listItem);
+  });
 }
 
 createSettingsTab();
