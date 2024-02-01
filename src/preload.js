@@ -178,6 +178,21 @@ contextBridge.exposeInMainWorld('gitCommands', {
       });
     });
   },
+  gitGetHash: async (directory) => {
+    return new Promise((resolve, reject) => {
+      exec(`git -C ${directory} rev-parse HEAD`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`error with git revert HEAD: ${error.message}`);
+          reject(error);
+        }
+        if (stderr) {
+          console.error(`stderr with git revert HEAD: ${stderr}`);
+        }
+        resolve(stdout.split("\n")[0]);
+      });
+    });
+  },
+  
 });
 
 contextBridge.exposeInMainWorld('openAiNpmApi', {

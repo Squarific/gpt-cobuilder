@@ -43,6 +43,7 @@ async function createHumanInputTab() {
 
     <div id="file-list"></div>
     
+    <button class="button" id="save-change-request">Save change request</button>
     <button class="button" id="run-full-workflow-button">Run full workflow</button>
     <p id="total-cost">Total cost for previous full workflow run: $0</p>
     <div id="file-changes-container2"></div>
@@ -84,6 +85,10 @@ async function createHumanInputTab() {
   window.fileListController = new FileListController();
   const fileListElement = window.fileListController.createDOM();
   document.getElementById('file-list').appendChild(fileListElement);
+
+  document.getElementById('save-change-request').addEventListener('click', () => {
+    createChangeRequestFile(document.getElementById('user-change-request').value, Array.from(window.fileListController.fileContentMap.keys()));
+  });
 
   // Loading existing data
   const folder = localStorage.getItem('folder');

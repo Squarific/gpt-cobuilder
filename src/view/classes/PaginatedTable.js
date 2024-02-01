@@ -84,19 +84,14 @@ class PaginatedTable {
     const modal = document.getElementById('requestDetailsModal');
     const apiKeyParagraph = modal.querySelector('#modal-apiKey');
     const modelParagraph = modal.querySelector('#modal-model');
-    const roleParagraph = modal.querySelector('#modal-role');
     const requestContentParagraph = modal.querySelector('#modal-requestContent');
     const responseContentParagraph = modal.querySelector('#modal-responseContent');
     const costParagraph = modal.querySelector('#modal-cost');
 
-    apiKeyParagraph.textContent = `API Key: ${requestLog.request.apiKey}`;
     modelParagraph.textContent = `Model: ${requestLog.response.model}`;
-    roleParagraph.textContent = `Role: ${requestLog.request.role}`;
-    requestContentParagraph.textContent = `Request: ${requestLog.request.content || requestLog.request.messages[1].content}`;
-    responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
     costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
 
-    requestContentParagraph.value = requestLog.request.content;
+    requestContentParagraph.value = requestLog.request.content || requestLog.request.messages[1].content;
     responseContentParagraph.value = requestLog.response.choices[0].message.content;
 
     modal.style.display = 'block';

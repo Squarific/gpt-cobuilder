@@ -1,15 +1,13 @@
-const toLocalISOString = (date) => {
-  const tzOffset = date.getTimezoneOffset() * 60000;
-  const localDate = new Date(date - tzOffset);
-  return localDate.toISOString().split('.')[0];
+const formattedTime = () => {
+  const currentTime = new Date();
+  const tzOffset = currentTime.getTimezoneOffset() * 60000;
+  const localDate = new Date(currentTime - tzOffset);
+  return localDate.toISOString().split('.')[0].replace(/:/g, '-');
 };
 
 async function logRequestAndResponse(request, response) {
   try {
-    const currentTime = new Date();
-    let formattedTime = toLocalISOString(currentTime);
-    formattedTime = formattedTime.replace(/:/g, '-');
-    const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime}.txt`;
+    const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime()}.txt`;
     
     const fileContent = {};
     fileContent['request'] = request;
@@ -20,6 +18,25 @@ async function logRequestAndResponse(request, response) {
   } catch (error) {
     console.error('Error logging request and response: ', error);
   }
+}
+
+async function createChangeRequestFile (changerequest, selectedfiles) {
+  const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/userchangerequests`;
+  
+  if(!await fs.exists(dirPath)){
+    await fs.mkdir(dirPath);
+  }
+
+  var commitHash = await window.gitCommands.gitGetHash(localStorage.getItem('folder'));
+
+  var content = `Files (${commitHash})
+- ${selectedfiles.map((f) => f.path).join('\n- ')}
+
+Change request:
+${changerequest}
+`;
+
+  await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
 
 async function updateFolder (folder) {
