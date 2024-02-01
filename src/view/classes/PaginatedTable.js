@@ -96,9 +96,8 @@ class PaginatedTable {
     responseContentParagraph.textContent = `Response: ${requestLog.response.choices[0].message.content}`;
     costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
 
-    // Used textarea for request and response details
-    requestContentParagraph.value = requestLog.request.content; // Set the content of the request
-    responseContentParagraph.value = requestLog.response.choices[0].message.content; // Set the content of the response
+    requestContentParagraph.value = requestLog.request.content;
+    responseContentParagraph.value = requestLog.response.choices[0].message.content;
 
     modal.style.display = 'block';
   }
@@ -108,16 +107,13 @@ class PaginatedTable {
     cell.textContent = text;
   }
 
-  // Add pagination controls below the table
   addPaginationControls() {
     const container = document.getElementById(this.tableId + "-container");
-
     if (!container) return;
 
     // Clear existing controls
     container.querySelectorAll('.pagination-control').forEach(ctrl => ctrl.remove());
 
-    // Add "Previous" button
     const prevButton = document.createElement('button');
     prevButton.textContent = 'Previous';
     prevButton.className = 'button pagination-control';
@@ -125,7 +121,6 @@ class PaginatedTable {
     prevButton.addEventListener('click', () => this.changePage(-1));
     container.appendChild(prevButton);
 
-    // Add "Next" button
     const nextButton = document.createElement('button');
     nextButton.textContent = 'Next';
     nextButton.className = 'button pagination-control';
@@ -133,7 +128,6 @@ class PaginatedTable {
     nextButton.addEventListener('click', () => this.changePage(1));
     container.appendChild(nextButton);
 
-    // Add "First" button
     const firstButton = document.createElement('button');
     firstButton.textContent = 'First';
     firstButton.className = 'button pagination-control';
@@ -141,7 +135,6 @@ class PaginatedTable {
     firstButton.addEventListener('click', () => this.goToFirstPage());
     container.insertBefore(firstButton, prevButton); // Insert before 'Previous' button
 
-    // Add "Last" button
     const lastButton = document.createElement('button');
     lastButton.textContent = 'Last';
     lastButton.className = 'button pagination-control';
@@ -149,7 +142,6 @@ class PaginatedTable {
     lastButton.addEventListener('click', () => this.goToLastPage());
     container.appendChild(lastButton);
 
-    // Add input field to jump to a page
     const pageInput = document.createElement('input');
     pageInput.type = 'number';
     pageInput.min = '1';
