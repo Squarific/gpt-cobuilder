@@ -4,20 +4,18 @@ const toLocalISOString = (date) => {
   return localDate.toISOString().split('.')[0];
 };
 
-// Function to save HTTP request and response to a file
 async function logRequestAndResponse(request, response) {
   try {
-    const currentTime = new Date(); // Get current date and time
-    let formattedTime = toLocalISOString(currentTime); // Format the time in the required format
-    formattedTime = formattedTime.replace(/:/g, '-'); // Replace colons with dashes
-    const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime}.txt`; // Form the filename
+    const currentTime = new Date();
+    let formattedTime = toLocalISOString(currentTime);
+    formattedTime = formattedTime.replace(/:/g, '-');
+    const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime}.txt`;
     
     const fileContent = {};
     fileContent['request'] = request;
     fileContent['response'] = response;
 
-    // Save the request and response to the file
-    await window.fs.saveFile(filename, JSON.stringify(fileContent, null, 2)); // The second argument of JSON.stringify is a replacer function which we don't need and the third argument is the number of spaces for indentation
+    await window.fs.saveFile(filename, JSON.stringify(fileContent, null, 2));
     console.log(`Request and response logged to ${filename}`);
   } catch (error) {
     console.error('Error logging request and response: ', error);
