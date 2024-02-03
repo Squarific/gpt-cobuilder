@@ -51,7 +51,7 @@ class FileListController {
     this.selectedFilesElement.textContent = '';
     this.unSelectedFilesElement.textContent = '';
     this.totalTokenCount = 0;
-    let fileList = await this.getFilesInFolderWithFilter(); 
+    let fileList = await this.getFilesInFolderWithFilter();
     this.displayFileStructure(fileList);
   }
 
@@ -126,6 +126,7 @@ class FileListController {
 
     if (this.selectedFiles.has(file.path)) {
       checkbox.checked = true;
+      this.updateFileSelection(file);
     }
     
     const label = document.createElement('label');
@@ -157,7 +158,7 @@ class FileListController {
   }
 
   async updateFileSelection(file) {
-    this.handleCheckboxChange(file.checkbox, file.checkbox.checked);
+    await this.handleCheckboxChange(file.checkbox, file.checkbox.checked);
     this.totalTokenCount = this.calculateTotalTokenCount();
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
   }

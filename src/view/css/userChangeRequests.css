@@ -2,16 +2,20 @@
     border-collapse: collapse;
     width: 100%;
     background-color: white;
-  }
-  
-  #user-change-requests-table th, 
-  #user-change-requests-table td {
+}
+
+#user-change-requests-table th, 
+#user-change-requests-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-  }
-  
-  #user-change-requests-table th {
+}
+
+#user-change-requests-table th {
     background-color: #f2f2f2;
     color: black;
-  }
+}
+
+#user-change-requests-table .button  {
+    margin:1em;
+}

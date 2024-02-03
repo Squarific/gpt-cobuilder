@@ -68,22 +68,19 @@ async function updateUserChangeRequestsTab() {
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             var buttons = row.querySelector(".buttons");
+            var agent = agents.find((agent) => agent.name == "SeniorDev");
 
-            for (var k = 0; k < agents.length; k++) {
-                var agent = agents[k];
+            buttons.appendChild(elementFromHTML(`
+                <button class="button">Run ${agent.name}</button>
+            `)).addEventListener("click", () => {
+                document.getElementById('last-response').value = "";
 
-                buttons.appendChild(elementFromHTML(`
-                    <button class="button">Run $${agent.name}</button>
-                `)).addEventListener("click", () => {
-                    document.getElementById('last-response').value = "";
-
-                    agent.run(new PromptParameters(fileListController, {
-                        USER_CHANGE_REQUEST: changeRequest
-                    }), chunkCallback).finally(() => {
-                        runAgentButton.disabled = false;
-                    });
+                agent.run(new PromptParameters(fileListController, {
+                    USER_CHANGE_REQUEST: changeRequest
+                }), chunkCallback).finally(() => {
+                    runAgentButton.disabled = false;
                 });
-            }
+            });
         }
     } catch (error) {
         console.error('Failed to load user change request files: ', error);
