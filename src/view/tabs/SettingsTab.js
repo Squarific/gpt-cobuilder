@@ -6,6 +6,9 @@ async function createSettingsTab() {
 
     <label for="folder-selection">Select a Folder:</label>
     <button id="folder-selection">Project folder</button>
+    
+    <label for="project-description">Project Description</label>
+    <textarea id="project-description" rows="5"></textarea>
 
     <label for="model-selection">Select a model:</label>
     <select id="model-selection">
@@ -19,6 +22,16 @@ async function createSettingsTab() {
     <div id="folder-display"></div>
     <ul id="recent-folders-list"></ul>
   `;
+
+  const projectDescriptionTextarea = document.getElementById('project-description');
+  projectDescriptionTextarea.addEventListener('input', updateProjectDescription);
+
+  const folder = localStorage.getItem('folder');
+  const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
+  if (await window.fs.exists(projectDescriptionFilePath)) {
+    const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
+    projectDescriptionTextarea.value = projectDescription;
+  }
   
   document.getElementById('api-key').addEventListener('input', () => {
     localStorage.setItem('apiKey', document.getElementById('api-key').value.trim());
@@ -37,6 +50,23 @@ async function createSettingsTab() {
 
   updateRecentFoldersList();
 }
+
+async function updateProjectDescription() {
+  const projectDescription = document.getElementById('project-description').value;
+  const folderPath = localStorage.getItem('folder');
+  const dirPath = `${folderPath}/${GPT_COBUILDER_FOLDER_NAME}`;
+  const projectDescriptionFilePath = `${folderPath}/${PROJECT_DESCRIPTION_FILE}`;
+
+  try {
+    if (!await fs.exists(dirPath)) {
+      await fs.mkdir(dirPath);
+    }
+    await window.fs.saveFile(projectDescriptionFilePath, projectDescription);
+  } catch (error) {
+    console.error("Failed to save project description to the file: ", error);
+  }
+}
+
 
 function updateRecentFoldersList() {
   const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];

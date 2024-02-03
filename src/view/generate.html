@@ -16,26 +16,18 @@
   <body>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button class="tablinks firstOpen" onclick="openTab(event, 'Inputs')">Human Inputs</button>
-      <button class="tablinks" onclick="openTab(event, 'CustomWorkflows')">Custom Workflows</button>
-      <button class="tablinks" onclick="openTab(event, 'Requests')">Requests</button>
-      <button class="tablinks" onclick="openTab(event, 'UserChangeRequests')">User change requests</button>
-      <button class="tablinks" id="add-tab-button">+</button>
+      <button class="tablinks" onclick="openTab(event, 'Requests')">Requests log</button>
+      <button class="tablinks firstOpen" onclick="openTab(event, 'UserChangeRequests')">User change requests</button>
+      <button class="tablinks" onclick="openTab(event, 'HighLevelChangeRequests')">High level change requests</button>
+      <button class="tablinks" onclick="openTab(event, 'FileChangeProposals')">File change proposals</button>
     </div>
 
     <div id="Settings" class="tabcontent"></div>
     <div id="Inputs" class="tabcontent"></div>
     <div id="Requests" class="tabcontent"></div>
-    <div id="CustomWorkflows" class="tabcontent"></div>
     <div id="UserChangeRequests" class="tabcontent"></div>
-
-    <div id="tabNameModal" class="modal">
-        <div class="modal-content">
-            <label for="tabNameInput">Name of the tab:</label>
-            <input type="text" id="tabNameInput" />
-            <button id="submitTabNameButton">Submit</button>
-        </div>
-    </div>
+    <div id="HighLevelChangeRequests" class="tabcontent"></div>
+    <div id="FileChangeProposals" class="tabcontent"></div>
 
     <div id="requestDetailsModal" class="modal">
       <div class="modal-content">
@@ -57,7 +49,6 @@
     <script src="classes/HtmlElementCreator.js"></script>
     <script src="classes/FileListController.js"></script>
     <script src="classes/PaginatedTable.js"></script>
-    <script src="classes/CustomWorkflows.js"></script>
 
     <!-- Tab dependencies -->
     <script src="utils.js"></script>
@@ -67,14 +58,8 @@
     <!-- Tabs -->
     <script src="tabs/AgentTab.js"></script>
     <script src="tabs/SettingsTab.js"></script>
-    <script src="tabs/HumanInputsTab.js"></script>
-    <script src="tabs/CustomWorkflowsTab.js"></script>
     <script src="tabs/RequestsTab.js"></script>
-    <script src="tabs/OutputsTab.js"></script>
     <script src="tabs/UserChangeRequestsTab.js"></script>
-
-    <!-- Modals -->
-    <script src="modals/CustomWorkflowModal.js"></script>
 
     <!-- Other -->
     <script src="agents.js"></script>
@@ -82,7 +67,6 @@
     <script src="fileOperations.js"></script>
     <script src="fileResponseParsing.js"></script>
     <script src="tabOperations.js"></script>
-    <script src="modalOperations.js"></script>
     <script src="generate.js"></script>
   </body>
 </html>

@@ -45,6 +45,8 @@ async function updateUserChangeRequestsTab() {
                 <th>Actions</th>
             </tr>
         </table>
+        <button class="button" id="new-change-request">New change request</button>
+        <button class="button" id="git-undo-last-commit-button">Undo last commit and push</button>
     `;
     
     try {
@@ -85,6 +87,12 @@ async function updateUserChangeRequestsTab() {
     } catch (error) {
         console.error('Failed to load user change request files: ', error);
     }
+
+    document.getElementById('new-change-request').addEventListener('click', () => {
+        createChangeRequestFile();
+    });
+
+    document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 }
 
 window.addEventListener('beforeunload', () => {
