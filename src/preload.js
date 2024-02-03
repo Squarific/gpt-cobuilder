@@ -44,7 +44,22 @@ contextBridge.exposeInMainWorld('fs', {
   saveFile,
   exists: fsSync.existsSync,
   mkdir: fs.mkdir,
-  readdir: fs.readdir
+  readdir: fs.readdir,
+  watchDirectory: (dirPath, opt, callback) => {
+    let watcher;
+    try {
+      watcher = fsSync.watch(dirPath, opt, (eventType, filename) => {
+        if (filename) {
+          callback(eventType, filename);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to watch directory for changes: ', error);
+    }
+    return () => {
+      if (watcher) watcher.close();
+    };
+  },
 });
 
 contextBridge.exposeInMainWorld('path', {
