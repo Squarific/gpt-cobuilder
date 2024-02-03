@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/error.css" />
     <link rel="stylesheet" href="css/table.css" />
     <link rel="stylesheet" href="css/generate.css" />
+    <link rel="stylesheet" href="css/userChangeRequests.css" />
   </head>
   <body>
     <div class="tab">
@@ -19,6 +20,7 @@
       <button class="tablinks" onclick="openTab(event, 'CustomWorkflows')">Custom Workflows</button>
       <button class="tablinks" onclick="openTab(event, 'Outputs')">Saved GPT Outputs</button>
       <button class="tablinks" onclick="openTab(event, 'Requests')">Requests</button>
+      <button class="tablinks" onclick="openTab(event, 'UserChangeRequests')">User change requests</button>
       <button class="tablinks" id="add-tab-button">+</button>
     </div>
 
@@ -27,6 +29,7 @@
     <div id="Outputs" class="tabcontent"></div>
     <div id="Requests" class="tabcontent"></div>
     <div id="CustomWorkflows" class="tabcontent"></div>
+    <div id="UserChangeRequests" class="tabcontent"></div>
 
     <div id="tabNameModal" class="modal">
         <div class="modal-content">
@@ -70,6 +73,7 @@
     <script src="tabs/CustomWorkflowsTab.js"></script>
     <script src="tabs/RequestsTab.js"></script>
     <script src="tabs/OutputsTab.js"></script>
+    <script src="tabs/UserChangeRequestsTab.js"></script>
 
     <!-- Modals -->
     <script src="modals/CustomWorkflowModal.js"></script>

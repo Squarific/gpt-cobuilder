@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     runAgentButton.onclick = () => {
       runAgentButton.disabled = true;
 
+      document.getElementById('last-response').value = "";
       agent.run(new PromptParameters(fileListController, {
         HIGH_LEVEL_CHANGE_REQUEST: document.getElementById('last-response').value
       }), chunkCallback).finally(() => {
