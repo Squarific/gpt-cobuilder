@@ -1,10 +1,3 @@
-savedOutputs.addEventListener('change', (event) => {
-    if(event.detail.name === "OUTPUT.GPT_FILE_CHANGES"){
-        updateFileList('file-changes-container', event.detail.content);
-        updateFileList('file-changes-container2', event.detail.content);
-    }
-});
-
 async function updateFileList(targetElementId, fileChanges) {
     let listContainer = document.getElementById(targetElementId);
     listContainer.innerHTML = '';
@@ -27,21 +20,3 @@ async function updateFileList(targetElementId, fileChanges) {
       listContainer.appendChild(listItem);
     }
 }
-
-savedOutputs.addEventListener("change", ({ detail }) => {
-  const savedOutputsContainer = document.getElementById('saved-outputs-container');
-  let outputArea = document.getElementById('output-' + detail.name);
-  
-  if (!outputArea) {
-      let outputLabel = document.createElement('div');
-      outputLabel.innerHTML = detail.name;
-      outputArea = document.createElement('textarea');
-      outputArea.id = 'output-' + detail.name;
-      outputArea.disabled = true;
-      savedOutputsContainer.appendChild(outputLabel);
-      savedOutputsContainer.appendChild(outputArea);
-  }
-
-  outputArea.value = detail.content;
-});
-

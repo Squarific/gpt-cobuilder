@@ -49,10 +49,6 @@ async function createHumanInputTab() {
     <div id="file-changes-container2"></div>
 
     <div id="custom-buttons">
-      <button class="button" id="apply-button2">Apply generated file changes</button>
-      <button class="button" id="git-operation-button2">
-        Perform git add, commit (with outputs.GPT_COMMIT_MESSAGE) and push
-      </button>
       <button class="button" id="git-undo-last-commit-button">
         Undo last commit and push
       </button>
@@ -78,8 +74,6 @@ async function createHumanInputTab() {
     runFullWorkflowButton.disabled = false;
   });
 
-  document.getElementById('apply-button2').addEventListener('click', applyFileChanges);
-  document.getElementById('git-operation-button2').addEventListener('click', gitOperations);
   document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 
   window.fileListController = new FileListController();

@@ -1,23 +1,10 @@
-async function gitOperations () {
-  // Get buttons by their IDs
-  const gitOperationButton1 = document.getElementById('git-operation-button');
-  const gitOperationButton2 = document.getElementById('git-operation-button2');
-
+async function gitAddCommitPush (gitMessage) {
   try {
-    // Disable the buttons
-    gitOperationButton1.disabled = true;
-    gitOperationButton2.disabled = true;
-
-    const gptGitMessage = savedOutputs.get("OUTPUT.GPT_GIT_MESSAGE");
     await window.gitCommands.gitAdd(localStorage.getItem("folder"));
     await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
     await window.gitCommands.gitPush(localStorage.getItem("folder"));
   } catch (error) {
     console.log("Error performing git operations", error);
-  } finally {
-    // Re-enable the buttons
-    gitOperationButton1.disabled = false;
-    gitOperationButton2.disabled = false;
   }
 }
 
@@ -48,13 +35,13 @@ async function runFullWorkflow () {
   document.getElementById('token-counts').innerText = displayTokenCounts(juniorResponse);
   totalCost += parseFloat(calculateCostFromResponse(juniorResponse));
   
-  await applyFileChanges();
+  await applyFileChanges(juniorResponse);
   document.getElementById('last-response').value = "";
   let gitResponse = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(gitResponse);
   totalCost += parseFloat(calculateCostFromResponse(gitResponse));
   
-  await gitOperations();
+  await gitAddCommitPush(gitResponse);
 
   // Display total cost
   document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
@@ -75,8 +62,8 @@ async function gitUndoLastCommitAndPush() {
   }
 }
 
-async function applyFileChanges () {
-  const parsedFiles = parseResponse(savedOutputs.get("OUTPUT.GPT_FILE_CHANGES"));
+async function applyFileChanges (fileChanges) {
+  const parsedFiles = parseResponse(fileChanges);
 
   for (const file of parsedFiles) {
     try {
