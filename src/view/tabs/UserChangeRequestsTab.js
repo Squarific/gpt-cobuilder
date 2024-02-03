@@ -41,7 +41,6 @@ async function updateUserChangeRequestsTab() {
         <table id="user-change-requests-table">
             <tr>
                 <th>User Change Request</th>
-                <th>Commit hash</th>
                 <th>Selected files</th>
                 <th>Actions</th>
             </tr>
@@ -57,11 +56,10 @@ async function updateUserChangeRequestsTab() {
 
             const tableRowHTML = `
                 <tr>
-                    <td><pre class="changerequest">${changeRequest}</pre></td>
-                    <td class="commithash">${commitHash}</td>
-                    <td class="files"></td>
-                    <td>
-                        <button class="logbutton">Log</button>
+                    <td><textarea class="changerequest">${changeRequest}</textarea></td>
+                    <td class="files">Selected on commit: ${commitHash}<br/></td>
+                    <td class="buttons">
+                        <button class="button logbutton">Log</button>
                     </td>
                 </tr>
             `;
@@ -71,10 +69,21 @@ async function updateUserChangeRequestsTab() {
             var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
+            var buttons = row.querySelector(".buttons");
+            for (var k = 0; k < agents.length; k++) {
+                var agent = agents[k];
+                buttons.appendChild(elementFromHTML(`
+                    <button class="button">Run $${agent.name}</button>
+                `)).addEventListener("click", () => {
+                    document.getElementById('last-response').value = "";
 
-            row.querySelector(".logbutton").addEventListener("click", (event) => {
-                console.log(changeRequest, commitHash);
-            });
+                    agent.run(new PromptParameters(fileListController, {
+                        USER_CHANGE_REQUEST: changeRequest
+                    }), chunkCallback).finally(() => {
+                        runAgentButton.disabled = false;
+                    });
+                });
+            }
         }
     } catch (error) {
         console.error('Failed to load user change request files: ', error);

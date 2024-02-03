@@ -24,7 +24,9 @@ async function runFullWorkflow () {
   }
   
   document.getElementById('last-response').value = "";
-  let seniorResponse = await SeniorDevAgent.run(new PromptParameters(fileListController), chunkCallback);
+  let seniorResponse = await SeniorDevAgent.run(new PromptParameters(fileListController, {
+    USER_CHANGE_REQUEST: document.getElementById("user-change-request").value || "Empty change request"
+  }), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(seniorResponse);
   totalCost += parseFloat(calculateCostFromResponse(seniorResponse));
 
