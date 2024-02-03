@@ -30,7 +30,7 @@ async function createChangeRequestFile (changerequest, selectedfiles) {
   var commitHash = await window.gitCommands.gitGetHash(localStorage.getItem('folder'));
 
   var content = `Files (${commitHash})
-- ${selectedfiles.map((f) => f.path).join('\n- ')}
+- ${selectedfiles.map((f) => f.path.replace(localStorage.getItem('folder'), "")).join('\n- ')}
 
 Change request:
 ${changerequest}
