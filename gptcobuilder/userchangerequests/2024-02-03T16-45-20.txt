@@ -1,0 +1,8 @@
+Files (ae56829b8966e0102a84515230f946b01b7d4f45):
+- package.json
+- src\view\classes\FileListController.js
+- src\view\css\input.css
+- src\view\fileOperations.js
+
+Change request:
+test

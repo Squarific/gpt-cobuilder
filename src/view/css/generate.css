@@ -4,6 +4,11 @@
   color: #495057;
 }
 
+.filelist button.button {
+  display:inline-block;
+  margin-right:20px;
+}
+
 /* Update existing .error-log class with general error styling */
 .error-log {
   margin: 20px;

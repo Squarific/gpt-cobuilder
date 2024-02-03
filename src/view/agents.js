@@ -1,11 +1,5 @@
 let agents = [];
 
-function elementFromHTML(htmlString) {
-  var div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
-  return div.firstChild;
-}
-
 window.addEventListener('DOMContentLoaded', async () => {
   const agentsDirPath = `gptcobuilder/agents/`;
   const agentNames = await window.fs.readdir(agentsDirPath);

@@ -35,17 +35,14 @@ async function updateUserChangeRequestsTab() {
             }
         });
     }
-
-    function logparsedFileContent (fileContent) {
-        var changeRequest = parseUserChangeRequestFileContent(fileContent);
-        console.log(changeRequest);
-    }
     
     userChangeRequestsTab.innerHTML = `
         <h2>User Change Requests</h2>
         <table id="user-change-requests-table">
             <tr>
                 <th>User Change Request</th>
+                <th>Commit hash</th>
+                <th>Selected files</th>
                 <th>Actions</th>
             </tr>
         </table>
@@ -56,20 +53,27 @@ async function updateUserChangeRequestsTab() {
         for (const fileName of userChangeRequestFiles) {
             const filePath = `${userChangeRequestsDir}/${fileName}`;
             const fileContent = await window.fs.readFile(filePath);
-            const tableRow = `
+            const { files, changeRequest, commitHash } = parseUserChangeRequestFileContent(fileContent);
+
+            const tableRowHTML = `
                 <tr>
-                    <td><pre class="filecontent">${fileContent}</pre></td>
+                    <td><pre class="changerequest">${changeRequest}</pre></td>
+                    <td class="commithash">${commitHash}</td>
+                    <td class="files"></td>
                     <td>
                         <button class="logbutton">Log</button>
                     </td>
                 </tr>
             `;
             
-            userChangeRequestsTab.querySelector('#user-change-requests-table').innerHTML += tableRow;
-            Array.from(userChangeRequestsTab.querySelectorAll(".logbutton")).forEach((button) => {
-                button.addEventListener("click", (event) => {
-                    logparsedFileContent(event.target.parentNode.parentNode.querySelector(".filecontent").textContent);
-                });
+            var row = userChangeRequestsTab.querySelector('#user-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
+
+            var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
+            row.querySelector(".files").appendChild(fileListController.createDOM());
+
+
+            row.querySelector(".logbutton").addEventListener("click", (event) => {
+                console.log(changeRequest, commitHash);
             });
         }
     } catch (error) {

@@ -1,21 +1,21 @@
 class FileListController {
-  constructor() {
-    this.element = document.createElement('pre');
-    this.fileContentMap = new Map();
+  constructor(alreadySelected) {
     this.fileListMap = new Map();
     this.totalTokenCount = 0;
     this.selectedFiles = new Set();
+
+    alreadySelected = alreadySelected || [];
+    this.fileContentMap = new Map(alreadySelected.map((f) => [{ path: f}, ""]));
     
-    this.fileChange = new Event('filechange');
     this.allFilesSelected = false;
     this.selectAllButton = null;
-    this.isBatchUpdating = false;
   }
 
   createDOM() {
     const targetDiv = document.createElement("div");
+    targetDiv.className = "filelist";
 
-    this.totalTokenLabel = document.createElement("p");
+    this.totalTokenLabel = document.createElement("label");
     targetDiv.appendChild(this.totalTokenLabel);
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
 
@@ -31,7 +31,14 @@ class FileListController {
     refreshButton.addEventListener('click', this.refresh.bind(this));
     targetDiv.appendChild(refreshButton);
 
-    targetDiv.appendChild(this.element);
+    this.selectedFilesElement = targetDiv.appendChild(document.createElement('pre'));
+
+    var details = targetDiv.appendChild(elementFromHTML(`
+      <details>
+        <summary>Unselected files</summary>
+      </details>
+    `));
+    this.unSelectedFilesElement = details.appendChild(document.createElement('pre'));
 
     this.refresh();
 
@@ -41,17 +48,18 @@ class FileListController {
   async refresh() {
     this.selectedFiles = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
 
-    this.element.textContent = '';
+    this.selectedFilesElement.textContent = '';
+    this.unSelectedFilesElement.textContent = '';
     this.totalTokenCount = 0;
     let fileList = await this.getFilesInFolderWithFilter(); 
     this.displayFileStructure(fileList);
-    this.element.dispatchEvent(this.fileChange);
   }
 
   async displayFileStructure(fileList) {
     this.fileContentMap.clear();
     this.fileListMap.clear();
-    this.element.textContent = '';
+    this.selectedFilesElement.textContent = '';
+    this.unSelectedFilesElement.textContent = '';
 
     const savedFolder = localStorage.getItem('folder');
 
@@ -118,7 +126,6 @@ class FileListController {
 
     if (this.selectedFiles.has(file.path)) {
       checkbox.checked = true;
-      await this.updateFileSelection(file);
     }
     
     const label = document.createElement('label');
@@ -137,27 +144,22 @@ class FileListController {
     fileEntry.appendChild(checkbox);
     fileEntry.appendChild(label);
 
-    this.element.appendChild(fileEntry);
+    if (checkbox.checked) {
+      this.selectedFilesElement.appendChild(fileEntry);
+    } else {
+      this.unSelectedFilesElement.appendChild(fileEntry);
+    }
   }
 
   async selectFile(file) {
-    this.checkbox(file).checked = true;
+    file.checkbox.checked = true;
     await this.updateFileSelection(file);
   }
 
   async updateFileSelection(file) {
-    if (this.checkbox(file).checked) {
-        const content = await window.fs.readFile(file.path);
-        this.fileContentMap.set(file, content);
-    } else {
-        this.fileContentMap.delete(file);
-    }
-
-    if (!this.isBatchUpdating) {
-        this.totalTokenCount = this.calculateTotalTokenCount();
-        this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
-        this.element.dispatchEvent(this.fileChange);
-    }
+    this.handleCheckboxChange(file.checkbox, file.checkbox.checked);
+    this.totalTokenCount = this.calculateTotalTokenCount();
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
   }
 
   async toggleAllFiles() {
@@ -167,7 +169,14 @@ class FileListController {
   }
 
   async setAllFilesSelected(selected) {
-    const checkboxes = this.element.querySelectorAll('.file-entry input[type="checkbox"]');
+    let checkboxes;
+
+    if (selected) {
+      checkboxes = this.unSelectedFilesElement.querySelectorAll('.file-entry input[type="checkbox"]');
+    } else {
+      checkboxes = this.selectedFilesElement.querySelectorAll('.file-entry input[type="checkbox"]');
+    }
+
     const updatePromises = [];
 
     for (let checkbox of checkboxes) {
@@ -180,13 +189,9 @@ class FileListController {
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
     this.allFilesSelected = selected;
     this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
-    this.element.dispatchEvent(this.fileChange);
   }
 
   async setFromContentMap(contentMap) {
-    // This will prevent firing events for each file selection during batch updates
-    this.isBatchUpdating = true;
-
     await this.setAllFilesSelected(false);
 
     for (let file of contentMap.keys()) {
@@ -198,22 +203,23 @@ class FileListController {
 
     this.totalTokenCount = this.calculateTotalTokenCount();
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
-    
-    // Now that batch updating is done, reset the flag and fire the event once
-    this.isBatchUpdating = false;
-    this.element.dispatchEvent(this.fileChange);
   }
 
   async handleCheckboxChange(checkbox, selected) {
     return new Promise(async (resolve) => {
+      var fileEntry = checkbox.parentNode;
+      if (fileEntry) fileEntry.parentNode.removeChild(fileEntry);
+
       checkbox.checked = selected;
       const filePath = checkbox.getAttribute('data-filepath');
       const file = this.fileListMap.get(filePath);
       if (selected) {
         const content = await window.fs.readFile(file.path);
         this.fileContentMap.set(file, content);
+        if (fileEntry) this.selectedFilesElement.appendChild(fileEntry);
       } else {
         this.fileContentMap.delete(file);
+        if (fileEntry) this.unSelectedFilesElement.appendChild(fileEntry);
       }
       resolve();
     });
@@ -231,9 +237,5 @@ class FileListController {
     }
 
     return count;
-  } 
-
-  checkbox(file) {
-    return file.checkbox;
-  }  
+  }
 }
