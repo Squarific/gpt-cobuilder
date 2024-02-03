@@ -2,7 +2,6 @@
   display: none;
   position: fixed;
   z-index: 1000;
-  padding-top: 100px;
   left: 0;
   top: 0;
   width: 100%; 
@@ -12,10 +11,12 @@
 
 .modal-content {
   background-color: #fefefe;
-  margin: 10% auto;
-  padding: 20px;
+  margin: 2% auto;
+  padding: 1%;
   border: 1px solid #888;
   width: 80%;
+  max-height:90%;
+  overflow:auto;
 }
 
 .close {

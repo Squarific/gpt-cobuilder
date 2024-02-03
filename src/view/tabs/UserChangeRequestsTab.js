@@ -1,4 +1,3 @@
-// Add a variable to keep track of the watcher so we can close it when necessary.
 let watcher;
 
 async function updateUserChangeRequestsTab() {
