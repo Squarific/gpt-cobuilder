@@ -1,2 +1,3 @@
 This is an electron project that aims to let users quickly create and iterate on applications using LLMs in this case chat GPT.
 Whenever DOM elements are created, avoid using createElement, instead write out the html and assign it using innerHTML.
+Everything that a user does or inputs should be written to disk almost instantly.
