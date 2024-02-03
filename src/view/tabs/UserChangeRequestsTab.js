@@ -58,9 +58,7 @@ async function updateUserChangeRequestsTab() {
                 <tr>
                     <td><textarea class="changerequest">${changeRequest}</textarea></td>
                     <td class="files">Selected on commit: ${commitHash}<br/></td>
-                    <td class="buttons">
-                        <button class="button logbutton">Log</button>
-                    </td>
+                    <td class="buttons"></td>
                 </tr>
             `;
             
@@ -70,8 +68,10 @@ async function updateUserChangeRequestsTab() {
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             var buttons = row.querySelector(".buttons");
+
             for (var k = 0; k < agents.length; k++) {
                 var agent = agents[k];
+
                 buttons.appendChild(elementFromHTML(`
                     <button class="button">Run $${agent.name}</button>
                 `)).addEventListener("click", () => {
@@ -95,5 +95,3 @@ window.addEventListener('beforeunload', () => {
         watcher();
     }
 });
-
-updateUserChangeRequestsTab();

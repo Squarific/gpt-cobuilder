@@ -29,4 +29,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
     };
   }
+
+  updateUserChangeRequestsTab();
 });
