@@ -13,9 +13,12 @@ function parseUserChangeRequestFileContent (fileContent) {
     }
 
     while (i < lines.length && lines[i] != "Change request:") i++;
+    
     for (var k = i + 1; k < lines.length; k++) {
-        changeRequest += lines[k];
+        changeRequest.push(lines[k]);
     }
+
+    changeRequest = changeRequest.join("\n");
 
     return {
         files,

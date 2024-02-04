@@ -4,7 +4,7 @@ function parseHighLevelChangeRequestFileContent (fileContent) {
     var lines = fileContent.split('\n');
     var commitHash = lines[0].split("(")[1].split(")")[0];
     var files = [];
-    var changeRequest = "";
+    var changeRequest = [];
 
     var i = 1;
     while (lines[i].indexOf("- ") == 0) {
@@ -13,9 +13,12 @@ function parseHighLevelChangeRequestFileContent (fileContent) {
     }
 
     while (i < lines.length && lines[i] != "High level change request:") i++;
+
     for (var k = i + 1; k < lines.length; k++) {
-        changeRequest += lines[k];
+        changeRequest.push(lines[k]);
     }
+
+    changeRequest = changeRequest.join("\n");
 
     return {
         files,

@@ -9,9 +9,27 @@
 #user-change-requests-table td,
 #high-level-change-requests-table th,
 #high-level-change-requests-table td {
+    position:relative;
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+}
+
+
+#user-change-requests-table td:first-child,
+#high-level-change-requests-table td:first-child {
+    width:100%;
+}
+
+#user-change-requests-table textarea,
+#high-level-change-requests-table textarea {
+    position:absolute;
+    bottom:5px;
+    right:5px;
+    top:5px;
+    left:5px;
+    width:initial;
+    z-index:1;
 }
 
 #user-change-requests-table th,

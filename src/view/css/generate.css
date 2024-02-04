@@ -9,6 +9,10 @@
   display:inline-block;
 }
 
+.file-entry {
+  text-wrap: nowrap;
+}
+
 .filelist button.button {
   display:inline-block;
   margin-right:20px;
