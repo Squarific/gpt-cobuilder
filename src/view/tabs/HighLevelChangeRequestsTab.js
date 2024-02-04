@@ -27,6 +27,14 @@ function parseHighLevelChangeRequestFileContent (fileContent) {
     };
 }
 
+function generateHighLevelChangeRequestsFileContent (files, response, commitHash) {
+    return `Files (${commitHash}):
+${files.join('\n')}
+
+High level change request:
+${response}`;
+}
+
 async function updateHighLevelChangeRequestsTab() {
     const highLevelChangeRequestsTab = document.getElementById('HighLevelChangeRequests');
     const highLevelChangeRequestsDir = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
@@ -75,7 +83,12 @@ async function updateHighLevelChangeRequestsTab() {
             var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
-            var buttons = row.querySelector(".buttons");
+            var changeRequestTextarea = row.querySelector(".changerequest");
+            changeRequestTextarea.addEventListener('input', async () => {
+                const updatedChangeRequest = changeRequestTextarea.value;
+                const updatedFileContent = generateHighLevelChangeRequestsFileContent(files, updatedChangeRequest, commitHash);
+                await window.fs.saveFile(filePath, updatedFileContent);
+            });
 
             var runSeniorButton = row.querySelector(".run-agent");
             runSeniorButton.addEventListener("click", async () => {

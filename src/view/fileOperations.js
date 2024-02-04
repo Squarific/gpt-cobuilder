@@ -27,8 +27,7 @@ async function createChangeRequestFile (changerequest, selectedfiles) {
 ${selectedfiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
 
 Change request:
-${changerequest}
-`;
+${changerequest}`;
 
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
@@ -40,8 +39,7 @@ async function createHighLevelChangeRequestFile (response, selectedFiles) {
 ${selectedFiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
 
 High level change request:
-${response}
-`;
+${response}`;
 
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }

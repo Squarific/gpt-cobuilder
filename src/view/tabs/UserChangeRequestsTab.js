@@ -4,7 +4,7 @@ function parseUserChangeRequestFileContent (fileContent) {
     var lines = fileContent.split('\n');
     var commitHash = lines[0].split("(")[1].split(")")[0];
     var files = [];
-    var changeRequest = "";
+    var changeRequest = [];
 
     var i = 1;
     while (lines[i].indexOf("- ") == 0) {
@@ -25,6 +25,14 @@ function parseUserChangeRequestFileContent (fileContent) {
         changeRequest,
         commitHash
     };
+}
+
+function generateUserChangeRequestFileContent(files, changeRequest, commitHash) {
+    return `Files (${commitHash}):
+${files.join('\n')}
+
+Change request:
+${changeRequest}`;
 }
 
 async function updateUserChangeRequestsTab() {
@@ -77,7 +85,12 @@ async function updateUserChangeRequestsTab() {
             var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
-            var buttons = row.querySelector(".buttons");
+            var changeRequestTextarea = row.querySelector(".changerequest");
+            changeRequestTextarea.addEventListener('input', async () => {
+                const updatedChangeRequest = changeRequestTextarea.value;
+                const updatedFileContent = generateUserChangeRequestFileContent(files, updatedChangeRequest, commitHash);
+                await window.fs.saveFile(filePath, updatedFileContent);
+            });
 
             var runSeniorButton = row.querySelector(".run-agent");
             runSeniorButton.addEventListener("click", async () => {
