@@ -1,10 +1,12 @@
 class FileListController {
-  constructor(alreadySelected) {
+  constructor(alreadySelected = []) {
+    //"path" => new File()
     this.fileListMap = new Map();
-    this.totalTokenCount = 0;
+    
+    //"path" => new File()
     this.selectedFiles = new Set();
 
-    alreadySelected = alreadySelected || [];
+    //new file() => "contentoffile"
     this.fileContentMap = new Map(alreadySelected.map((f) => [{ path: f}, ""]));
     
     this.allFilesSelected = false;
@@ -12,33 +14,26 @@ class FileListController {
   }
 
   createDOM() {
-    const targetDiv = document.createElement("div");
-    targetDiv.className = "filelist";
+    const targetDiv = elementFromHTML(`
+      <div class="filelist">
+        <label>Selected files tokens: 0</label>
+        <button class="button selectall">Select All Files</button>
+        <button class="button refresh">Refresh File List</button>
+        <pre class="selectedfiles"></pre>
+        <details>
+          <summary>Unselected files</summary>
+          <pre class="unselectedfiles"></pre>
+        </details>
+      </div>
+    `);
 
-    this.totalTokenLabel = document.createElement("label");
-    targetDiv.appendChild(this.totalTokenLabel);
-    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
-
-    this.selectAllButton = document.createElement("button");
-    this.selectAllButton.innerText = "Select All Files";
-    this.selectAllButton.className = "button";
+    this.totalTokenLabel = targetDiv.querySelector("label");
+    this.selectAllButton = targetDiv.querySelector(".selectall");
     this.selectAllButton.addEventListener('click', this.toggleAllFiles.bind(this));
-    targetDiv.appendChild(this.selectAllButton);
-    
-    const refreshButton = document.createElement("button");
-    refreshButton.innerText = "Refresh File List";
-    refreshButton.className = "button";
-    refreshButton.addEventListener('click', this.refresh.bind(this));
-    targetDiv.appendChild(refreshButton);
+    targetDiv.querySelector(".refresh").addEventListener('click', this.refresh.bind(this));
 
-    this.selectedFilesElement = targetDiv.appendChild(document.createElement('pre'));
-
-    var details = targetDiv.appendChild(elementFromHTML(`
-      <details>
-        <summary>Unselected files</summary>
-      </details>
-    `));
-    this.unSelectedFilesElement = details.appendChild(document.createElement('pre'));
+    this.selectedFilesElement = targetDiv.querySelector(".selectedfiles");
+    this.unSelectedFilesElement = targetDiv.querySelector(".unselectedfiles");
 
     this.refresh();
 
@@ -46,20 +41,18 @@ class FileListController {
   }
 
   async refresh() {
+    // Cache selected files
     this.selectedFiles = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
-
-    this.selectedFilesElement.textContent = '';
-    this.unSelectedFilesElement.textContent = '';
-    this.totalTokenCount = 0;
-    let fileList = await this.getFilesInFolderWithFilter();
-    this.displayFileStructure(fileList);
+    this.selectedFilesElement.innerHTML = '';
+    this.unSelectedFilesElement.innerHTML = '';
+    this.displayFileStructure(await this.getFilesInFolderWithFilter());
   }
 
   async displayFileStructure(fileList) {
     this.fileContentMap.clear();
     this.fileListMap.clear();
-    this.selectedFilesElement.textContent = '';
-    this.unSelectedFilesElement.textContent = '';
+    this.selectedFilesElement.innerHTML = '';
+    this.unSelectedFilesElement.innerHTML = '';
 
     const savedFolder = localStorage.getItem('folder');
 
@@ -113,40 +106,22 @@ class FileListController {
   }
 
   async addFileUI(filePath, file) {
-    const fileEntry = document.createElement("div");
-    fileEntry.className = "file-entry";
+    const id = Math.random() + "-checkbox";
+    const warningClasses = file.size > 1000 ? 'token-serious-warning' : file.size > 700 ? 'token-warning' : '';
 
-    const checkbox = document.createElement("input");
-    checkbox.setAttribute("data-filepath", file.path);
-    checkbox.id = Math.random() + "-checkbox";
-    checkbox.type = "checkbox";
-    checkbox.addEventListener("change", () => this.updateFileSelection(file));
-        
-    file.checkbox = checkbox;
+    const fileEntry = elementFromHTML(`
+      <div class="file-entry">
+        <input id="${id}" checked="${this.selectedFiles.has(file.path)}" type="checkbox" data-filepath="${file.path}"/>
+        <label for="${id}" class="${warningClasses}">${filePath} (${file.size})</label>
+      </div>
+    `);
+
+    file.checkbox = fileEntry.querySelector("input");
+    file.checkbox.addEventListener("change", () => this.updateFileSelection(file));
 
     if (this.selectedFiles.has(file.path)) {
-      checkbox.checked = true;
-      this.updateFileSelection(file);
-    }
-    
-    const label = document.createElement('label');
-    label.setAttribute("for", checkbox.id);
-
-    if (file.size > 700) {
-      label.classList.add('token-warning');
-    }
-
-    if (file.size > 1000) {
-      label.classList.add('token-serious-warning');
-    }
-
-    label.textContent = `${filePath} (${file.size})`;
-
-    fileEntry.appendChild(checkbox);
-    fileEntry.appendChild(label);
-
-    if (checkbox.checked) {
       this.selectedFilesElement.appendChild(fileEntry);
+      this.updateFileSelection(file);
     } else {
       this.unSelectedFilesElement.appendChild(fileEntry);
     }
@@ -158,15 +133,14 @@ class FileListController {
   }
 
   async updateFileSelection(file) {
-    await this.handleCheckboxChange(file.checkbox, file.checkbox.checked);
-    this.totalTokenCount = this.calculateTotalTokenCount();
-    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+    await this.setCheckboxSelected(file.checkbox, file.checkbox.checked);
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.calculateTotalTokenCount()}`;
   }
 
   async toggleAllFiles() {
     this.allFilesSelected = !this.allFilesSelected;
     await this.setAllFilesSelected(this.allFilesSelected);
-    this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files"; // Update button text
+    this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
   }
 
   async setAllFilesSelected(selected) {
@@ -178,16 +152,9 @@ class FileListController {
       checkboxes = this.selectedFilesElement.querySelectorAll('.file-entry input[type="checkbox"]');
     }
 
-    const updatePromises = [];
+    await Promise.all(checkboxes.map(checkbox => this.setCheckboxSelected(checkbox, selected)));
 
-    for (let checkbox of checkboxes) {
-      updatePromises.push(this.handleCheckboxChange(checkbox, selected));
-    }
-
-    await Promise.all(updatePromises);
-
-    this.totalTokenCount = this.calculateTotalTokenCount();
-    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.calculateTotalTokenCount()}`;
     this.allFilesSelected = selected;
     this.selectAllButton.innerText = this.allFilesSelected ? "Deselect All Files" : "Select All Files";
   }
@@ -202,31 +169,28 @@ class FileListController {
       }
     }
 
-    this.totalTokenCount = this.calculateTotalTokenCount();
-    this.totalTokenLabel.innerText = `Selected files tokens: ${this.totalTokenCount}`;
+    this.totalTokenLabel.innerText = `Selected files tokens: ${this.calculateTotalTokenCount()}`;
   }
 
-  async handleCheckboxChange(checkbox, selected) {
-    return new Promise(async (resolve) => {
-      var fileEntry = checkbox.parentNode;
-      if (fileEntry) fileEntry.parentNode.removeChild(fileEntry);
+  async setCheckboxSelected(checkbox, selected) {
+    var fileEntry = checkbox.parentNode;
+    if (fileEntry) fileEntry.parentNode.removeChild(fileEntry);
 
-      checkbox.checked = selected;
-      const filePath = checkbox.getAttribute('data-filepath');
-      const file = this.fileListMap.get(filePath);
-      if (selected) {
-        const content = await window.fs.readFile(file.path);
-        this.fileContentMap.set(file, content);
-        if (fileEntry) this.selectedFilesElement.appendChild(fileEntry);
-      } else {
-        this.fileContentMap.delete(file);
-        if (fileEntry) this.unSelectedFilesElement.appendChild(fileEntry);
-      }
-      resolve();
-    });
+    checkbox.checked = selected;
+    const filePath = checkbox.getAttribute('data-filepath');
+    const file = this.fileFromFilePath(filePath);
+
+    if (selected) {
+      const content = await window.fs.readFile(file.path);
+      this.fileContentMap.set(file, content);
+      if (fileEntry) this.selectedFilesElement.appendChild(fileEntry);
+    } else {
+      this.fileContentMap.delete(file);
+      if (fileEntry) this.unSelectedFilesElement.appendChild(fileEntry);
+    }
   }
 
-  findFileInMap(filePath) {
+  fileFromFilePath(filePath) {
     return this.fileListMap.get(filePath);
   }
 
