@@ -75,8 +75,6 @@ async function updateUserChangeRequestsTab() {
             buttons.appendChild(elementFromHTML(`
                 <button class="button">Run ${agent.name}</button>
             `)).addEventListener("click", () => {
-                document.getElementById('last-response').value = "";
-
                 agent.run(new PromptParameters(fileListController, {
                     USER_CHANGE_REQUEST: changeRequest
                 }), chunkCallback).finally(() => {
@@ -89,7 +87,7 @@ async function updateUserChangeRequestsTab() {
     }
 
     document.getElementById('new-change-request').addEventListener('click', () => {
-        createChangeRequestFile();
+        createChangeRequestFile("", []);
     });
 
     document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);

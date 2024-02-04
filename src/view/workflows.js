@@ -9,7 +9,7 @@ async function gitAddCommitPush (gitMessage) {
 }
 
 let chunkCallback = (chunk) => {
-  document.getElementById('last-response').value += chunk.choices[0]?.delta?.content || '';
+  //document.getElementById('last-response').value += chunk.choices[0]?.delta?.content || '';
 }
 
 async function runFullWorkflow () {
@@ -23,7 +23,6 @@ async function runFullWorkflow () {
     console.error("AGENT MISSING", SeniorDevAgent, JuniorDevAgent, GitMasterAgent);
   }
   
-  document.getElementById('last-response').value = "";
   let seniorResponse = await SeniorDevAgent.run(new PromptParameters(fileListController, {
     USER_CHANGE_REQUEST: document.getElementById("user-change-request").value || "Empty change request"
   }), chunkCallback);
@@ -38,7 +37,6 @@ async function runFullWorkflow () {
   totalCost += parseFloat(calculateCostFromResponse(juniorResponse));
   
   await applyFileChanges(juniorResponse);
-  document.getElementById('last-response').value = "";
   let gitResponse = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(gitResponse);
   totalCost += parseFloat(calculateCostFromResponse(gitResponse));

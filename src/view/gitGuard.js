@@ -66,7 +66,6 @@ async function generateAndPushCommit() {
       return;
     }
 
-    document.getElementById('last-response').value = "";
     const response = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
     
     if (response && response.choices && response.choices.length > 0) {
