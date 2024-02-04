@@ -2,6 +2,11 @@
   margin-top:0;
   display: inline-block;
   color: #495057;
+  font-family:monospace;
+}
+
+.file-entry input {
+  display:inline-block;
 }
 
 .filelist button.button {

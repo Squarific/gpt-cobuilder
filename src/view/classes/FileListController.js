@@ -19,10 +19,10 @@ class FileListController {
         <label>Selected files tokens: 0</label>
         <button class="button selectall">Select All Files</button>
         <button class="button refresh">Refresh File List</button>
-        <pre class="selectedfiles"></pre>
+        <div class="selectedfiles"></div>
         <details>
           <summary>Unselected files</summary>
-          <pre class="unselectedfiles"></pre>
+          <div class="unselectedfiles"></div>
         </details>
       </div>
     `);
@@ -107,12 +107,12 @@ class FileListController {
 
   async addFileUI(filePath, file) {
     const id = Math.random() + "-checkbox";
-    const warningClasses = file.size > 1000 ? 'token-serious-warning' : file.size > 700 ? 'token-warning' : '';
+    const warningClasses = file.size > 1000 ? 'class="token-serious-warning"' : file.size > 700 ? 'class="token-warning"' : '';
 
     const fileEntry = elementFromHTML(`
       <div class="file-entry">
-        <input id="${id}" checked="${this.selectedFiles.has(file.path)}" type="checkbox" data-filepath="${file.path}"/>
-        <label for="${id}" class="${warningClasses}">${filePath} (${file.size})</label>
+        <input id="${id}" ${this.selectedFiles.has(file.path) ? "checked" : ""} type="checkbox" data-filepath="${file.path}"/>
+        <label for="${id}" ${warningClasses}>${filePath} (${file.size})</label>
       </div>
     `);
 
