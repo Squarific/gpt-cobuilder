@@ -1,6 +1,6 @@
-let watcher;
+let highLevelChangeRequestWatcher;
 
-function parseUserChangeRequestFileContent (fileContent) {
+function parseHighLevelChangeRequestFileContent (fileContent) {
     var lines = fileContent.split('\n');
     var commitHash = lines[0].split("(")[1].split(")")[0];
     var files = [];
@@ -12,7 +12,7 @@ function parseUserChangeRequestFileContent (fileContent) {
         i++;
     }
 
-    while (i < lines.length && lines[i] != "Change request:") i++;
+    while (i < lines.length && lines[i] != "High level change request:") i++;
     for (var k = i + 1; k < lines.length; k++) {
         changeRequest += lines[k];
     }
@@ -24,39 +24,37 @@ function parseUserChangeRequestFileContent (fileContent) {
     };
 }
 
-async function updateUserChangeRequestsTab() {
-    const userChangeRequestsTab = document.getElementById('UserChangeRequests');
-    const userChangeRequestsDir = `${localStorage.getItem('folder')}/gptcobuilder/userchangerequests`;
+async function updateHighLevelChangeRequestsTab() {
+    const highLevelChangeRequestsTab = document.getElementById('HighLevelChangeRequests');
+    const highLevelChangeRequestsDir = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
 
-    if (!watcher) {
-        watcher = window.fs.watchDirectory(userChangeRequestsDir, { encoding: 'buffer' }, (eventType, filename) => {
+    if (!highLevelChangeRequestWatcher) {
+        highLevelChangeRequestWatcher = window.fs.watchDirectory(highLevelChangeRequestsDir, { encoding: 'buffer' }, (eventType, filename) => {
             if (eventType === 'rename') {
-                updateUserChangeRequestsTab();
+                updateHighLevelChangeRequestsTab();
             }
         });
     }
-    
-    userChangeRequestsTab.innerHTML = `
-        <h2>User Change Requests</h2>
-        <table id="user-change-requests-table">
+
+    highLevelChangeRequestsTab.innerHTML = `
+        <h2>High Level Change Requests</h2>
+        <table id="high-level-change-requests-table">
             <tr>
-                <th>User Change Request</th>
+                <th>Response from Senior Dev</th>
                 <th>Selected files</th>
                 <th>Actions</th>
             </tr>
         </table>
-        <button class="button" id="new-change-request">New change request</button>
-        <button class="button" id="git-undo-last-commit-button">Undo last commit and push</button>
     `;
-    
-    try {
-        const userChangeRequestFiles = await window.fs.readdir(userChangeRequestsDir);
-        for (const fileName of userChangeRequestFiles) {
-            const filePath = `${userChangeRequestsDir}/${fileName}`;
-            const fileContent = await window.fs.readFile(filePath);
-            const { files, changeRequest, commitHash } = parseUserChangeRequestFileContent(fileContent);
 
-            var agent = agents.find((agent) => agent.name == "SeniorDev") || {name: "undefined"};
+    try {
+        const highLevelChangeRequestFiles = await window.fs.readdir(highLevelChangeRequestsDir);
+        for (const fileName of highLevelChangeRequestFiles) {
+            const filePath = `${highLevelChangeRequestsDir}/${fileName}`;
+            const fileContent = await window.fs.readFile(filePath);
+            const { files, changeRequest, commitHash } = parseHighLevelChangeRequestFileContent(fileContent);
+
+            var agent = agents.find((agent) => agent.name == "JuniorDev") || {name: "undefined"};
 
             const tableRowHTML = `
                 <tr>
@@ -69,7 +67,7 @@ async function updateUserChangeRequestsTab() {
                 </tr>
             `;
             
-            var row = userChangeRequestsTab.querySelector('#user-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
+            var row = highLevelChangeRequestsTab.querySelector('#high-level-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
 
             var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
             row.querySelector(".files").appendChild(fileListController.createDOM());
@@ -94,18 +92,12 @@ async function updateUserChangeRequestsTab() {
             });
         }
     } catch (error) {
-        console.error('Failed to load user change request files: ', error);
+        console.error('Failed to load high level change request files: ', error);
     }
-
-    document.getElementById('new-change-request').addEventListener('click', () => {
-        createChangeRequestFile("", []);
-    });
-
-    document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 }
 
 window.addEventListener('beforeunload', () => {
-    if (watcher) {
-        watcher();
+    if (highLevelChangeRequestWatcher) {
+        highLevelChangeRequestWatcher();
     }
 });

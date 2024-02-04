@@ -22,13 +22,7 @@ async function logRequestAndResponse(request, response) {
 
 async function createChangeRequestFile (changerequest, selectedfiles) {
   const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/userchangerequests`;
-  
-  if(!await fs.exists(dirPath)){
-    await fs.mkdir(dirPath);
-  }
-
   var commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
-
   var content = `Files (${commitHash}):
 ${selectedfiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
 
@@ -39,20 +33,36 @@ ${changerequest}
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
 
+async function createHighLevelChangeRequestFile (response, selectedFiles) {
+  const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
+  var commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
+  var content = `Files (${commitHash}):
+${selectedFiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
+
+High level change request:
+${response}
+`;
+
+  await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
+}
+
 async function updateFolder (folder) {
   if (folder) {
     localStorage.setItem('folder', folder);
     document.getElementById('folder-display').textContent = ` Selected Folder: ${folder}`;
 
-    const dirPath = `${folder}/gptcobuilder`;
-    if(!await fs.exists(dirPath)){
-      await fs.mkdir(dirPath);
-    }
+    const dirs = [
+      `${folder}/gptcobuilder`,
+      `${folder}/gptcobuilder/requests`,
+      `${folder}/gptcobuilder/userchangerequests`,
+      `${folder}/gptcobuilder/highlevelchangerequests`,
+    ];
 
-    const dirPathRequests = `${folder}/gptcobuilder/requests`;
-    if(!await fs.exists(dirPathRequests)){
-      await fs.mkdir(dirPathRequests);
-    }
+    dirs.forEach(async (dir) => {
+      if(!await fs.exists(dir)) {
+        await fs.mkdir(dir);
+      }
+    });    
     
     // Load the projectDescription
     if (document.getElementById('project-description')) {
