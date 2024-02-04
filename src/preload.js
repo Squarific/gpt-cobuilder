@@ -66,11 +66,8 @@ contextBridge.exposeInMainWorld('path', {
   relative: path.relative
 });
 
-// Expose the Tokenizer module to the renderer process
 contextBridge.exposeInMainWorld('tiktoken', {
-  countTokens: async (text) => {
-    return enc.encode(text).length;
-  }
+  countTokens: async (text) => enc.encode(text).length
 });
 
 contextBridge.exposeInMainWorld('gitignoreParser', parser);
@@ -113,7 +110,7 @@ contextBridge.exposeInMainWorld('gitCommands', {
   diff: async (directory) => gitCommand(directory, "diff"),
   status: async (directory) => gitCommand(directory, "status"),
   push: async (directory) => gitCommand(directory, "push"),
-  add: async (directory) => gitCommand(directory, "add"),
+  add: async (directory) => gitCommand(directory, "add ."),
   commit: async (directory, commitMessage) => {
       const safeCommitMessage = commitMessage.replace(/"/g, '\\"');
       return gitCommand(directory, `commit -m "${safeCommitMessage}`);
