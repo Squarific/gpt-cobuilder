@@ -1,5 +1,9 @@
+var fileListControllers = [];
+
 class FileListController {
   constructor(alreadySelected = []) {
+    fileListControllers.push(this);
+    
     //"path" => new File()
     this.fileListMap = new Map();
     
@@ -152,7 +156,7 @@ class FileListController {
       checkboxes = this.selectedFilesElement.querySelectorAll('.file-entry input[type="checkbox"]');
     }
 
-    await Promise.all(checkboxes.map(checkbox => this.setCheckboxSelected(checkbox, selected)));
+    await Promise.all(Array.from(checkboxes).map(checkbox => this.setCheckboxSelected(checkbox, selected)));
 
     this.totalTokenLabel.innerText = `Selected files tokens: ${this.calculateTotalTokenCount()}`;
     this.allFilesSelected = selected;

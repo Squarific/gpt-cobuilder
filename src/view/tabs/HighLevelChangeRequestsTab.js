@@ -94,7 +94,7 @@ async function updateHighLevelChangeRequestsTab() {
             runSeniorButton.addEventListener("click", async () => {
                 runSeniorButton.disabled = true;
                 let seniorResponse = await agent.run(new PromptParameters(fileListController, {
-                    USER_CHANGE_REQUEST: row.querySelector(".changerequest").value
+                    USER_CHANGE_REQUEST: changeRequestTextarea.value
                 }), chunkCallback).finally(() => {
                     runSeniorButton.disabled = false;
                 });

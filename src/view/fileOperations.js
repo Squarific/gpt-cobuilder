@@ -54,6 +54,7 @@ async function updateFolder (folder) {
       `${folder}/gptcobuilder/requests`,
       `${folder}/gptcobuilder/userchangerequests`,
       `${folder}/gptcobuilder/highlevelchangerequests`,
+      `${folder}/gptcobuilder/filechangesproposals`,
     ];
 
     dirs.forEach(async (dir) => {

@@ -63,7 +63,7 @@ async function gitUndoLastCommitAndPush() {
 }
 
 async function applyFileChanges (fileChanges) {
-  const parsedFiles = parseResponse(fileChanges);
+  const parsedFiles = parseFilesResponse(fileChanges);
 
   for (const file of parsedFiles) {
     try {
@@ -74,5 +74,5 @@ async function applyFileChanges (fileChanges) {
     }
   }
 
-  fileListController.refresh();
+  fileListControllers.foreach((c) => c.refresh());
 }

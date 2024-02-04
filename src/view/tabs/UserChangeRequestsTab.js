@@ -57,7 +57,6 @@ async function updateUserChangeRequestsTab() {
             </tr>
         </table>
         <button class="button" id="new-change-request">New change request</button>
-        <button class="button" id="git-undo-last-commit-button">Undo last commit and push</button>
     `;
     
     try {
@@ -96,7 +95,7 @@ async function updateUserChangeRequestsTab() {
             runSeniorButton.addEventListener("click", async () => {
                 runSeniorButton.disabled = true;
                 let seniorResponse = await agent.run(new PromptParameters(fileListController, {
-                    USER_CHANGE_REQUEST: row.querySelector(".changerequest").value
+                    USER_CHANGE_REQUEST: changeRequestTextarea.value
                 }), chunkCallback).finally(() => {
                     runSeniorButton.disabled = false;
                 });
@@ -116,8 +115,6 @@ async function updateUserChangeRequestsTab() {
     document.getElementById('new-change-request').addEventListener('click', () => {
         createChangeRequestFile("", []);
     });
-
-    document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 }
 
 window.addEventListener('beforeunload', () => {

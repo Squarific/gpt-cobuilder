@@ -19,7 +19,7 @@ const parseBlocks = (response) => {
     return blocks;
 };
 
-const parseResponse = (response) => {
+const parseFilesResponse = (response) => {
   const files = [];
 
   // Split the response by the code block delimiter
