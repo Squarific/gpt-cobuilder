@@ -3,7 +3,7 @@ var fileListControllers = [];
 class FileListController {
   constructor(alreadySelected = []) {
     fileListControllers.push(this);
-    
+
     //"path" => new File()
     this.fileListMap = new Map();
     
@@ -185,9 +185,9 @@ class FileListController {
     const file = this.fileFromFilePath(filePath);
 
     if (selected) {
+      if (fileEntry) this.selectedFilesElement.appendChild(fileEntry);
       const content = await window.fs.readFile(file.path);
       this.fileContentMap.set(file, content);
-      if (fileEntry) this.selectedFilesElement.appendChild(fileEntry);
     } else {
       this.fileContentMap.delete(file);
       if (fileEntry) this.unSelectedFilesElement.appendChild(fileEntry);
