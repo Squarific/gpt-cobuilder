@@ -1,8 +1,8 @@
-async function gitAddCommitPush (gitMessage) {
+async function addCommitPush (gitMessage) {
   try {
-    await window.gitCommands.gitAdd(localStorage.getItem("folder"));
-    await window.gitCommands.gitCommit(localStorage.getItem("folder"), gptGitMessage);
-    await window.gitCommands.gitPush(localStorage.getItem("folder"));
+    await window.gitCommands.add(localStorage.getItem("folder"));
+    await window.gitCommands.commit(localStorage.getItem("folder"), gptGitMessage);
+    await window.gitCommands.push(localStorage.getItem("folder"));
   } catch (error) {
     console.log("Error performing git operations", error);
   }
@@ -41,7 +41,7 @@ async function runFullWorkflow () {
   document.getElementById('token-counts').innerText = displayTokenCounts(gitResponse);
   totalCost += parseFloat(calculateCostFromResponse(gitResponse));
   
-  await gitAddCommitPush(gitResponse);
+  await addCommitPush(gitResponse);
 
   // Display total cost
   document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
@@ -52,9 +52,9 @@ async function gitUndoLastCommitAndPush() {
     const directory = localStorage.getItem('folder');
     // Run git revert on the last commit without creating a new commit
     // It should automatically revert the changes made by the last commit
-    await window.gitCommands.gitRevertLastCommit(directory);
+    await window.gitCommands.revertLastCommit(directory);
     // Push the changes after reverting
-    await window.gitCommands.gitPush(directory);
+    await window.gitCommands.push(directory);
     alert('The last commit has been successfully undone and the changes have been pushed.');
   } catch (error) {
     console.error('Error reverting the last commit and pushing:', error);

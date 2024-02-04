@@ -56,11 +56,17 @@ async function updateUserChangeRequestsTab() {
             const fileContent = await window.fs.readFile(filePath);
             const { files, changeRequest, commitHash } = parseUserChangeRequestFileContent(fileContent);
 
+            
+            var agent = agents.find((agent) => agent.name == "SeniorDev");
+
             const tableRowHTML = `
                 <tr>
                     <td><textarea class="changerequest">${changeRequest}</textarea></td>
                     <td class="files">Selected on commit: ${commitHash}<br/></td>
-                    <td class="buttons"></td>
+                    <td class="buttons">
+                        <button class="button run-agent">Run ${agent.name}</button>
+                        <button class="button delete-change-request">Delete</button>
+                    </td>
                 </tr>
             `;
             
@@ -70,17 +76,20 @@ async function updateUserChangeRequestsTab() {
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             var buttons = row.querySelector(".buttons");
-            var agent = agents.find((agent) => agent.name == "SeniorDev");
 
-            var runSeniorButton = buttons.appendChild(elementFromHTML(`
-                <button class="button">Run ${agent.name}</button>
-            `)).addEventListener("click", () => {
+            var runSeniorButton = row.querySelector(".run-agent");
+            runSeniorButton.addEventListener("click", () => {
                 runSeniorButton.disabled = true;
                 agent.run(new PromptParameters(fileListController, {
-                    USER_CHANGE_REQUEST: changeRequest
+                    USER_CHANGE_REQUEST: row.querySelector(".changerequest").value
                 }), chunkCallback).finally(() => {
                     runSeniorButton.disabled = false;
                 });
+            });
+
+            var deleteButton = row.querySelector(".delete-change-request");
+            deleteButton.addEventListener("click", async () => {
+                await window.fs.unlink(`${filePath}`);
             });
         }
     } catch (error) {

@@ -45,6 +45,7 @@ contextBridge.exposeInMainWorld('fs', {
   exists: fsSync.existsSync,
   mkdir: fs.mkdir,
   readdir: fs.readdir,
+  unlink: fs.unlink,
   watchDirectory: (dirPath, opt, callback) => {
     let watcher;
     try {
@@ -93,121 +94,36 @@ contextBridge.exposeInMainWorld('folderDialog', {
   }
 });
 
+async function gitCommand (directory, command) {
+  return new Promise((resolve, reject) => {
+    exec(`git -C ${directory} ${command}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`error with git ${command}: ${error.message}`);
+        reject(error);
+        return;
+      }
+
+      if (stderr) {
+        console.error(`stderr with git ${command}: ${stderr}`);
+      }
+
+      resolve(stdout);
+    });
+  });
+}
+
 contextBridge.exposeInMainWorld('gitCommands', {
-  gitDiff: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} diff`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git diff: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git diff: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitStatus: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} status`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git status: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git status: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitPush: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} push`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git push: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git push: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitAdd: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} add .`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git add: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git add: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitCommit: async (directory, commitMessage) => {
-    return new Promise((resolve, reject) => {
+  diff: async (directory) => gitCommand(directory, "diff"),
+  status: async (directory) => gitCommand(directory, "status"),
+  push: async (directory) => gitCommand(directory, "push"),
+  add: async (directory) => gitCommand(directory, "add"),
+  commit: async (directory, commitMessage) => {
       const safeCommitMessage = commitMessage.replace(/"/g, '\\"');
-      exec(`git -C ${directory} commit -m "${safeCommitMessage}"`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git commit: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git commit: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
+      return gitCommand(directory, `commit -m "${safeCommitMessage}`);
   },
-  gitResetLastCommit: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} reset --soft HEAD~1`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git reset: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git reset: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitRevertLastCommit: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} revert HEAD`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git revert HEAD: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git revert HEAD: ${stderr}`);
-        }
-        resolve(stdout);
-      });
-    });
-  },
-  gitGetHash: async (directory) => {
-    return new Promise((resolve, reject) => {
-      exec(`git -C ${directory} rev-parse HEAD`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`error with git revert HEAD: ${error.message}`);
-          reject(error);
-        }
-        if (stderr) {
-          console.error(`stderr with git revert HEAD: ${stderr}`);
-        }
-        resolve(stdout.split("\n")[0]);
-      });
-    });
-  },
-  
+  gitResetLastCommit: async (directory) => gitCommand(directory, `reset --soft HEAD~1`),
+  revertLastCommit: async (directory) => gitCommand(directory, `revert HEAD`),
+  getHash: async (directory) => gitCommand(directory, `rev-parse HEAD`),
 });
 
 contextBridge.exposeInMainWorld('openAiNpmApi', {

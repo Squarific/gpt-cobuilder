@@ -1,8 +1,8 @@
 async function checkUncommittedChanges() {
   const directory = localStorage.getItem('folder');
-  const gitStatus = await window.gitCommands.gitStatus(directory);
-  const hasUncommittedChanges = gitStatus.includes('Changes to be committed:') || gitStatus.includes('Changes not staged for commit:');
-  const modifiedFiles = extractModifiedFiles(gitStatus);
+  const status = await window.gitCommands.status(directory);
+  const hasUncommittedChanges = status.includes('Changes to be committed:') || status.includes('Changes not staged for commit:');
+  const modifiedFiles = extractModifiedFiles(status);
   const warningElement = createGitWarningElement(hasUncommittedChanges, modifiedFiles);
   const bodyElement = document.querySelector('body');
   const existingWarning = document.getElementById('git-warning');
@@ -70,9 +70,9 @@ async function generateAndPushCommit() {
     
     if (response && response.choices && response.choices.length > 0) {
       const commitMessage = response.choices[0].message.content;
-      await window.gitCommands.gitAdd(localStorage.getItem("folder"));
-      await window.gitCommands.gitCommit(localStorage.getItem("folder"), commitMessage);
-      await window.gitCommands.gitPush(localStorage.getItem("folder"));
+      await window.gitCommands.add(localStorage.getItem("folder"));
+      await window.gitCommands.commit(localStorage.getItem("folder"), commitMessage);
+      await window.gitCommands.push(localStorage.getItem("folder"));
       checkUncommittedChanges();
     } else {
       console.error('Failed to generate commit message');
