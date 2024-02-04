@@ -42,8 +42,10 @@ async function createSettingsTab() {
     updateFolder(folder);
   });
 
-  document.getElementById('model-selection').addEventListener('change', () => {
-    const model = document.getElementById('model-selection').value;
+  var modelSelect = document.getElementById('model-selection');
+  modelSelect.value = (await loadSettings()).modelSelection;
+  modelSelect.addEventListener('change', () => {
+    const model = modelSelect.value;
     const settings = { modelSelection: model };
     saveSettings(settings);
   });
