@@ -72,13 +72,14 @@ async function updateUserChangeRequestsTab() {
             var buttons = row.querySelector(".buttons");
             var agent = agents.find((agent) => agent.name == "SeniorDev");
 
-            buttons.appendChild(elementFromHTML(`
+            var runSeniorButton = buttons.appendChild(elementFromHTML(`
                 <button class="button">Run ${agent.name}</button>
             `)).addEventListener("click", () => {
+                runSeniorButton.disabled = true;
                 agent.run(new PromptParameters(fileListController, {
                     USER_CHANGE_REQUEST: changeRequest
                 }), chunkCallback).finally(() => {
-                    runAgentButton.disabled = false;
+                    runSeniorButton.disabled = false;
                 });
             });
         }
