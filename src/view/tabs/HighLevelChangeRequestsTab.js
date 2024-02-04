@@ -90,16 +90,16 @@ async function updateHighLevelChangeRequestsTab() {
                 await window.fs.saveFile(filePath, updatedFileContent);
             });
 
-            var runSeniorButton = row.querySelector(".run-agent");
-            runSeniorButton.addEventListener("click", async () => {
-                runSeniorButton.disabled = true;
-                let seniorResponse = await agent.run(new PromptParameters(fileListController, {
-                    USER_CHANGE_REQUEST: changeRequestTextarea.value
+            var runJuniorButton = row.querySelector(".run-agent");
+            runJuniorButton.addEventListener("click", async () => {
+                runJuniorButton.disabled = true;
+                let juniorResponse = await agent.run(new PromptParameters(fileListController, {
+                    HIGH_LEVEL_CHANGE_REQUEST: changeRequestTextarea.value
                 }), chunkCallback).finally(() => {
-                    runSeniorButton.disabled = false;
+                    runJuniorButton.disabled = false;
                 });
 
-                createHighLevelChangeRequestFile(seniorResponse.choices[0].message.content, files);
+                createFilechangesProposalFile(juniorResponse.choices[0].message.content);
             });
 
             var deleteButton = row.querySelector(".delete-change-request");
