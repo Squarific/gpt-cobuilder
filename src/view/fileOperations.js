@@ -27,7 +27,7 @@ async function createChangeRequestFile (changerequest, selectedfiles) {
     await fs.mkdir(dirPath);
   }
 
-  var commitHash = await window.gitCommands.getHash(localStorage.getItem('folder')).split("\n")[0];
+  var commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
 
   var content = `Files (${commitHash}):
 ${selectedfiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
