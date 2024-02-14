@@ -44,7 +44,7 @@ function createGitWarningElement(hasUncommittedChanges, modifiedFiles) {
 }
 
 function extractModifiedFiles(gitStatus) {
-  const fileRegex = /^(?:\s*modified:|\s*M)\s*(.+)$/mg;
+  const fileRegex = /^(?:\s*modified:|\s*M|\s*deleted:)\s*(.+)$/mg;
   let match;
   const files = [];
   while ((match = fileRegex.exec(gitStatus)) !== null) {
