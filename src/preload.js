@@ -108,6 +108,7 @@ async function gitCommand (directory, command) {
 
 contextBridge.exposeInMainWorld('gitCommands', {
   diff: async (directory) => gitCommand(directory, "diff"),
+  diffstaged: async (directory) => gitCommand(directory, "diff --staged"),
   status: async (directory) => gitCommand(directory, "status"),
   push: async (directory) => gitCommand(directory, "push"),
   add: async (directory) => gitCommand(directory, "add ."),

@@ -4,6 +4,7 @@ function parseFilechangesProposalFileContent (fileContent) {
     var lines = fileContent.split('\n');
     var filechangesProposal = [];
 
+    var i = 0;
     while (i < lines.length && lines[i] != "File changes proposal:") i++;
 
     for (var k = i + 1; k < lines.length; k++) {
@@ -26,18 +27,17 @@ async function createFileChangesComparison (rawNewFiles) {
     let newFiles = parseFilesResponse(rawNewFiles);
     let newFilesElements = [];
 
-    for (var file in newFiles) {
+    for (var i = 0; i < newFiles.length; i++) {
+        let file = newFiles[i];
         let fileContent;
+        let tokenCount = 0;
 
         try {
           fileContent = await window.fs.readFile(file.path);
           tokenCount = await window.tiktoken.countTokens(fileContent);
-        } catch (error) {
-          fileContent = '';
-          tokenCount = 0;
-        }
+        } catch (error) {}
   
-        newFilesElements.push(`<li>File path: ${file.path} Current length: ${tokenCount} New Length: ${await window.tiktoken.countTokens(file.content)}</li>`);
+        newFilesElements.push(`<li>File path: ${file.path}<br/>Current length: ${tokenCount}<br/>New Length: ${await window.tiktoken.countTokens(file.content)}</li>`);
     }
 
     return `<ul>${newFilesElements.join("")}</ul>`;
@@ -57,7 +57,7 @@ async function updateFilechangesProposalsTab() {
 
     filechangesProposalsTab.innerHTML = `
         <h2>Filechanges Proposals</h2>
-        <table id="file-changes-proposals-table">
+        <table id="file-changes-proposals-table" class="wide-first-child">
             <tr>
                 <th>Raw file changes</th>
                 <th>Parsed file changes</th>
@@ -77,7 +77,7 @@ async function updateFilechangesProposalsTab() {
             const tableRowHTML = `
                 <tr>
                     <td><textarea class="proposal">${filechangesProposal}</textarea></td>
-                    <td class="parsed-proposal">${createFileChangesComparison(filechangesProposal)}</td>
+                    <td class="parsed-proposal">${await createFileChangesComparison(filechangesProposal)}</td>
                     <td class="buttons">
                         <button class="button apply-changes">Apply file changes</button>
                         <button class="button delete-proposal">Delete</button>
@@ -100,7 +100,7 @@ async function updateFilechangesProposalsTab() {
                 applyFileChanges(proposalTextarea.value);
             });
 
-            var deleteButton = row.querySelector(".delete-change-request");
+            var deleteButton = row.querySelector(".delete-proposal");
             deleteButton.addEventListener("click", async () => {
                 await window.fs.unlink(`${filePath}`);
             });

@@ -66,11 +66,13 @@ async function generateAndPushCommit() {
       return;
     }
 
-    const response = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
+    await window.gitCommands.add(localStorage.getItem("folder"));
+    const response = await GitMasterAgent.run(new PromptParameters(undefined, {
+      GIT_DIFF: await window.gitCommands.diffstaged(localStorage.getItem("folder"))
+    }), chunkCallback);
     
     if (response && response.choices && response.choices.length > 0) {
       const commitMessage = response.choices[0].message.content;
-      await window.gitCommands.add(localStorage.getItem("folder"));
       await window.gitCommands.commit(localStorage.getItem("folder"), commitMessage);
       await window.gitCommands.push(localStorage.getItem("folder"));
       checkUncommittedChanges();

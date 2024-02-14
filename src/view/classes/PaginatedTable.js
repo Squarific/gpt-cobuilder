@@ -44,6 +44,11 @@ class PaginatedTable {
     }
   }
 
+  parseDateTime (datetime) {
+    var split = datetime.split('.')[0].split('T');
+    return new Date(split[0] + "T" + split[1].replace(/-/g, ':'));
+  }
+
   async populateTableWithPageFiles(table, pageFiles) {
     const folder = localStorage.getItem('folder');
     const requestsPath = `${folder}/gptcobuilder/requests`;
@@ -55,7 +60,7 @@ class PaginatedTable {
 
       const row = table.insertRow();
       this.fillCell(row, requestLog.response.model);
-      this.fillCell(row, new Date(fileName.split('.')[0].replace(/-/g, ':')).toLocaleString());
+      this.fillCell(row, this.parseDateTime(fileName).toLocaleString());
       this.fillCell(row, 'DONE');
       this.fillCell(row, requestLog.response.usage.prompt_tokens);
       this.fillCell(row, requestLog.response.usage.completion_tokens);

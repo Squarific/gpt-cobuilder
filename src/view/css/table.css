@@ -1,25 +1,36 @@
-#requests-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 20px;
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
 }
 
-#requests-table th,
-#requests-table td {
-  text-align: left;
-  padding: 8px;
+th, td {
+    position:relative;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
 }
 
-#requests-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+
+table.wide-first-child td:first-child {
+    width:100%;
 }
 
-#requests-table th {
-  background-color: #4CAF50;
-  color: white;
+table.wide-first-child td:first-child textarea {
+    position:absolute;
+    bottom:5px;
+    right:5px;
+    top:5px;
+    left:5px;
+    width:initial;
+    z-index:1;
 }
 
-#requests-table td {
-  border-bottom: 1px solid #ddd;
-  word-wrap:break-word;
+th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+table .button  {
+    margin:1em;
 }

@@ -49,7 +49,7 @@ async function updateHighLevelChangeRequestsTab() {
 
     highLevelChangeRequestsTab.innerHTML = `
         <h2>High Level Change Requests</h2>
-        <table id="high-level-change-requests-table">
+        <table id="high-level-change-requests-table" class="wide-first-child">
             <tr>
                 <th>Response from Senior Dev</th>
                 <th>Selected files</th>

@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="css/error.css" />
     <link rel="stylesheet" href="css/table.css" />
     <link rel="stylesheet" href="css/generate.css" />
-    <link rel="stylesheet" href="css/userChangeRequests.css" />
   </head>
   <body>
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
       <button class="tablinks" onclick="openTab(event, 'Requests')">Requests log</button>
+      <button class="tablinks" onclick="openTab(event, 'ActiveRequests')">Active requests</button>
       <button class="tablinks firstOpen" onclick="openTab(event, 'UserChangeRequests')">User change requests</button>
       <button class="tablinks" onclick="openTab(event, 'HighLevelChangeRequests')">High level change requests</button>
       <button class="tablinks" onclick="openTab(event, 'FilechangesProposals')">File changes proposals</button>
@@ -25,6 +25,7 @@
     <div id="Settings" class="tabcontent"></div>
     <div id="Inputs" class="tabcontent"></div>
     <div id="Requests" class="tabcontent"></div>
+    <div id="ActiveRequests" class="tabcontent"></div>
     <div id="UserChangeRequests" class="tabcontent"></div>
     <div id="HighLevelChangeRequests" class="tabcontent"></div>
     <div id="FilechangesProposals" class="tabcontent"></div>
@@ -60,6 +61,7 @@
     <script src="tabs/AgentTab.js"></script>
     <script src="tabs/SettingsTab.js"></script>
     <script src="tabs/RequestsTab.js"></script>
+    <script src="tabs/ActiveRequestsTab.js"></script>
     <script src="tabs/UserChangeRequestsTab.js"></script>
     <script src="tabs/HighLevelChangeRequestsTab.js"></script>
     <script src="tabs/FilechangesProposalsTab.js"></script>

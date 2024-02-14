@@ -49,7 +49,7 @@ async function updateUserChangeRequestsTab() {
     
     userChangeRequestsTab.innerHTML = `
         <h2>User Change Requests</h2>
-        <table id="user-change-requests-table">
+        <table id="user-change-requests-table" class="wide-first-child">
             <tr>
                 <th>User Change Request</th>
                 <th>Selected files</th>
