@@ -45,7 +45,7 @@ class PaginatedTable {
   }
 
   parseDateTime (datetime) {
-    var split = datetime.split('.')[0].split('T');
+    let split = datetime.split('.')[0].split('T');
     return new Date(split[0] + "T" + split[1].replace(/-/g, ':'));
   }
 

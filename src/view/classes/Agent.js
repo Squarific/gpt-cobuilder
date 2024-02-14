@@ -16,7 +16,7 @@ class Agent {
         }*/
         
         try {
-            var response = await sendMessageToChatGPTStreamed(
+            let response = await sendMessageToChatGPTStreamed(
                 await this.parsedSystemMessage(promptParameters),
                 await this.parsedUserMessage(promptParameters),
                 chunkCallback

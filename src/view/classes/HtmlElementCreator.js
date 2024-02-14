@@ -19,7 +19,7 @@ class HtmlElementCreator {
     }
 
     createTextAreaWithLabel(labelmessage, id, disabled, rows) {
-        var div = document.createElement("div");
+        let div = document.createElement("div");
 
         const label = document.createElement("label");
         label.innerText = labelmessage;

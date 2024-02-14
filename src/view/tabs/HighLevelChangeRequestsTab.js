@@ -1,12 +1,12 @@
 let highLevelChangeRequestWatcher;
 
 function parseHighLevelChangeRequestFileContent (fileContent) {
-    var lines = fileContent.split('\n');
-    var commitHash = lines[0].split("(")[1].split(")")[0];
-    var files = [];
-    var changeRequest = [];
+    let lines = fileContent.split('\n');
+    let commitHash = lines[0].split("(")[1].split(")")[0];
+    let files = [];
+    let changeRequest = [];
 
-    var i = 1;
+    let i = 1;
     while (lines[i].indexOf("- ") == 0) {
         files.push(lines[i].substring(2));
         i++;
@@ -14,7 +14,7 @@ function parseHighLevelChangeRequestFileContent (fileContent) {
 
     while (i < lines.length && lines[i] != "High level change request:") i++;
 
-    for (var k = i + 1; k < lines.length; k++) {
+    for (let k = i + 1; k < lines.length; k++) {
         changeRequest.push(lines[k]);
     }
 
@@ -65,7 +65,7 @@ async function updateHighLevelChangeRequestsTab() {
             const fileContent = await window.fs.readFile(filePath);
             const { files, changeRequest, commitHash } = parseHighLevelChangeRequestFileContent(fileContent);
 
-            var agent = agents.find((agent) => agent.name == "JuniorDev") || {name: "undefined"};
+            let agent = agents.find((agent) => agent.name == "JuniorDev") || {name: "undefined"};
 
             const tableRowHTML = `
                 <tr>
@@ -78,19 +78,19 @@ async function updateHighLevelChangeRequestsTab() {
                 </tr>
             `;
             
-            var row = highLevelChangeRequestsTab.querySelector('#high-level-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
+            let row = highLevelChangeRequestsTab.querySelector('#high-level-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
 
-            var fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
+            let fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
-            var changeRequestTextarea = row.querySelector(".changerequest");
+            let changeRequestTextarea = row.querySelector(".changerequest");
             changeRequestTextarea.addEventListener('input', async () => {
                 const updatedChangeRequest = changeRequestTextarea.value;
                 const updatedFileContent = generateHighLevelChangeRequestsFileContent(files, updatedChangeRequest, commitHash);
                 await window.fs.saveFile(filePath, updatedFileContent);
             });
 
-            var runJuniorButton = row.querySelector(".run-agent");
+            let runJuniorButton = row.querySelector(".run-agent");
             runJuniorButton.addEventListener("click", async () => {
                 runJuniorButton.disabled = true;
                 let juniorResponse = await agent.run(new PromptParameters(fileListController, {
@@ -102,7 +102,7 @@ async function updateHighLevelChangeRequestsTab() {
                 createFilechangesProposalFile(juniorResponse.choices[0].message.content);
             });
 
-            var deleteButton = row.querySelector(".delete-change-request");
+            let deleteButton = row.querySelector(".delete-change-request");
             deleteButton.addEventListener("click", async () => {
                 await window.fs.unlink(`${filePath}`);
             });

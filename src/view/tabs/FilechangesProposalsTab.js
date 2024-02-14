@@ -1,13 +1,13 @@
 let filechangesProposalsWatcher;
 
 function parseFilechangesProposalFileContent (fileContent) {
-    var lines = fileContent.split('\n');
-    var filechangesProposal = [];
+    let lines = fileContent.split('\n');
+    let filechangesProposal = [];
 
-    var i = 0;
+    let i = 0;
     while (i < lines.length && lines[i] != "File changes proposal:") i++;
 
-    for (var k = i + 1; k < lines.length; k++) {
+    for (let k = i + 1; k < lines.length; k++) {
         filechangesProposal.push(lines[k]);
     }
 
@@ -27,7 +27,7 @@ async function createFileChangesComparison (rawNewFiles) {
     let newFiles = parseFilesResponse(rawNewFiles);
     let newFilesElements = [];
 
-    for (var i = 0; i < newFiles.length; i++) {
+    for (let i = 0; i < newFiles.length; i++) {
         let file = newFiles[i];
         let fileContent;
         let tokenCount = 0;
@@ -85,9 +85,9 @@ async function updateFilechangesProposalsTab() {
                 </tr>
             `;
             
-            var row = filechangesProposalsTab.querySelector('#file-changes-proposals-table').appendChild(rowElementFromHTML(tableRowHTML));
+            let row = filechangesProposalsTab.querySelector('#file-changes-proposals-table').appendChild(rowElementFromHTML(tableRowHTML));
 
-            var proposalTextarea = row.querySelector(".proposal");
+            let proposalTextarea = row.querySelector(".proposal");
             proposalTextarea.addEventListener('input', async () => {
                 const updatedProposal = proposalTextarea.value;
                 const updatedFileContent = generateFilechangesProposalFileContent(updatedProposal);
@@ -95,12 +95,12 @@ async function updateFilechangesProposalsTab() {
                 row.querySelector(".parsed-proposal").innerHTML = createFileChangesComparison(updatedFileContent);
             });
 
-            var applyButton = row.querySelector(".apply-changes");
+            let applyButton = row.querySelector(".apply-changes");
             applyButton.addEventListener("click", async () => {
                 applyFileChanges(proposalTextarea.value);
             });
 
-            var deleteButton = row.querySelector(".delete-proposal");
+            let deleteButton = row.querySelector(".delete-proposal");
             deleteButton.addEventListener("click", async () => {
                 await window.fs.unlink(`${filePath}`);
             });

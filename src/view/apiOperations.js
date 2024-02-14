@@ -50,7 +50,7 @@ const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCal
     { role: 'user', content: userMessage }
   ];
   
-  var response = await openAiNpmApi.chatCompletion(apiKey, model, messages, chunkCallback);
+  let response = await openAiNpmApi.chatCompletion(apiKey, model, messages, chunkCallback);
 
   await logRequestAndResponse({ model, messages }, response);
 

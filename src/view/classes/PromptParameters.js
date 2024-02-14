@@ -12,7 +12,7 @@ class PromptParameters {
         }
 
         if (this.inputs) {
-            for (var key in this.inputs) {
+            for (let key in this.inputs) {
                 prompt = prompt.replaceAll(`{ ${key} }`, this.inputs[key]);
             }
         }
@@ -24,7 +24,7 @@ class PromptParameters {
         let files = [];
 
         fileContentMap.forEach((value, key, map) => {
-            var file = key.path + "\n";
+            let file = key.path + "\n";
             file += FILE_DELIMETER + "\n";
             file += value + "\n";
             file += FILE_DELIMETER;

@@ -135,7 +135,7 @@ contextBridge.exposeInMainWorld('openAiNpmApi', {
       chunkCallback(chunk);
     }
 
-    var response = await completionStream.finalChatCompletion();
+    let response = await completionStream.finalChatCompletion();
     response.usage = {
       prompt_tokens: enc.encode(messages[0].content + messages[1].content).length,
       completion_tokens: enc.encode(response.choices[0].message.content).length

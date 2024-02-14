@@ -1,4 +1,4 @@
-var fileListControllers = [];
+let fileListControllers = [];
 
 class FileListController {
   constructor(alreadySelected = []) {
@@ -96,8 +96,8 @@ class FileListController {
           return gitignore.accepts(normalizedFilePath);
         });
 
-        for (var k = 0; k < gitIgnoredFiltered.length; k++) {
-          var content = await window.fs.readFile(gitIgnoredFiltered[k].path);
+        for (let k = 0; k < gitIgnoredFiltered.length; k++) {
+          let content = await window.fs.readFile(gitIgnoredFiltered[k].path);
           if (content.length > 16192) continue;
           gitIgnoredFiltered[k].size = await tiktoken.countTokens(content);
         }
@@ -177,7 +177,7 @@ class FileListController {
   }
 
   async setCheckboxSelected(checkbox, selected) {
-    var fileEntry = checkbox.parentNode;
+    let fileEntry = checkbox.parentNode;
     if (fileEntry) fileEntry.parentNode.removeChild(fileEntry);
 
     checkbox.checked = selected;
