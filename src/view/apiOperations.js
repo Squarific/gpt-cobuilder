@@ -1,6 +1,6 @@
 // This function is here to calculate cost given a response
 // It gives back a string with a precision of two decimal places
-function calculateCostFromResponse(response) {
+function costStringFromGPTResponse(response) {
   let model = response.model;
   return calculateCost(response.usage.prompt_tokens, response.usage.completion_tokens, model);
 }
@@ -18,25 +18,19 @@ const calculateCost = (inputTokens, outputTokens, model) => {
 
   const cost = (inputTokens * INPUT_TOKEN_COST / 1000) + (outputTokens * OUTPUT_TOKEN_COST / 1000);
 
-  return cost.toFixed(2); // Returns the cost with 2 decimal places
+  return cost.toFixed(2);
 };
 
 const displayTokenCounts = (response) => {
   const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
-  
-  // Calculate cost
   const cost = calculateCost(prompt_tokens, completion_tokens, response.model);
-
   return `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
 const displayFilesTokenCounts = (response) => {
   const tokenCountElement = document.getElementById('files-response-token-count');
   const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
-  
-  // Calculate cost
   const cost = calculateCost(prompt_tokens, completion_tokens, response.model);
-
   tokenCountElement.textContent = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 

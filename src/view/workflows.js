@@ -27,19 +27,19 @@ async function runFullWorkflow () {
     USER_CHANGE_REQUEST: document.getElementById("user-change-request").value || "Empty change request"
   }), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(seniorResponse);
-  totalCost += parseFloat(calculateCostFromResponse(seniorResponse));
+  totalCost += parseFloat(costStringFromGPTResponse(seniorResponse));
 
   document.getElementById('last-response').value = "";
   let juniorResponse = await JuniorDevAgent.run(new PromptParameters(fileListController, {
     HIGH_LEVEL_CHANGE_REQUEST: seniorResponse.choices[0].message.content
   }), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(juniorResponse);
-  totalCost += parseFloat(calculateCostFromResponse(juniorResponse));
+  totalCost += parseFloat(costStringFromGPTResponse(juniorResponse));
   
   await applyFileChanges(juniorResponse);
   let gitResponse = await GitMasterAgent.run(new PromptParameters(), chunkCallback);
   document.getElementById('token-counts').innerText = displayTokenCounts(gitResponse);
-  totalCost += parseFloat(calculateCostFromResponse(gitResponse));
+  totalCost += parseFloat(costStringFromGPTResponse(gitResponse));
   
   await addCommitPush(gitResponse);
 

@@ -6,20 +6,17 @@ class Agent {
     }
 
     async run(promptParameters, chunkCallback) {
-        /*
-        try {
-            const tokenCountFullMessage = await tiktoken.countTokens(this.data.fullMessageTextArea.value);
-            const tokenCountSystemMessage = await tiktoken.countTokens(this.data.systemMessageTextarea.value);
-            this.data.tokenCountElement.textContent = `Total Tokens: ${tokenCountSystemMessage + tokenCountFullMessage}`;
-        } catch(error) {
-            console.error('Failed to count tokens:', error);
-        }*/
+        var userMessage = await this.parsedUserMessage(promptParameters);
+        var responseCell = addActiveRequest(userMessage, this.name);
         
         try {
             let response = await sendMessageToChatGPTStreamed(
                 await this.parsedSystemMessage(promptParameters),
-                await this.parsedUserMessage(promptParameters),
-                chunkCallback
+                userMessage,
+                (chunk) => {
+                    chunkCallback(chunk);
+                    responseCell.textContent += chunk.choices[0]?.delta?.content || '';
+                }
             );
 
             return response;

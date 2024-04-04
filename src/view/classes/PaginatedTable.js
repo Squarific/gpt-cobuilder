@@ -64,7 +64,7 @@ class PaginatedTable {
       this.fillCell(row, 'DONE');
       this.fillCell(row, requestLog.response.usage.prompt_tokens);
       this.fillCell(row, requestLog.response.usage.completion_tokens);
-      this.fillCell(row, `$${calculateCostFromResponse(requestLog.response)}`);
+      this.fillCell(row, `$${costStringFromGPTResponse(requestLog.response)}`);
       this.fillCell(row, requestLog.response.choices[0].finish_reason);
 
       let requestContent = (requestLog.request.content || requestLog.request.messages[1].content).slice(-256);
@@ -94,7 +94,7 @@ class PaginatedTable {
     const costParagraph = modal.querySelector('#modal-cost');
 
     modelParagraph.textContent = `Model: ${requestLog.response.model}`;
-    costParagraph.textContent = `Cost: $${calculateCostFromResponse(requestLog.response)}`;
+    costParagraph.textContent = `Cost: $${costStringFromGPTResponse(requestLog.response)}`;
 
     requestContentParagraph.value = requestLog.request.content || requestLog.request.messages[1].content;
     responseContentParagraph.value = requestLog.response.choices[0].message.content;

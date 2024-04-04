@@ -54,10 +54,9 @@ function extractModifiedFiles(gitStatus) {
 }
 
 async function generateAndPushCommit() {
-  // Get the Git Master agent button
   const commitPushButton = document.getElementById('commit-push-button');
+  
   try {
-    // Disable the button
     commitPushButton.disabled = true;
 
     const GitMasterAgent = agents.find(agent => agent.name === 'GitMaster');
