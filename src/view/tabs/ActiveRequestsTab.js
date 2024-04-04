@@ -5,8 +5,8 @@ function addActiveRequest(prompt, agentName) {
     const agentCell = row.insertCell(1);
     const responseCell = row.insertCell(2);
 
-    promptCell.textContent = prompt;
-    agentCell.textContent = agentName;
+    promptCell.innerText = prompt;
+    agentCell.innerText = agentName;
     
     return responseCell;
 }

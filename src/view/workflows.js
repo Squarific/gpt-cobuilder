@@ -44,7 +44,7 @@ async function runFullWorkflow () {
   await addCommitPush(gitResponse);
 
   // Display total cost
-  document.getElementById('total-cost').textContent = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
+  document.getElementById('total-cost').innerText = `Total cost for previous full workflow run: $${totalCost.toFixed(2)}`;
 }
 
 async function gitUndoLastCommitAndPush() {

@@ -46,7 +46,7 @@ class AgentTab {
     async updateTokenCount(textarea, tokenCountDiv) {
         const text = textarea.value;
         const tokens = await tiktoken.countTokens(text);
-        tokenCountDiv.textContent = `Token count: ${tokens}`;
+        tokenCountDiv.innerText = `Token count: ${tokens}`;
     }
 
     createTabButton(name) {

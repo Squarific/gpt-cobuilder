@@ -21,13 +21,13 @@ function createGitWarningElement(hasUncommittedChanges, modifiedFiles) {
   warningElement.id = 'git-warning';
   warningElement.className = 'error-log';
   warningElement.style.display = hasUncommittedChanges ? 'block' : 'none';
-  warningElement.textContent = 'There are uncommitted changes:';
+  warningElement.innerText = 'There are uncommitted changes:';
 
   if (modifiedFiles.length > 0) {
     const fileListElement = document.createElement('ul');
     for (const file of modifiedFiles) {
       const fileElement = document.createElement('li');
-      fileElement.textContent = file;
+      fileElement.innerText = file;
       fileListElement.appendChild(fileElement);
     }
     warningElement.appendChild(fileListElement);
@@ -36,7 +36,7 @@ function createGitWarningElement(hasUncommittedChanges, modifiedFiles) {
   const commitPushButton = document.createElement('button');
   commitPushButton.className = 'button';
   commitPushButton.id = 'commit-push-button';
-  commitPushButton.textContent = 'Generate commit message and commit and push changes';
+  commitPushButton.innerText = 'Generate commit message and commit and push changes';
   commitPushButton.addEventListener('click', generateAndPushCommit);
   warningElement.appendChild(commitPushButton);
 

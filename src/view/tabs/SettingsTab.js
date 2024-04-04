@@ -77,7 +77,7 @@ function updateRecentFoldersList() {
 
   recentFolders.forEach(folder => {
     const listItem = document.createElement('li');
-    listItem.textContent = folder;
+    listItem.innerText = folder;
     listItem.className = "button";
     listItem.addEventListener('click', () => {
       updateFolder(folder);

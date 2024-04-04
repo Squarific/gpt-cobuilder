@@ -39,7 +39,7 @@ class PaginatedTable {
     const headerRow = table.insertRow();
     for (const headerText of headers) {
       const headerCell = document.createElement('th');
-      headerCell.textContent = headerText;
+      headerCell.innerText = headerText;
       headerRow.appendChild(headerCell);
     }
   }
@@ -93,8 +93,8 @@ class PaginatedTable {
     const responseContentParagraph = modal.querySelector('#modal-responseContent');
     const costParagraph = modal.querySelector('#modal-cost');
 
-    modelParagraph.textContent = `Model: ${requestLog.response.model}`;
-    costParagraph.textContent = `Cost: $${costStringFromGPTResponse(requestLog.response)}`;
+    modelParagraph.innerText = `Model: ${requestLog.response.model}`;
+    costParagraph.innerText = `Cost: $${costStringFromGPTResponse(requestLog.response)}`;
 
     requestContentParagraph.value = requestLog.request.content || requestLog.request.messages[1].content;
     responseContentParagraph.value = requestLog.response.choices[0].message.content;
@@ -104,7 +104,7 @@ class PaginatedTable {
 
   fillCell(row, text) {
     const cell = row.insertCell();
-    cell.textContent = text;
+    cell.innerText = text;
   }
 
   addPaginationControls() {
@@ -115,28 +115,28 @@ class PaginatedTable {
     container.querySelectorAll('.pagination-control').forEach(ctrl => ctrl.remove());
 
     const prevButton = document.createElement('button');
-    prevButton.textContent = 'Previous';
+    prevButton.innerText = 'Previous';
     prevButton.className = 'button pagination-control';
     prevButton.disabled = this.currentPage <= 1;
     prevButton.addEventListener('click', () => this.changePage(-1));
     container.appendChild(prevButton);
 
     const nextButton = document.createElement('button');
-    nextButton.textContent = 'Next';
+    nextButton.innerText = 'Next';
     nextButton.className = 'button pagination-control';
     nextButton.disabled = this.currentPage >= this.totalPages;
     nextButton.addEventListener('click', () => this.changePage(1));
     container.appendChild(nextButton);
 
     const firstButton = document.createElement('button');
-    firstButton.textContent = 'First';
+    firstButton.innerText = 'First';
     firstButton.className = 'button pagination-control';
     firstButton.disabled = this.currentPage === 1;
     firstButton.addEventListener('click', () => this.goToFirstPage());
     container.insertBefore(firstButton, prevButton); // Insert before 'Previous' button
 
     const lastButton = document.createElement('button');
-    lastButton.textContent = 'Last';
+    lastButton.innerText = 'Last';
     lastButton.className = 'button pagination-control';
     lastButton.disabled = this.currentPage === this.totalPages;
     lastButton.addEventListener('click', () => this.goToLastPage());

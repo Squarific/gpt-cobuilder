@@ -15,7 +15,7 @@ class Agent {
                 userMessage,
                 (chunk) => {
                     chunkCallback(chunk);
-                    responseCell.textContent += chunk.choices[0]?.delta?.content || '';
+                    responseCell.innerText += chunk.choices[0]?.delta?.content || '';
                 }
             );
 

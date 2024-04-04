@@ -55,7 +55,7 @@ ${response}`;
 async function updateFolder (folder) {
   if (folder) {
     localStorage.setItem('folder', folder);
-    document.getElementById('folder-display').textContent = ` Selected Folder: ${folder}`;
+    document.getElementById('folder-display').innerText = ` Selected Folder: ${folder}`;
 
     const dirs = [
       `${folder}/gptcobuilder`,
