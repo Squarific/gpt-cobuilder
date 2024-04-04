@@ -5,7 +5,22 @@ function addActiveRequest(prompt, agentName) {
     const agentCell = row.insertCell(1);
     const responseCell = row.insertCell(2);
 
-    promptCell.innerText = prompt;
+    const shortenedPrompt = prompt.length > 512 ? prompt.substring(0, 512) + '...' : prompt;
+    promptCell.innerText = shortenedPrompt;
+
+    promptCell.dataset.fullPrompt = prompt;
+    promptCell.dataset.shortened = "true";
+
+    promptCell.addEventListener('click', () => {
+        if (promptCell.dataset.shortened === "true") {
+            promptCell.innerText = promptCell.dataset.fullPrompt;
+            promptCell.dataset.shortened = "false";
+        } else {
+            promptCell.innerText = shortenedPrompt;
+            promptCell.dataset.shortened = "true";
+        }
+    });
+
     agentCell.innerText = agentName;
     
     return responseCell;
