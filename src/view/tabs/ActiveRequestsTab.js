@@ -31,7 +31,7 @@ function initActiveRequestsTab() {
     
     activeRequestsTab.innerHTML = `
         <h2>Active Requests</h2>
-        <table id="active-requests-table" class="wide-first-child">
+        <table id="active-requests-table">
             <tr>
                 <th>Prompt</th>
                 <th>Agent</th>
