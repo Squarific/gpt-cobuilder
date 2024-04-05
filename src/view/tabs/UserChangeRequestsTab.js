@@ -3,6 +3,7 @@ import { createChangeRequestFile } from '../fileOperations.js';
 import { createHighLevelChangeRequestFile } from "../fileOperations.js";
 import { agents } from '../agents.js';
 import { FileListController } from '../classes/FileListController.js';
+import { PromptParameters } from '../classes/PromptParameters.js';
 
 let watcher;
 
@@ -93,7 +94,6 @@ export async function updateUserChangeRequestsTab() {
             let changeRequestTextarea = row.querySelector(".changerequest");
 
             changeRequestTextarea.addEventListener('input', async () => {
-                console.log("input");
                 const updatedChangeRequest = changeRequestTextarea.value;
                 const updatedFileContent = generateUserChangeRequestFileContent(files, updatedChangeRequest, commitHash);
                 await window.fs.saveFile(filePath, updatedFileContent);
