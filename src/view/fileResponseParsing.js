@@ -1,4 +1,4 @@
-const parseBlocks = (response) => {
+const splitInBlocksByDelimiter = (response) => {
     let lines = response.split("\n");
     let blocks = [];
     let currentBlock = '';
@@ -19,22 +19,19 @@ const parseBlocks = (response) => {
     return blocks;
 };
 
-const parseFilesResponse = (response) => {
+export const parseFilesResponse = (response) => {
   const files = [];
 
   // Split the response by the code block delimiter
-  const blocks = parseBlocks(response);
+  const blocks = splitInBlocksByDelimiter(response);
 
   // Iterate over the blocks, skipping the language specifier
   for(let i = 0; i < blocks.length - 1; i += 2) {
-    // Get the file path
-    let path = blocks[i].trim().split("\n");
-    path = path[path.length - 1]; // Only the line directly before the delimiter
+    let linesBeforeCodeBlock = blocks[i].trim().split("\n");
+    path = linesBeforeCodeBlock[linesBeforeCodeBlock.length - 1]; // The line directly before the delimiter
 
     // Get the file content
     let content = blocks[i + 1];
-
-    // Add the file to the list
     files.push({ path, content });
   }
   return files;

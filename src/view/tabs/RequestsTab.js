@@ -1,5 +1,7 @@
+import { PaginatedTable } from '../classes/PaginatedTable.js';
+
 async function createRequestsTab() {
-  const requestsTab = document.getElementById('Requests');
+  const requestsTab = $('#Requests');
   requestsTab.innerHTML = `
     <div id="requests-table-container">
       <h2>Requests Log</h2>

@@ -5,7 +5,7 @@ const formattedTime = () => {
   return localDate.toISOString().split('.')[0].replace(/:/g, '-');
 };
 
-async function logRequestAndResponse(request, response) {
+export async function logRequestAndResponse(request, response) {
   try {
     const filename = `${localStorage.getItem('folder')}/gptcobuilder/requests/${formattedTime()}.txt`;
     
@@ -20,7 +20,7 @@ async function logRequestAndResponse(request, response) {
   }
 }
 
-async function createFilechangesProposalFile (filechanges) {
+export async function createFilechangesProposalFile (filechanges) {
   const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/filechangesproposals`;
   const content = `File changes proposal:
 ${filechanges}`;
@@ -28,7 +28,7 @@ ${filechanges}`;
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
 
-async function createChangeRequestFile (changerequest, selectedfiles) {
+export async function createChangeRequestFile (changerequest, selectedfiles) {
   const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/userchangerequests`;
   const commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
   const content = `Files (${commitHash}):
@@ -40,7 +40,7 @@ ${changerequest}`;
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
 
-async function createHighLevelChangeRequestFile (response, selectedFiles) {
+export async function createHighLevelChangeRequestFile (response, selectedFiles) {
   const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
   const commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
   const content = `Files (${commitHash}):
@@ -52,10 +52,10 @@ ${response}`;
   await window.fs.saveFile(`${dirPath}/${formattedTime()}.txt`, content);
 }
 
-async function updateFolder (folder) {
+export async function updateFolder (folder) {
   if (folder) {
     localStorage.setItem('folder', folder);
-    document.getElementById('folder-display').innerText = ` Selected Folder: ${folder}`;
+    $('#folder-display').innerText = ` Selected Folder: ${folder}`;
 
     const dirs = [
       `${folder}/gptcobuilder`,
@@ -72,16 +72,16 @@ async function updateFolder (folder) {
     });
     
     // Load the projectDescription
-    if (document.getElementById('project-description')) {
+    if ($('#project-description')) {
       const projectDescriptionFilePath = `${folder}/gptcobuilder/project_description.txt`;
       const projectDescription = await window.fs.readFile(projectDescriptionFilePath);
-      document.getElementById('project-description').value = projectDescription;
+      $('#project-description').value = projectDescription;
     }
 
     // Load the settings
     const settings = await loadSettings();
     if (settings && settings.modelSelection) {
-        document.getElementById('model-selection').value = settings.modelSelection;
+        $('#model-selection').value = settings.modelSelection;
     }
 
     // Save the new folder as a recent folder
@@ -95,7 +95,7 @@ async function updateFolder (folder) {
   }
 };
 
-async function filterFilesByGitignore(fileList) {
+export async function filterFilesByGitignore(fileList) {
   let fileListArray = Array.from(fileList);
 
   try {
@@ -121,13 +121,13 @@ async function filterFilesByGitignore(fileList) {
   }
 }
 
-async function getFilesInFolderWithFilter(folder) {
+export async function getFilesInFolderWithFilter(folder) {
   const filePaths = await window.fs.getFilesInDirectory(folder);
   const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
   return await filterFilesByGitignore(fileEntries);
 }
 
-async function saveSettings(settings) {
+export async function saveSettings(settings) {
     const settingsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/settings.json`;
     try {
         await window.fs.saveFile(settingsFilePath, JSON.stringify(settings, null, 2));
@@ -136,7 +136,7 @@ async function saveSettings(settings) {
     }
 }
 
-async function loadSettings() {
+export async function loadSettings() {
     const settingsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/settings.json`;
     try {
         const settingsJSON = await window.fs.readFile(settingsFilePath);

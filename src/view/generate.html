@@ -14,12 +14,12 @@
   </head>
   <body>
     <div class="tab">
-      <button class="tablinks" onclick="openTab(event, 'Settings')">Settings</button>
-      <button class="tablinks" onclick="openTab(event, 'Requests')">Requests log</button>
-      <button class="tablinks" onclick="openTab(event, 'ActiveRequests')">Active requests</button>
-      <button class="tablinks firstOpen" onclick="openTab(event, 'UserChangeRequests')">User change requests</button>
-      <button class="tablinks" onclick="openTab(event, 'HighLevelChangeRequests')">High level change requests</button>
-      <button class="tablinks" onclick="openTab(event, 'FilechangesProposals')">File changes proposals</button>
+      <button class="tablinks" data-tab-name="Settings">Settings</button>
+      <button class="tablinks" data-tab-name="Requests">Requests log</button>
+      <button class="tablinks" data-tab-name="ActiveRequests">Active requests</button>
+      <button class="tablinks firstOpen" data-tab-name="UserChangeRequests">User change requests</button>
+      <button class="tablinks" data-tab-name="HighLevelChangeRequests">High level change requests</button>
+      <button class="tablinks" data-tab-name="FilechangesProposals">File changes proposals</button>
     </div>
 
     <div id="Settings" class="tabcontent"></div>
@@ -43,34 +43,25 @@
       </div>
     </div>
 
-    <!-- Classes -->
-    <script src="classes/Constants.js"></script>
-    <script src="classes/Agent.js"></script>
-    <script src="classes/PromptParameters.js"></script>
-    <script src="classes/HtmlElementCreator.js"></script>
-    <script src="classes/FileListController.js"></script>
-    <script src="classes/PaginatedTable.js"></script>
+    <script>
+      $ = document.querySelector.bind(document);
+      $$ = document.querySelectorAll.bind(document);
+    </script>
 
-    <!-- Tab dependencies -->
-    <script src="utils.js"></script>
-    <script src="workflows.js"></script>
-    <script src="gitGuard.js"></script>
-    <script src="fileOperations.js"></script>
+    <script src="gitGuard.js" type="module"></script>
 
     <!-- Tabs -->
-    <script src="tabs/AgentTab.js"></script>
-    <script src="tabs/SettingsTab.js"></script>
-    <script src="tabs/RequestsTab.js"></script>
-    <script src="tabs/ActiveRequestsTab.js"></script>
-    <script src="tabs/UserChangeRequestsTab.js"></script>
-    <script src="tabs/HighLevelChangeRequestsTab.js"></script>
-    <script src="tabs/FilechangesProposalsTab.js"></script>
+    <script src="tabs/AgentTab.js" type="module"></script>
+    <script src="tabs/SettingsTab.js" type="module"></script>
+    <script src="tabs/RequestsTab.js" type="module"></script>
+    <script src="tabs/ActiveRequestsTab.js" type="module"></script>
+    <script src="tabs/UserChangeRequestsTab.js" type="module"></script>
+    <script src="tabs/HighLevelChangeRequestsTab.js" type="module"></script>
+    <script src="tabs/FilechangesProposalsTab.js" type="module"></script>
 
     <!-- Other -->
-    <script src="agents.js"></script>
-    <script src="apiOperations.js"></script>
-    <script src="fileResponseParsing.js"></script>
-    <script src="tabOperations.js"></script>
-    <script src="generate.js"></script>
+    <script src="agents.js" type="module"></script>
+    <script src="tabOperations.js" type="module"></script>
+    <script src="requestDetailsModal.js" type="module"></script>
   </body>
 </html>

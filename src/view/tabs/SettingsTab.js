@@ -1,5 +1,7 @@
+import { loadSettings, updateFolder, saveSettings } from "../fileOperations.js";
+
 async function createSettingsTab() {
-  const settingsTab = document.getElementById('Settings');
+  const settingsTab = $('#Settings');
   settingsTab.innerHTML = `
     <label for="api-key">ChatGPT API Key:</label>
     <input type="text" id="api-key" value="${localStorage.getItem('apiKey') || ''}" />
@@ -23,7 +25,7 @@ async function createSettingsTab() {
     <ul id="recent-folders-list"></ul>
   `;
 
-  const projectDescriptionTextarea = document.getElementById('project-description');
+  const projectDescriptionTextarea = $('#project-description');
   projectDescriptionTextarea.addEventListener('input', updateProjectDescription);
 
   const folder = localStorage.getItem('folder');
@@ -33,16 +35,16 @@ async function createSettingsTab() {
     projectDescriptionTextarea.value = projectDescription;
   }
   
-  document.getElementById('api-key').addEventListener('input', () => {
-    localStorage.setItem('apiKey', document.getElementById('api-key').value.trim());
+  $('#api-key').addEventListener('input', () => {
+    localStorage.setItem('apiKey', $('#api-key').value.trim());
   });
 
-  document.getElementById('folder-selection').addEventListener('click', async () => {
+  $('#folder-selection').addEventListener('click', async () => {
     const folder = await folderDialog.open();
     updateFolder(folder);
   });
 
-  let modelSelect = document.getElementById('model-selection');
+  let modelSelect = $('#model-selection');
   modelSelect.value = (await loadSettings()).modelSelection;
   modelSelect.addEventListener('change', () => {
     const model = modelSelect.value;
@@ -54,7 +56,7 @@ async function createSettingsTab() {
 }
 
 async function updateProjectDescription() {
-  const projectDescription = document.getElementById('project-description').value;
+  const projectDescription = $('#project-description').value;
   const folderPath = localStorage.getItem('folder');
   const dirPath = `${folderPath}/${GPT_COBUILDER_FOLDER_NAME}`;
   const projectDescriptionFilePath = `${folderPath}/${PROJECT_DESCRIPTION_FILE}`;
@@ -72,7 +74,7 @@ async function updateProjectDescription() {
 
 function updateRecentFoldersList() {
   const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
-  const recentFoldersList = document.getElementById('recent-folders-list');
+  const recentFoldersList = $('#recent-folders-list');
   recentFoldersList.innerHTML = "";
 
   recentFolders.forEach(folder => {

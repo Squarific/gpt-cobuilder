@@ -1,11 +1,11 @@
-class PromptParameters {
+export class PromptParameters {
     constructor(fileList, inputs) {
         this.fileList = fileList;
         this.inputs = inputs;
     }
 
     async parsePrompt(prompt) {
-        prompt = prompt.replaceAll("{ PROJECT_DESCRIPTION }", document.getElementById("project-description").value || "No project description");
+        prompt = prompt.replaceAll("{ PROJECT_DESCRIPTION }", $("#project-description").value || "No project description");
         
         if (this.fileList) {
             prompt = prompt.replaceAll("{ SELECTED_FILES }", this.fileContentMapToText(this.fileList.fileContentMap) || "No files selected");

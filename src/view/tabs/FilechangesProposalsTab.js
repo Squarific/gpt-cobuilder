@@ -1,3 +1,8 @@
+import { gitUndoLastCommitAndPush } from "../workflows.js";
+import { rowElementFromHTML } from "../utils.js";
+import { applyFileChanges  } from "../workflows.js";
+import { parseFilesResponse } from "../fileResponseParsing.js";
+
 let filechangesProposalsWatcher;
 
 function parseFilechangesProposalFileContent (fileContent) {
@@ -44,7 +49,7 @@ async function createFileChangesComparison (rawNewFiles) {
 }
 
 async function updateFilechangesProposalsTab() {
-    const filechangesProposalsTab = document.getElementById('FilechangesProposals');
+    const filechangesProposalsTab = $('#FilechangesProposals');
     const filechangesProposalsDir = `${localStorage.getItem('folder')}/gptcobuilder/filechangesproposals`;
 
     if (!filechangesProposalsWatcher) {
@@ -109,7 +114,7 @@ async function updateFilechangesProposalsTab() {
         console.error('Failed to load file changes proposals files: ', error);
     }
 
-    document.getElementById('git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
+    $('#git-undo-last-commit-button').addEventListener('click', gitUndoLastCommitAndPush);
 }
 
 window.addEventListener('beforeunload', () => {

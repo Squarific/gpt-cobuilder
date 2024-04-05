@@ -1,3 +1,7 @@
+import { rowElementFromHTML } from "../utils.js";
+import { createChangeRequestFile } from '../fileOperations.js';
+import { createHighLevelChangeRequestFile } from "../fileOperations.js";
+
 let watcher;
 
 function parseUserChangeRequestFileContent (fileContent) {
@@ -35,8 +39,8 @@ Change request:
 ${changeRequest}`;
 }
 
-async function updateUserChangeRequestsTab() {
-    const userChangeRequestsTab = document.getElementById('UserChangeRequests');
+export async function updateUserChangeRequestsTab() {
+    const userChangeRequestsTab = $('#UserChangeRequests');
     const userChangeRequestsDir = `${localStorage.getItem('folder')}/gptcobuilder/userchangerequests`;
 
     if (!watcher) {
@@ -98,7 +102,7 @@ async function updateUserChangeRequestsTab() {
                 runSeniorButton.disabled = true;
                 let seniorResponse = await agent.run(new PromptParameters(fileListController, {
                     USER_CHANGE_REQUEST: changeRequestTextarea.value
-                }), chunkCallback).finally(() => {
+                })).finally(() => {
                     runSeniorButton.disabled = false;
                 });
 
@@ -114,7 +118,7 @@ async function updateUserChangeRequestsTab() {
         console.error('Failed to load user change request files: ', error);
     }
 
-    document.getElementById('new-change-request').addEventListener('click', () => {
+    $('#new-change-request').addEventListener('click', () => {
         createChangeRequestFile("", []);
     });
 }

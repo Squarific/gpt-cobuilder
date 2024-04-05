@@ -1,6 +1,9 @@
+import { loadSettings } from "./fileOperations.js";
+import { logRequestAndResponse } from "./fileOperations.js";
+
 // This function is here to calculate cost given a response
 // It gives back a string with a precision of two decimal places
-function costStringFromGPTResponse(response) {
+export function costStringFromGPTResponse(response) {
   let model = response.model;
   return calculateCost(response.usage.prompt_tokens, response.usage.completion_tokens, model);
 }
@@ -27,15 +30,8 @@ const displayTokenCounts = (response) => {
   return `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
 };
 
-const displayFilesTokenCounts = (response) => {
-  const tokenCountElement = document.getElementById('files-response-token-count');
-  const { prompt_tokens, completion_tokens, total_tokens } = response.usage;
-  const cost = calculateCost(prompt_tokens, completion_tokens, response.model);
-  tokenCountElement.innerText = `Prompt Tokens: ${prompt_tokens}, Completion Tokens: ${completion_tokens}, Total Tokens: ${total_tokens}, Cost: $${cost}`;
-};
-
-const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCallback) => {
-  const apiKey = document.getElementById('api-key').value;
+export const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCallback) => {
+  const apiKey = $('#api-key').value;
 
   const model = (await loadSettings()).modelSelection;
 

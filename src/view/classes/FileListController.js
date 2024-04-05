@@ -1,3 +1,6 @@
+import { elementFromHTML } from "../utils.js";
+import { filterFilesByGitignore, getFilesInFolderWithFilter } from '../fileOperations.js'
+
 let fileListControllers = [];
 
 class FileListController {

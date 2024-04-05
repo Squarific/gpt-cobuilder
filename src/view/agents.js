@@ -1,4 +1,9 @@
-let agents = [];
+import { Agent } from './classes/Agent.js';
+import { agentTab } from './tabs/AgentTab.js';
+import { updateUserChangeRequestsTab } from './tabs/UserChangeRequestsTab.js';
+import { updateHighLevelChangeRequestsTab } from './tabs/HighLevelChangeRequestsTab.js';
+
+export let agents = [];
 
 window.addEventListener('DOMContentLoaded', async () => {
   const agentsDirPath = `gptcobuilder/agents/`;

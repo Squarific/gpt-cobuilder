@@ -1,3 +1,5 @@
+import { elementFromHTML } from "../utils.js";
+
 class AgentTab {
     constructor() {}
 
@@ -34,7 +36,7 @@ class AgentTab {
     initializeTokenCounts(ids) {
         ids.forEach(id => {
             const textarea = document.getElementById(id);
-            const tokenCountDiv = document.querySelector(`.token-count[data-for="${id}"]`);
+            const tokenCountDiv = $(`.token-count[data-for="${id}"]`);
             this.updateTokenCount(textarea, tokenCountDiv);
   
             textarea.addEventListener('input', () => {
@@ -54,8 +56,8 @@ class AgentTab {
         tabButton.className = "tablinks";
         tabButton.innerText = name;
         tabButton.onclick = (event) => openTab(event, name);
-        document.getElementsByClassName("tab")[0].insertBefore(tabButton, document.getElementById("add-tab-button"));
+        document.getElementsByClassName("tab")[0].insertBefore(tabButton, $("#add-tab-button"));
     }
 }
 
-agentTab = new AgentTab();
+export const agentTab = new AgentTab();

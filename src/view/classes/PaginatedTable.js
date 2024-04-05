@@ -1,6 +1,8 @@
+import { costStringFromGPTResponse } from "../apiOperations.js"
+
 const ITEMS_PER_PAGE = 50; // Number of items per page
 
-class PaginatedTable {
+export class PaginatedTable {
   constructor(tableId) {
     this.tableId = tableId;
     this.currentPage = 1;
@@ -86,7 +88,7 @@ class PaginatedTable {
     const requestLog = JSON.parse(fileContent);
 
     // Now use the JSON to update the modal content
-    const modal = document.getElementById('requestDetailsModal');
+    const modal = $('#requestDetailsModal');
     const apiKeyParagraph = modal.querySelector('#modal-apiKey');
     const modelParagraph = modal.querySelector('#modal-model');
     const requestContentParagraph = modal.querySelector('#modal-requestContent');

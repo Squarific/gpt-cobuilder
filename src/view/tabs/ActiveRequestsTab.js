@@ -1,5 +1,5 @@
-function addActiveRequest(prompt, agentName) {
-    const table = document.getElementById('active-requests-table');
+export function addActiveRequest(prompt, agentName) {
+    const table = $('#active-requests-table');
     const row = table.insertRow(-1);
     const promptCell = row.insertCell(0);
     const agentCell = row.insertCell(1);
@@ -27,7 +27,7 @@ function addActiveRequest(prompt, agentName) {
 }
 
 function initActiveRequestsTab() {
-    const activeRequestsTab = document.getElementById('ActiveRequests');
+    const activeRequestsTab = $('#ActiveRequests');
     
     activeRequestsTab.innerHTML = `
         <h2>Active Requests</h2>

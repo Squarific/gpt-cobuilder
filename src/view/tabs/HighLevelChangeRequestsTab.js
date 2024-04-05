@@ -1,3 +1,6 @@
+import { rowElementFromHTML } from "../utils.js";
+import { createFilechangesProposalFile } from '../fileOperations.js';
+
 let highLevelChangeRequestWatcher;
 
 function parseHighLevelChangeRequestFileContent (fileContent) {
@@ -35,8 +38,8 @@ High level change request:
 ${response}`;
 }
 
-async function updateHighLevelChangeRequestsTab() {
-    const highLevelChangeRequestsTab = document.getElementById('HighLevelChangeRequests');
+export async function updateHighLevelChangeRequestsTab() {
+    const highLevelChangeRequestsTab = $('#HighLevelChangeRequests');
     const highLevelChangeRequestsDir = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
 
     if (!highLevelChangeRequestWatcher) {
@@ -95,7 +98,7 @@ async function updateHighLevelChangeRequestsTab() {
                 runJuniorButton.disabled = true;
                 let juniorResponse = await agent.run(new PromptParameters(fileListController, {
                     HIGH_LEVEL_CHANGE_REQUEST: changeRequestTextarea.value
-                }), chunkCallback).finally(() => {
+                })).finally(() => {
                     runJuniorButton.disabled = false;
                 });
 

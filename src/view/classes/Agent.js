@@ -1,4 +1,7 @@
-class Agent {
+import { addActiveRequest } from '../tabs/ActiveRequestsTab.js';
+import { sendMessageToChatGPTStreamed } from '../apiOperations.js';
+
+export class Agent {
     constructor(name, systemMessage, userMessage) {
         this.name = name;
         this.systemMessage = systemMessage;
@@ -14,7 +17,7 @@ class Agent {
                 await this.parsedSystemMessage(promptParameters),
                 userMessage,
                 (chunk) => {
-                    chunkCallback(chunk);
+                    chunkCallback ? chunkCallback(chunk) : {};
                     responseCell.innerText += chunk.choices[0]?.delta?.content || '';
                 }
             );

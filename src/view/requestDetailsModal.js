@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', async () => {
   // Close the modal when the close button (x) is clicked
-  const modal = document.getElementById('requestDetailsModal');
+  const modal = $('#requestDetailsModal');
   const closeButton = modal.querySelector('.close');
   closeButton.onclick = function() {
     modal.style.display = "none";

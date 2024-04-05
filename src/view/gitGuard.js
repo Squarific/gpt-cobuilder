@@ -1,11 +1,14 @@
+import { agents } from './agents.js';
+import { PromptParameters } from './classes/PromptParameters.js';
+
 async function checkUncommittedChanges() {
   const directory = localStorage.getItem('folder');
   const status = await window.gitCommands.status(directory);
   const hasUncommittedChanges = status.includes('Changes to be committed:') || status.includes('Changes not staged for commit:');
   const modifiedFiles = extractModifiedFiles(status);
   const warningElement = createGitWarningElement(hasUncommittedChanges, modifiedFiles);
-  const bodyElement = document.querySelector('body');
-  const existingWarning = document.getElementById('git-warning');
+  const bodyElement = $('body');
+  const existingWarning = $('#git-warning');
 
   if (existingWarning) {
     bodyElement.removeChild(existingWarning);
@@ -54,7 +57,7 @@ function extractModifiedFiles(gitStatus) {
 }
 
 async function generateAndPushCommit() {
-  const commitPushButton = document.getElementById('commit-push-button');
+  const commitPushButton = $('#commit-push-button');
   
   try {
     commitPushButton.disabled = true;
@@ -68,7 +71,7 @@ async function generateAndPushCommit() {
     await window.gitCommands.add(localStorage.getItem("folder"));
     const response = await GitMasterAgent.run(new PromptParameters(undefined, {
       GIT_DIFF: await window.gitCommands.diffstaged(localStorage.getItem("folder"))
-    }), chunkCallback);
+    }));
     
     if (response && response.choices && response.choices.length > 0) {
       const commitMessage = response.choices[0].message.content;
