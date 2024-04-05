@@ -11,6 +11,7 @@ export class Agent {
     async run(promptParameters, chunkCallback) {
         var userMessage = await this.parsedUserMessage(promptParameters);
         var responseCell = addActiveRequest(userMessage, this.name);
+        var row = responseCell.parentNode;
         
         try {
             let response = await sendMessageToChatGPTStreamed(
@@ -21,6 +22,8 @@ export class Agent {
                     responseCell.innerText += chunk.choices[0]?.delta?.content || '';
                 }
             );
+
+            row.parentNode.removeChild(row);
 
             return response;
         } catch (error) {

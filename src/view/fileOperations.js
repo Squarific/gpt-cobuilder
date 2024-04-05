@@ -95,38 +95,6 @@ export async function updateFolder (folder) {
   }
 };
 
-export async function filterFilesByGitignore(fileList) {
-  let fileListArray = Array.from(fileList);
-
-  try {
-      // Find the .gitignore file in the fileListArray
-      const gitignoreFile = fileListArray.find(file => file.path.endsWith('.gitignore'));
-      if (!gitignoreFile) {
-      return fileListArray;
-      }
-
-      // Read the .gitignore file content
-      gitignoreContent = await window.fs.readFile(gitignoreFile.path) + "\n.git/";
-      gitignore = gitignoreParser.compile(gitignoreContent);
-
-      // Filter out files based on .gitignore rules
-      return fileListArray.filter(file => {
-      const filePath = file.path;
-      const normalizedFilePath = path.relative(path.dirname(gitignoreFile.path), filePath).replaceAll("\\", "/");
-      return gitignore.accepts(normalizedFilePath);
-      });
-  } catch (error) {
-      console.error('Error reading .gitignore:', error);
-      return fileListArray;
-  }
-}
-
-export async function getFilesInFolderWithFilter(folder) {
-  const filePaths = await window.fs.getFilesInDirectory(folder);
-  const fileEntries = filePaths.map(filePath => ({name: path.basename(filePath), path: filePath}));
-  return await filterFilesByGitignore(fileEntries);
-}
-
 export async function saveSettings(settings) {
     const settingsFilePath = `${localStorage.getItem('folder')}/gptcobuilder/settings.json`;
     try {

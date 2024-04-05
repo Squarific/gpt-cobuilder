@@ -1,7 +1,8 @@
 import { rowElementFromHTML } from "../utils.js";
 import { createChangeRequestFile } from '../fileOperations.js';
 import { createHighLevelChangeRequestFile } from "../fileOperations.js";
-import { agents } from './agents.js';
+import { agents } from '../agents.js';
+import { FileListController } from '../classes/FileListController.js';
 
 let watcher;
 

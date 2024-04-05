@@ -1,9 +1,8 @@
 import { elementFromHTML } from "../utils.js";
-import { filterFilesByGitignore, getFilesInFolderWithFilter } from '../fileOperations.js'
 
 let fileListControllers = [];
 
-class FileListController {
+export class FileListController {
   constructor(alreadySelected = []) {
     fileListControllers.push(this);
 
