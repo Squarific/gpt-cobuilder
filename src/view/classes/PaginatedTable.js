@@ -124,6 +124,7 @@ export class PaginatedTable {
 
     const table = document.getElementById(this.tableId);
     this.populateTableWithPageFiles(table);
+    this.addPaginationControls();
   }
 
   getColumnKeyByIndex(index) {
@@ -174,36 +175,26 @@ export class PaginatedTable {
        <button class="button pagination-control" ${this.currentPage === this.totalPages ? 'disabled' : ''} data-direction="last">Last</button>
        <input type="number" class="pagination-control" min="1" max="${this.totalPages}" value="${this.currentPage}">`;
 
-    container.insertAdjacentHTML('beforeend', paginationHTML);
+    container.insertAdjacentHTML('afterBegin', paginationHTML);
 
     // Add the event listeners to the buttons and input
     container.querySelector('[data-direction="-1"]').addEventListener('click', () => this.changePage(-1));
     container.querySelector('[data-direction="1"]').addEventListener('click', () => this.changePage(1));
-    container.querySelector('[data-direction="first"]').addEventListener('click', () => this.goToFirstPage());
-    container.querySelector('[data-direction="last"]').addEventListener('click', () => this.goToLastPage());
+    container.querySelector('[data-direction="first"]').addEventListener('click', () => this.goToPage(1));
+    container.querySelector('[data-direction="last"]').addEventListener('click', () => this.goToPage(this.totalPages));
     container.querySelector('input').addEventListener('change', (e) => this.goToPage(e.target.value));
   }
 
   changePage(direction) {
     this.currentPage += direction;
-    this.loadTable();
-  }
-
-  goToFirstPage() {
-    this.currentPage = 1;
-    this.loadTable();
-  }
-
-  goToLastPage() {
-    this.currentPage = this.totalPages;
-    this.loadTable();
+    this.renderSortedTable();
   }
 
   goToPage(pageNumber) {
     pageNumber = parseInt(pageNumber, 10);
     if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= this.totalPages) {
       this.currentPage = pageNumber;
-      this.loadTable();
+      this.renderSortedTable();
     } else {
       alert(`Invalid page number. Please enter a number between 1 and ${this.totalPages}.`);
     }

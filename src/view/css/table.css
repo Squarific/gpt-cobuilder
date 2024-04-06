@@ -38,3 +38,7 @@ table .button  {
 #active-requests-table td {
     white-space: pre;
 }
+
+.pagination-control {
+    display: inline-block;
+}
