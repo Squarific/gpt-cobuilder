@@ -228,9 +228,3 @@ export class PaginatedTable {
     }
   }
 }
-
-// Instantiate and call loadTable on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-  const paginatedRequestTable = new PaginatedTable('requests-table');
-  paginatedRequestTable.loadTable();
-});
