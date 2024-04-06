@@ -88,16 +88,18 @@ export class PaginatedTable {
   }
 
   createTableHeaders(table) {
-    const headers = [
+    let headersHTML = [
       "Model Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", 
       "Cost", "Finish Reason", "Request Content", "Response Content"
-    ];
-    const headerRow = table.insertRow();
-    headers.forEach((headerText, index) => {
-      const headerCell = document.createElement('th');
-      headerCell.innerHTML = headerText;
-      headerCell.addEventListener('click', () => this.sortTableByColumn(index));
-      headerRow.appendChild(headerCell);
+    ].map(
+      (headerText, index) => `<th data-sort-index="${index}">${headerText}</th>`
+    ).join('');
+
+    table.insertAdjacentHTML('beforeend', `<tr>${headersHTML}</tr>`);
+    
+    table.querySelectorAll("th").forEach(headerCell => {
+      const sortOrderIndex = parseInt(headerCell.dataset.sortIndex);
+      headerCell.addEventListener('click', () => this.sortTableByColumn(sortOrderIndex));
     });
   }
 
@@ -165,42 +167,21 @@ export class PaginatedTable {
 
     container.querySelectorAll('.pagination-control').forEach(ctrl => ctrl.remove());
 
-    const prevButton = document.createElement('button');
-    prevButton.innerText = 'Previous';
-    prevButton.className = 'button pagination-control';
-    prevButton.disabled = this.currentPage <= 1;
-    prevButton.addEventListener('click', () => this.changePage(-1));
-    container.appendChild(prevButton);
+    const paginationHTML = 
+      `<button class="button pagination-control" ${this.currentPage <= 1 ? 'disabled' : ''} data-direction="-1">Previous</button>
+       <button class="button pagination-control" ${this.currentPage >= this.totalPages ? 'disabled' : ''} data-direction="1">Next</button>
+       <button class="button pagination-control" ${this.currentPage === 1 ? 'disabled' : ''} data-direction="first">First</button>
+       <button class="button pagination-control" ${this.currentPage === this.totalPages ? 'disabled' : ''} data-direction="last">Last</button>
+       <input type="number" class="pagination-control" min="1" max="${this.totalPages}" value="${this.currentPage}">`;
 
-    const nextButton = document.createElement('button');
-    nextButton.innerText = 'Next';
-    nextButton.className = 'button pagination-control';
-    nextButton.disabled = this.currentPage >= this.totalPages;
-    nextButton.addEventListener('click', () => this.changePage(1));
-    container.appendChild(nextButton);
+    container.insertAdjacentHTML('beforeend', paginationHTML);
 
-    const firstButton = document.createElement('button');
-    firstButton.innerText = 'First';
-    firstButton.className = 'button pagination-control';
-    firstButton.disabled = this.currentPage === 1;
-    firstButton.addEventListener('click', () => this.goToFirstPage());
-    container.insertBefore(firstButton, prevButton); // Insert before 'Previous' button
-
-    const lastButton = document.createElement('button');
-    lastButton.innerText = 'Last';
-    lastButton.className = 'button pagination-control';
-    lastButton.disabled = this.currentPage === this.totalPages;
-    lastButton.addEventListener('click', () => this.goToLastPage());
-    container.appendChild(lastButton);
-
-    const pageInput = document.createElement('input');
-    pageInput.type = 'number';
-    pageInput.min = '1';
-    pageInput.max = `${this.totalPages}`;
-    pageInput.value = this.currentPage;
-    pageInput.className = 'pagination-control';
-    pageInput.addEventListener('change', () => this.goToPage(pageInput.value));
-    container.appendChild(pageInput);
+    // Add the event listeners to the buttons and input
+    container.querySelector('[data-direction="-1"]').addEventListener('click', () => this.changePage(-1));
+    container.querySelector('[data-direction="1"]').addEventListener('click', () => this.changePage(1));
+    container.querySelector('[data-direction="first"]').addEventListener('click', () => this.goToFirstPage());
+    container.querySelector('[data-direction="last"]').addEventListener('click', () => this.goToLastPage());
+    container.querySelector('input').addEventListener('change', (e) => this.goToPage(e.target.value));
   }
 
   changePage(direction) {

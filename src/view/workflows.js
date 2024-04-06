@@ -38,5 +38,5 @@ export async function applyFileChanges (fileChanges) {
     }
   }
 
-  fileListControllers.foreach((c) => c.refresh());
+  fileListControllers.forEach((c) => c.refresh());
 }
