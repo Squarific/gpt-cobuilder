@@ -7,9 +7,9 @@ export class PaginatedTable {
     this.tableId = tableId;
     this.currentPage = 1;
     this.totalPages = 1;
-    this.requestLogData = []; // Holds parsed log objects
-    this.currentlySortedBy = null;
-    this.isAscending = true;
+    this.requestLogData = [];
+    this.currentlySortedBy = 1;
+    this.isAscending = false;
   }
 
   async loadTable() {
