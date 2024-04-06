@@ -34,3 +34,7 @@ th {
 table .button  {
     margin:1em;
 }
+
+#active-requests-table td {
+    white-space: pre;
+}
