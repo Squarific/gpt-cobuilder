@@ -15,14 +15,13 @@ export class PaginatedTable {
   async loadTable() {
     const folder = localStorage.getItem('folder');
     const requestsPath = `${folder}/gptcobuilder/requests`;
-    const table = document.getElementById(this.tableId);
 
     try {
       const requestFiles = await window.fs.readdir(requestsPath);
       this.totalPages = Math.ceil(requestFiles.length / ITEMS_PER_PAGE);
 
       this.requestLogData = await this.parseRequestLogFiles(requestFiles);
-      this.populateTableWithPageFiles(table);
+      this.renderSortedTable();
       this.addPaginationControls();
     } catch (error) {
       console.error('Error loading requests:', error);
