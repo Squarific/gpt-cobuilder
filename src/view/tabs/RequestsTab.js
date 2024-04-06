@@ -1,5 +1,7 @@
 import { PaginatedTable } from '../classes/PaginatedTable.js';
 
+export let paginatedRequestTable;
+
 async function createRequestsTab() {
   const requestsTab = $('#Requests');
   requestsTab.innerHTML = `
@@ -10,7 +12,7 @@ async function createRequestsTab() {
   `;
 
   // Instantiate and call loadTable on tab creation
-  const paginatedRequestTable = new PaginatedTable('requests-table');
+  paginatedRequestTable = new PaginatedTable('requests-table');
   await paginatedRequestTable.loadTable();
 }
 

@@ -1,5 +1,6 @@
-import { addActiveRequest } from '../tabs/ActiveRequestsTab.js';
-import { sendMessageToChatGPTStreamed } from '../apiOperations.js';
+import { addActiveRequest } from "../tabs/ActiveRequestsTab.js";
+import { sendMessageToChatGPTStreamed } from "../apiOperations.js";
+import { paginatedRequestTable } from "../tabs/RequestsTab.js"
 
 export class Agent {
     constructor(name, systemMessage, userMessage) {
@@ -24,6 +25,7 @@ export class Agent {
             );
 
             row.parentNode.removeChild(row);
+            paginatedRequestTable.loadTable();
 
             return response;
         } catch (error) {
