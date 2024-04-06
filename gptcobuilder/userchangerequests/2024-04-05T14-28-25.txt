@@ -2,4 +2,4 @@ Files (bf0119bcb6a5a9c250c2ff484bd7203278c6f214):
 
 
 Change request:
-The order in the requests log table should be from new to old instead of from old to new as it is now.
+It should be possible to sort the table by clicking on a header.

@@ -92,3 +92,6 @@ typings/
 out/
 
 gptcobuilder/requests
+gptcobuilder/userchangerequests
+gptcobuilder/highlevelchangerequests
+gptcobuilder/filechangesproposals

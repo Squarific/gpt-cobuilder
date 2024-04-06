@@ -30,7 +30,7 @@ export const parseFilesResponse = (response) => {
   // Iterate over the blocks, skipping the language specifier
   for(let i = 0; i < blocks.length - 1; i += 2) {
     let linesBeforeCodeBlock = blocks[i].trim().split("\n");
-    path = linesBeforeCodeBlock[linesBeforeCodeBlock.length - 1]; // The line directly before the delimiter
+    let path = linesBeforeCodeBlock[linesBeforeCodeBlock.length - 1]; // The line directly before the delimiter
 
     // Get the file content
     let content = blocks[i + 1];
