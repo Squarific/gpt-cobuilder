@@ -1,4 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const contextMenu = require('electron-context-menu');
+
+contextMenu({});
 
 const path = require('path');
 
@@ -14,7 +17,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
+      nodeIntegration: true
     },
   });
 
