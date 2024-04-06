@@ -7,6 +7,9 @@ export class PaginatedTable {
     this.tableId = tableId;
     this.currentPage = 1;
     this.totalPages = 1;
+    this.requestLogData = []; // Holds parsed log objects
+    this.currentlySortedBy = null;
+    this.isAscending = true;
   }
 
   async loadTable() {
@@ -18,31 +21,38 @@ export class PaginatedTable {
       const requestFiles = await window.fs.readdir(requestsPath);
       this.totalPages = Math.ceil(requestFiles.length / ITEMS_PER_PAGE);
 
-      this.updateTable(table, requestFiles);
+      this.requestLogData = await this.parseRequestLogFiles(requestFiles);
+      this.populateTableWithPageFiles(table);
       this.addPaginationControls();
     } catch (error) {
       console.error('Error loading requests:', error);
     }
   }
 
-  async updateTable(table, requestFiles) {
-    // Only get files for the current page
+  async populateTableWithPageFiles(table) {
     const start = (this.currentPage - 1) * ITEMS_PER_PAGE;
     const end = this.currentPage * ITEMS_PER_PAGE;
-    const pageFiles = requestFiles.slice(start, end);
+    const pageFiles = this.requestLogData.slice(start, end);
 
     table.innerHTML = '';
     this.createTableHeaders(table);
-    await this.populateTableWithPageFiles(table, pageFiles);
-  }
 
-  createTableHeaders(table) {
-    const headers = ["Model Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", "Cost", "Finish Reason", "Request Content", "Response Content"];
-    const headerRow = table.insertRow();
-    for (const headerText of headers) {
-      const headerCell = document.createElement('th');
-      headerCell.innerText = headerText;
-      headerRow.appendChild(headerCell);
+    for (const requestLog of pageFiles) {
+      const row = table.insertRow();
+      this.fillCell(row, requestLog.model);
+      this.fillCell(row, requestLog.dateTime.toLocaleString());
+      this.fillCell(row, requestLog.status);
+      this.fillCell(row, requestLog.inputTokens);
+      this.fillCell(row, requestLog.completionTokens);
+      this.fillCell(row, requestLog.cost);
+      this.fillCell(row, requestLog.finishReason);
+      this.fillCell(row, requestLog.requestContent);
+      this.fillCell(row, requestLog.responseContent);
+
+      row.setAttribute('data-request', requestLog.filePath); // Set the data attribute for row
+      row.classList.add('request-entry'); // Add class for event listener
+
+      row.addEventListener('click', this.openRequestDetails.bind(this));
     }
   }
 
@@ -51,35 +61,76 @@ export class PaginatedTable {
     return new Date(split[0] + "T" + split[1].replace(/-/g, ':'));
   }
 
-  async populateTableWithPageFiles(table, pageFiles) {
+  async parseRequestLogFiles(requestFiles) {
     const folder = localStorage.getItem('folder');
     const requestsPath = `${folder}/gptcobuilder/requests`;
+    const requestLogData = [];
 
-    for (const fileName of pageFiles) {
+    for (const fileName of requestFiles) {
       const filePath = `${requestsPath}/${fileName}`;
       const fileContent = await window.fs.readFile(filePath);
       const requestLog = JSON.parse(fileContent);
 
-      const row = table.insertRow();
-      this.fillCell(row, requestLog.response.model);
-      this.fillCell(row, this.parseDateTime(fileName).toLocaleString());
-      this.fillCell(row, 'DONE');
-      this.fillCell(row, requestLog.response.usage.prompt_tokens);
-      this.fillCell(row, requestLog.response.usage.completion_tokens);
-      this.fillCell(row, `$${costStringFromGPTResponse(requestLog.response)}`);
-      this.fillCell(row, requestLog.response.choices[0].finish_reason);
-
-      let requestContent = (requestLog.request.content || requestLog.request.messages[1].content).slice(-256);
-      let responseContent = requestLog.response.choices[0].message.content.slice(0, 256);
-      
-      this.fillCell(row, requestContent);
-      this.fillCell(row, responseContent);
-
-      row.setAttribute('data-request', filePath); // Set the data attribute for row
-      row.classList.add('request-entry'); // Add class for event listener
-
-      row.addEventListener('click', this.openRequestDetails.bind(this));
+      requestLogData.push({
+        model: requestLog.response.model,
+        dateTime: this.parseDateTime(fileName),
+        status: 'DONE',
+        inputTokens: parseInt(requestLog.response.usage.prompt_tokens),
+        completionTokens: parseInt(requestLog.response.usage.completion_tokens),
+        cost: costStringFromGPTResponse(requestLog.response),
+        finishReason: requestLog.response.choices[0].finish_reason,
+        requestContent: (requestLog.request.content || requestLog.request.messages[1].content).slice(-256),
+        responseContent: requestLog.response.choices[0].message.content.slice(0, 256),
+        filePath: filePath
+      });
     }
+
+    return requestLogData;
+  }
+
+  createTableHeaders(table) {
+    const headers = [
+      "Model Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", 
+      "Cost", "Finish Reason", "Request Content", "Response Content"
+    ];
+    const headerRow = table.insertRow();
+    headers.forEach((headerText, index) => {
+      const headerCell = document.createElement('th');
+      headerCell.innerHTML = headerText;
+      headerCell.addEventListener('click', () => this.sortTableByColumn(index));
+      headerRow.appendChild(headerCell);
+    });
+  }
+
+  sortTableByColumn(columnIndex) {
+    if (this.currentlySortedBy === columnIndex) {
+      this.isAscending = !this.isAscending;
+    } else {
+      this.currentlySortedBy = columnIndex;
+      this.isAscending = true;
+    }
+    this.renderSortedTable();
+  }
+
+  renderSortedTable() {
+    this.requestLogData.sort((a, b) => {
+      const compareA = a[this.getColumnKeyByIndex(this.currentlySortedBy)];
+      const compareB = b[this.getColumnKeyByIndex(this.currentlySortedBy)];
+      if (compareA < compareB) return this.isAscending ? -1 : 1;
+      if (compareA > compareB) return this.isAscending ? 1 : -1;
+      return 0;
+    });
+
+    const table = document.getElementById(this.tableId);
+    this.populateTableWithPageFiles(table);
+  }
+
+  getColumnKeyByIndex(index) {
+    const keys = [
+      "model", "dateTime", "status", "inputTokens", "completionTokens",
+      "cost", "finishReason", "requestContent", "responseContent"
+    ];
+    return keys[index] || null;
   }
 
   async openRequestDetails(event) {
@@ -113,7 +164,6 @@ export class PaginatedTable {
     const container = document.getElementById(this.tableId + "-container");
     if (!container) return;
 
-    // Clear existing controls
     container.querySelectorAll('.pagination-control').forEach(ctrl => ctrl.remove());
 
     const prevButton = document.createElement('button');
@@ -154,10 +204,9 @@ export class PaginatedTable {
     container.appendChild(pageInput);
   }
 
-  // Change to previous or next page
   changePage(direction) {
     this.currentPage += direction;
-    this.loadTable(); // Reload the table content
+    this.loadTable();
   }
 
   goToFirstPage() {

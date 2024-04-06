@@ -1,6 +1,6 @@
 import { elementFromHTML } from "../utils.js";
 
-let fileListControllers = [];
+export let fileListControllers = [];
 
 export class FileListController {
   constructor(alreadySelected = []) {
