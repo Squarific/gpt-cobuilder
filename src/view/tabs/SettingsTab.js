@@ -1,3 +1,4 @@
+import { GPT_COBUILDER_FOLDER_NAME, PROJECT_DESCRIPTION_FILE } from "../classes/Constants.js";
 import { loadSettings, updateFolder, saveSettings } from "../fileOperations.js";
 
 async function createSettingsTab() {

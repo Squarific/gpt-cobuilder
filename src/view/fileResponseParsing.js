@@ -1,3 +1,5 @@
+import { FILE_DELIMETER } from "./classes/Constants.js";
+
 const splitInBlocksByDelimiter = (response) => {
     let lines = response.split("\n");
     let blocks = [];

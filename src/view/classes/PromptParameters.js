@@ -1,3 +1,5 @@
+import { FILE_DELIMETER } from "./Constants.js";
+
 export class PromptParameters {
     constructor(fileList, inputs) {
         this.fileList = fileList;
