@@ -1,6 +1,7 @@
 import { rowElementFromHTML } from "../utils.js";
 import { createFilechangesProposalFile } from '../fileOperations.js';
 import { PromptParameters } from '../classes/PromptParameters.js';
+import { agents } from '../agents.js';
 
 let highLevelChangeRequestWatcher;
 

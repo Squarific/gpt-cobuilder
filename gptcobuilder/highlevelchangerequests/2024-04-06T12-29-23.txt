@@ -1,0 +1,49 @@
+Files (e14c58614b12bc09a8ce76e4618d81259cd142c8):
+
+
+High level change request:
+To implement the change requested by the user, you need to sort the files by date in descending order before populating the table. This can be done by amending the `loadTable()` method to sort the `requestFiles` array based on the date embedded in the file names, assuming they are in a sortable format like `YYYY-MM-DDTHH-MM-SS`.
+
+Here's the updated `loadTable()` method with the sorting added:
+
+```js
+// Updated loadTable method with sorting from new to old
+export class PaginatedTable {
+  // ... existing methods and constructor
+
+  async loadTable() {
+    const folder = localStorage.getItem('folder');
+    const requestsPath = `${folder}/gptcobuilder/requests`;
+    const table = document.getElementById(this.tableId);
+
+    try {
+      let requestFiles = await window.fs.readdir(requestsPath);
+
+      // Sort the files by date in descending order
+      requestFiles = requestFiles.sort((a, b) => {
+        // Parse the datetime from the file name and convert it to a timestamp
+        const timestampA = this.parseDateTime(a.split('.')[0]).getTime();
+        const timestampB = this.parseDateTime(b.split('.')[0]).getTime();
+        return timestampB - timestampA; // Sort in descending order
+      });
+
+      this.totalPages = Math.ceil(requestFiles.length / ITEMS_PER_PAGE);
+
+      this.updateTable(table, requestFiles);
+      this.addPaginationControls();
+    } catch (error) {
+      console.error('Error loading requests:', error);
+    }
+  }
+
+  // ... the rest of the PaginatedTable class remains unchanged
+}
+
+// Instantiate and call loadTable on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  const paginatedRequestTable = new PaginatedTable('requests-table');
+  paginatedRequestTable.loadTable();
+});
+```
+
+Make sure this updated `loadTable()` function replaces the existing one in the `PaginatedTable.js`. What it does is to sort all the files by their timestamp after retrieving them from the directory and before calculating the pagination. The `parseDateTime` method remains as is, as it is used to convert the date string from the file name into a `Date` object that you can sort on.
