@@ -1,4 +1,5 @@
 import { elementFromHTML } from "../utils.js";
+import { openTab } from "../tabOperations.js";
 
 class AgentTab {
     constructor() {}
@@ -55,7 +56,8 @@ class AgentTab {
         const tabButton = document.createElement("button");
         tabButton.className = "tablinks";
         tabButton.innerText = name;
-        tabButton.onclick = (event) => openTab(event, name);
+        tabButton.dataset.tabName = name;
+        tabButton.addEventListener("click", openTab);
         document.getElementsByClassName("tab")[0].insertBefore(tabButton, $("#add-tab-button"));
     }
 }
