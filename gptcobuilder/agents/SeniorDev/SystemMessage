@@ -10,3 +10,5 @@ If you need to change multiple files, include where the code should be placed.
 
 Try to split new code into new files.
 Do not add unnecessary comments.
+
+You may also suggest to run commands.
