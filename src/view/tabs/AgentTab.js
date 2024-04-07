@@ -1,5 +1,6 @@
-import { elementFromHTML } from "../utils.js";
+import { elementFromHTML, debounce } from "../utils.js";
 import { openTab } from "../tabOperations.js";
+import { AGENTS_DIR_PATH } from "../classes/Constants.js";
 
 class AgentTab {
     constructor() {}
@@ -31,6 +32,15 @@ class AgentTab {
         `;
   
         document.getElementsByTagName("body")[0].appendChild(tabContent);
+
+        tabContent.querySelector(`#${agentSystemMessageId}`).addEventListener('input', debounce((event) => {
+            window.fs.saveFile(`${AGENTS_DIR_PATH}/${agent.name}/SystemMessage`, event.target.value);
+        }, 500));
+
+        tabContent.querySelector(`#${agentUserMessageId}`).addEventListener('input', debounce((event) => {
+            window.fs.saveFile(`${AGENTS_DIR_PATH}/${agent.name}/UserMessage`, event.target.value);
+        }, 500));
+
         this.initializeTokenCounts([agentSystemMessageId, agentUserMessageId]);
     }
   
