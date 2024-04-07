@@ -14,6 +14,7 @@
   </head>
   <body>
     <div class="tab">
+      <button class="tablinks" data-tab-name="NewProject">New Project</button>
       <button class="tablinks" data-tab-name="Settings">Settings</button>
       <button class="tablinks" data-tab-name="Requests">Requests log</button>
       <button class="tablinks" data-tab-name="ActiveRequests">Active requests</button>
@@ -29,6 +30,7 @@
     <div id="UserChangeRequests" class="tabcontent"></div>
     <div id="HighLevelChangeRequests" class="tabcontent"></div>
     <div id="FilechangesProposals" class="tabcontent"></div>
+    <div id="NewProject" class="tabcontent"></div>
 
     <div id="requestDetailsModal" class="modal">
       <div class="modal-content">
@@ -58,6 +60,7 @@
     <script src="tabs/UserChangeRequestsTab.js" type="module"></script>
     <script src="tabs/HighLevelChangeRequestsTab.js" type="module"></script>
     <script src="tabs/FilechangesProposalsTab.js" type="module"></script>
+    <script src="tabs/NewProjectTab.js" type="module"></script>
 
     <!-- Other -->
     <script src="agents.js" type="module"></script>
