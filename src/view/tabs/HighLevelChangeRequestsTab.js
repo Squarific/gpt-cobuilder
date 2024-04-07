@@ -90,7 +90,7 @@ export async function updateHighLevelChangeRequestsTab() {
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             let changeRequestTextarea = row.querySelector(".changerequest");
-            changeRequestTextarea.innerText = changeRequest;
+            changeRequestTextarea.textContent = changeRequest;
             changeRequestTextarea.addEventListener('input', async () => {
                 const updatedChangeRequest = changeRequestTextarea.value;
                 const updatedFileContent = generateHighLevelChangeRequestsFileContent(files, updatedChangeRequest, commitHash);

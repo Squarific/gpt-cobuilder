@@ -81,7 +81,7 @@ async function updateFilechangesProposalsTab() {
 
             const tableRowHTML = `
                 <tr>
-                    <td><textarea class="proposal">${filechangesProposal}</textarea></td>
+                    <td><textarea class="proposal"></textarea></td>
                     <td class="parsed-proposal">${await createFileChangesComparison(filechangesProposal)}</td>
                     <td class="buttons">
                         <button class="button apply-changes">Apply file changes</button>
@@ -93,6 +93,7 @@ async function updateFilechangesProposalsTab() {
             let row = filechangesProposalsTab.querySelector('#file-changes-proposals-table').appendChild(rowElementFromHTML(tableRowHTML));
 
             let proposalTextarea = row.querySelector(".proposal");
+            proposalTextarea.textContent = filechangesProposal;
             proposalTextarea.addEventListener('input', async () => {
                 const updatedProposal = proposalTextarea.value;
                 const updatedFileContent = generateFilechangesProposalFileContent(updatedProposal);
