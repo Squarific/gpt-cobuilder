@@ -75,7 +75,7 @@ export async function updateHighLevelChangeRequestsTab() {
 
             const tableRowHTML = `
                 <tr>
-                    <td><textarea class="changerequest">${changeRequest}</textarea></td>
+                    <td><textarea class="changerequest"></textarea></td>
                     <td class="files">Selected on commit: ${commitHash}<br/></td>
                     <td class="buttons">
                         <button class="button run-agent">Run ${agent.name}</button>
@@ -90,6 +90,7 @@ export async function updateHighLevelChangeRequestsTab() {
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             let changeRequestTextarea = row.querySelector(".changerequest");
+            changeRequestTextarea.innerText = changeRequest;
             changeRequestTextarea.addEventListener('input', async () => {
                 const updatedChangeRequest = changeRequestTextarea.value;
                 const updatedFileContent = generateHighLevelChangeRequestsFileContent(files, updatedChangeRequest, commitHash);
