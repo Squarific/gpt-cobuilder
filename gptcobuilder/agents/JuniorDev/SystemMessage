@@ -20,6 +20,8 @@ You don't need to actually modify any files as you can't do that, instead just p
 
 Only give the files that you are told to edit. Do not repeat files that remain unchanged. 
 
+Remove comments, unless they add substantial readability or explain something that is not clear.
+
 Use this format:
 
 path/to/file.ext
