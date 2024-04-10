@@ -36,7 +36,7 @@ function parseUserChangeRequestFileContent (fileContent) {
 
 function generateUserChangeRequestFileContent(files, changeRequest, commitHash) {
     return `Files (${commitHash}):
-${files.join('\n')}
+${files.map(f => `- ${f}`).join('\n')}
 
 Change request:
 ${changeRequest}`;
@@ -71,7 +71,7 @@ export async function updateUserChangeRequestsTab() {
         for (const fileName of userChangeRequestFiles) {
             const filePath = `${userChangeRequestsDir}/${fileName}`;
             const fileContent = await window.fs.readFile(filePath);
-            const { files, changeRequest, commitHash } = parseUserChangeRequestFileContent(fileContent);
+            let { files, changeRequest, commitHash } = parseUserChangeRequestFileContent(fileContent);
 
             let agent = agents.find((agent) => agent.name == "SeniorDev") || {name: "undefined"};
 
@@ -88,15 +88,24 @@ export async function updateUserChangeRequestsTab() {
             
             let row = userChangeRequestsTab.querySelector('#user-change-requests-table').appendChild(rowElementFromHTML(tableRowHTML));
 
-            let fileListController = new FileListController(files.map((f) => localStorage.getItem('folder') + "\\" + f));            
+            let fileListController = new FileListController(files.map((f) => `${localStorage.getItem('folder')}\\${f}`));
+            fileListController.addEventListener("fileSelectionChange", async () => {
+                files = Array.from(fileListController.fileListMap)
+                    .filter(e => e[1].checkbox.checked)
+                    .map((e) => e[0].replace(`${localStorage.getItem('folder')}\\`, ""));
+                
+                const updatedFileContent = generateUserChangeRequestFileContent(files, changeRequest, commitHash);
+                await window.fs.saveFile(filePath, updatedFileContent);
+            });
             row.querySelector(".files").appendChild(fileListController.createDOM());
 
             let changeRequestTextarea = row.querySelector(".changerequest");
-            changeRequestTextarea.textContent = changeRequest;
+            changeRequestTextarea.value = changeRequest;
 
             changeRequestTextarea.addEventListener('input', async () => {
-                const updatedChangeRequest = changeRequestTextarea.value;
-                const updatedFileContent = generateUserChangeRequestFileContent(files, updatedChangeRequest, commitHash);
+                changeRequest = changeRequestTextarea.value;
+
+                const updatedFileContent = generateUserChangeRequestFileContent(files, changeRequest, commitHash);
                 await window.fs.saveFile(filePath, updatedFileContent);
             });
 

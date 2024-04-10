@@ -1,22 +1,28 @@
-import { elementFromHTML } from "../utils.js";
+import { elementFromHTML, debounce } from "../utils.js";
 
 export let fileListControllers = [];
 
-export class FileListController {
+export class FileListController extends EventTarget {
   constructor(alreadySelected = []) {
+    super();
     fileListControllers.push(this);
 
-    //"path" => new File()
+    //"path" => File() object
     this.fileListMap = new Map();
     
-    //"path" => new File()
-    this.selectedFiles = new Set();
+    //"path" => File() object
+    // This is only used as a temp cache
+    this._selectedFilesBeforeRefresh = new Set();
 
-    //new file() => "contentoffile"
-    this.fileContentMap = new Map(alreadySelected.map((f) => [{ path: f}, ""]));
+    //File() object => "content of file"
+    this.fileContentMap = new Map(alreadySelected.map((f) => [{ path: f }, ""]));
     
     this.allFilesSelected = false;
     this.selectAllButton = null;
+
+    this.emitFileSelectionChangeEvent = debounce(() => {
+      this.dispatchEvent(new Event("fileSelectionChange"));
+    }, 100);
   }
 
   createDOM() {
@@ -48,7 +54,7 @@ export class FileListController {
 
   async refresh() {
     // Cache selected files
-    this.selectedFiles = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
+    this._selectedFilesBeforeRefresh = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
     this.selectedFilesElement.innerHTML = '';
     this.unSelectedFilesElement.innerHTML = '';
     this.displayFileStructure(await this.getFilesInFolderWithFilter());
@@ -117,7 +123,7 @@ export class FileListController {
 
     const fileEntry = elementFromHTML(`
       <div class="file-entry">
-        <input id="${id}" ${this.selectedFiles.has(file.path) ? "checked" : ""} type="checkbox" data-filepath="${file.path}"/>
+        <input id="${id}" ${this._selectedFilesBeforeRefresh.has(file.path) ? "checked" : ""} type="checkbox" data-filepath="${file.path}"/>
         <label for="${id}" ${warningClasses}>${filePath} (${file.size})</label>
       </div>
     `);
@@ -125,7 +131,7 @@ export class FileListController {
     file.checkbox = fileEntry.querySelector("input");
     file.checkbox.addEventListener("change", () => this.updateFileSelection(file));
 
-    if (this.selectedFiles.has(file.path)) {
+    if (this._selectedFilesBeforeRefresh.has(file.path)) {
       this.selectedFilesElement.appendChild(fileEntry);
       this.updateFileSelection(file);
     } else {
@@ -194,6 +200,8 @@ export class FileListController {
       this.fileContentMap.delete(file);
       if (fileEntry) this.unSelectedFilesElement.appendChild(fileEntry);
     }
+
+    this.emitFileSelectionChangeEvent();
   }
 
   fileFromFilePath(filePath) {
