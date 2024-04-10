@@ -35,10 +35,12 @@ class AgentTab {
 
         tabContent.querySelector(`#${agentSystemMessageId}`).addEventListener('input', debounce((event) => {
             window.fs.saveFile(`${AGENTS_DIR_PATH}/${agent.name}/SystemMessage`, event.target.value);
+            agent.systemMessage = event.target.value;
         }, 500));
 
         tabContent.querySelector(`#${agentUserMessageId}`).addEventListener('input', debounce((event) => {
             window.fs.saveFile(`${AGENTS_DIR_PATH}/${agent.name}/UserMessage`, event.target.value);
+            agent.userMessage = event.target.value;
         }, 500));
 
         this.initializeTokenCounts([agentSystemMessageId, agentUserMessageId]);
