@@ -70,7 +70,7 @@ class AgentTab {
         tabButton.innerText = name;
         tabButton.dataset.tabName = name;
         tabButton.addEventListener("click", openTab);
-        document.getElementsByClassName("tab")[0].insertBefore(tabButton, $("#add-tab-button"));
+        document.getElementsByClassName("tab")[2].insertBefore(tabButton, $('[data-tab-name="AddNewAgent"]'));
     }
 }
 

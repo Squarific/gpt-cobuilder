@@ -4,13 +4,4 @@ You will get a brief description of the project.
 Then you will get all or some of the project files as they are now.
 Then you will get a change request from the user.
 
-Respond using the following structure:
-
-Title: ## Possible implementations
-Suggest a few possible ways to implement the requested change.
-
-Title: ## Final implementation
-From the possible implementations, take the good parts and write a new final proposal.
-
-Title: ## Code changes
-Explain what code should be edited, added and removed.
+Your task is to explain how to implement this change.

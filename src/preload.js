@@ -167,9 +167,7 @@ contextBridge.exposeInMainWorld('groqApi', {
       }
     });
 
-    console.log("Groq complete", completed);
-
-    let response = { choices: [{ message: { content: completed }}]};
+    let response = { model, choices: [{ message: { content: completed }}]};
     
     response.usage = {
       prompt_tokens: enc.encode(messages[0].content + messages[1].content).length,

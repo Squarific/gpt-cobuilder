@@ -14,14 +14,20 @@
   </head>
   <body>
     <div class="tab">
-      <button class="tablinks" data-tab-name="NewProject">New Project</button>
-      <button class="tablinks" data-tab-name="Settings">Settings</button>
-      <button class="tablinks" data-tab-name="Requests">Requests log</button>
-      <button class="tablinks" data-tab-name="ActiveRequests">Active requests</button>
+      <button class="tablinks" data-tab-name="NewProject">📝 New Project</button>
+      <button class="tablinks" data-tab-name="Settings">⚙️ Settings</button>
+    </div>
+    <div class="tab">
+      <button class="tablinks" data-tab-name="Requests">📜 Requests log</button>
+      <button class="tablinks" data-tab-name="ActiveRequests">💬 Active requests</button>
       <button class="tablinks firstOpen" data-tab-name="UserChangeRequests">User change requests</button>
       <button class="tablinks" data-tab-name="HighLevelChangeRequests">High level change requests</button>
       <button class="tablinks" data-tab-name="FilechangesProposals">File changes proposals</button>
     </div>
+    <div class="tab">
+      <button class="tablinks" data-tab-name="AddNewAgent">🤖 Add new agent</button>
+    </div>
+    
 
     <div id="Settings" class="tabcontent"></div>
     <div id="Inputs" class="tabcontent"></div>
@@ -65,6 +71,6 @@
     <!-- Other -->
     <script src="agents.js" type="module"></script>
     <script src="tabOperations.js" type="module"></script>
-    <script src="requestDetailsModal.js" type="module"></script>
+    <script src="modals/requestDetailsModal.js" type="module"></script>
   </body>
 </html>

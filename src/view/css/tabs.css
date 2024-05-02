@@ -1,4 +1,5 @@
 .tab {
+  display:flex;
   overflow: hidden;
   border: 1px solid #ced4da;
   background-color: #e9ecef;
