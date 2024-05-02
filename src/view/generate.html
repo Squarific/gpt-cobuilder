@@ -24,8 +24,8 @@
       <button class="tablinks" data-tab-name="HighLevelChangeRequests">High level change requests</button>
       <button class="tablinks" data-tab-name="FilechangesProposals">File changes proposals</button>
     </div>
-    <div class="tab">
-      <button class="tablinks" data-tab-name="AddNewAgent">🤖 Add new agent</button>
+    <div class="tab agentsbuttons">
+      <button id="AddNewAgent">🤖 Add new agent</button>
     </div>
     
 
@@ -51,6 +51,8 @@
       </div>
     </div>
 
+    <div class="modals"></div>
+
     <script>
       $ = document.querySelector.bind(document);
       $$ = document.querySelectorAll.bind(document);
@@ -72,5 +74,6 @@
     <script src="agents.js" type="module"></script>
     <script src="tabOperations.js" type="module"></script>
     <script src="modals/requestDetailsModal.js" type="module"></script>
+    <script src="modals/addNewAgentModal.js" type="module"></script>
   </body>
 </html>

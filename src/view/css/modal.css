@@ -9,6 +9,10 @@
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+.modal.visible {
+  display:block;
+}
+
 .modal-content {
   background-color: #fefefe;
   margin: 2% auto;
