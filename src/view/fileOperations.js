@@ -44,7 +44,7 @@ export async function createHighLevelChangeRequestFile (response, selectedFiles)
   const dirPath = `${localStorage.getItem('folder')}/gptcobuilder/highlevelchangerequests`;
   const commitHash = (await window.gitCommands.getHash(localStorage.getItem('folder'))).split("\n")[0];
   const content = `Files (${commitHash}):
-${selectedFiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f.path)).join('\n')}
+${selectedFiles.map((f) => "- " + path.relative(localStorage.getItem('folder'), f)).join('\n')}
 
 High level change request:
 ${response}`;

@@ -7,6 +7,7 @@ const enc = getEncoding("cl100k_base");
 const parser = require("@gerhobbelt/gitignore-parser");
 
 const OpenAI = require('openai');
+const Groq = require("groq-sdk");
 
 const markdownIt = require('markdown-it');
 const md = new markdownIt();
@@ -136,6 +137,40 @@ contextBridge.exposeInMainWorld('openAiNpmApi', {
     }
 
     let response = await completionStream.finalChatCompletion();
+    response.usage = {
+      prompt_tokens: enc.encode(messages[0].content + messages[1].content).length,
+      completion_tokens: enc.encode(response.choices[0].message.content).length
+    };
+
+    response.usage.total_tokens = response.usage.prompt_tokens + response.usage.completion_tokens;
+
+    return response;
+  },
+});
+
+contextBridge.exposeInMainWorld('groqApi', {
+  chatCompletion: async (apiKey, model, messages, chunkCallback) => {
+    const groq = new Groq({ apiKey, dangerouslyAllowBrowser: true });
+
+    console.log(model, messages);
+
+    var completed = "";
+
+    var a = await groq.chat.completions.create({
+      messages,
+      model,
+      stream: true
+    }).then(async (completionStream) => {
+      for await (const chunk of completionStream) {
+        chunkCallback(chunk);
+        completed += chunk.choices[0]?.delta?.content || "";
+      }
+    });
+
+    console.log("Groq complete", completed);
+
+    let response = { choices: [{ message: { content: completed }}]};
+    
     response.usage = {
       prompt_tokens: enc.encode(messages[0].content + messages[1].content).length,
       completion_tokens: enc.encode(response.choices[0].message.content).length

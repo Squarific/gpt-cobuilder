@@ -4,8 +4,11 @@ import { loadSettings, updateFolder, saveSettings } from "../fileOperations.js";
 async function createSettingsTab() {
   const settingsTab = $('#Settings');
   settingsTab.innerHTML = `
-    <label for="api-key">ChatGPT API Key:</label>
-    <input type="text" id="api-key" value="${localStorage.getItem('apiKey') || ''}" />
+    <label for="openai-api-key">ChatGPT API Key:</label>
+    <input type="text" id="openai-api-key" value="${localStorage.getItem('apiKey') || ''}" />
+
+    <label for="groq-api-key">Groq API Key:</label>
+    <input type="text" id="groq-api-key" value="${localStorage.getItem('groq-apiKey') || ''}" />
 
     <label for="folder-selection">Select a Folder:</label>
     <button id="folder-selection">Project folder</button>
@@ -20,6 +23,8 @@ async function createSettingsTab() {
       <option value="gpt-4">gpt-4</option>
       <option value="gpt-4-32k">gpt-4-32k</option>
       <option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
+      <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+      <option value="llama3-70b-8192">llama3-70b-8192</option>
     </select>
     
     <div id="folder-display"></div>
@@ -36,8 +41,12 @@ async function createSettingsTab() {
     projectDescriptionTextarea.value = projectDescription;
   }
   
-  $('#api-key').addEventListener('input', () => {
-    localStorage.setItem('apiKey', $('#api-key').value.trim());
+  $('#openai-api-key').addEventListener('input', () => {
+    localStorage.setItem('apiKey', $('#openai-api-key').value.trim());
+  });
+
+  $('#groq-api-key').addEventListener('input', () => {
+    localStorage.setItem('groq-apiKey', $('#groq-api-key').value.trim());
   });
 
   $('#folder-selection').addEventListener('click', async () => {

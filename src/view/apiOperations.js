@@ -31,8 +31,6 @@ const displayTokenCounts = (response) => {
 };
 
 export const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, chunkCallback) => {
-  const apiKey = $('#api-key').value;
-
   const model = (await loadSettings()).modelSelection;
 
   const messages = [
@@ -40,7 +38,13 @@ export const sendMessageToChatGPTStreamed = async (systemMessage, userMessage, c
     { role: 'user', content: userMessage }
   ];
   
-  let response = await openAiNpmApi.chatCompletion(apiKey, model, messages, chunkCallback);
+  let response;
+  if (model == "mixtral-8x7b-32768" || model == "llama3-70b-8192") {
+    response = await groqApi.chatCompletion($('#groq-api-key').value, model, messages, chunkCallback);
+  } else {
+    response = await openAiNpmApi.chatCompletion($('#openai-api-key').value, model, messages, chunkCallback);
+  }
+  
 
   await logRequestAndResponse({ model, messages }, response);
 
