@@ -11,6 +11,7 @@ export class PromptParameters {
         
         if (this.fileList) {
             prompt = prompt.replaceAll("{ SELECTED_FILES }", this.fileContentMapToText(this.fileList.fileContentMap) || "No files selected");
+            prompt = prompt.replaceAll("{ FILE_LIST }", this.fileList() || "No files in project");
         }
 
         if (this.inputs) {
@@ -20,6 +21,10 @@ export class PromptParameters {
         }
 
         return prompt;
+    }
+
+    fileList() {
+        return Array.from(this.fileList.fileListMap.keys()).join("/n");
     }
 
     fileContentMapToText(fileContentMap) {

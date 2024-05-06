@@ -9,10 +9,6 @@ export class FileListController extends EventTarget {
 
     //"path" => File() object
     this.fileListMap = new Map();
-    
-    //"path" => File() object
-    // This is only used as a temp cache
-    this._selectedFilesBeforeRefresh = new Set();
 
     //File() object => "content of file"
     this.fileContentMap = new Map(alreadySelected.map((f) => [{ path: f }, ""]));
@@ -53,14 +49,13 @@ export class FileListController extends EventTarget {
   }
 
   async refresh() {
-    // Cache selected files
-    this._selectedFilesBeforeRefresh = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
+    let currentlySelected = new Set(Array.from(this.fileContentMap.keys()).map(file => file.path));
     this.selectedFilesElement.innerHTML = '';
     this.unSelectedFilesElement.innerHTML = '';
-    this.displayFileStructure(await this.getFilesInFolderWithFilter());
+    this.displayFileStructure(await this.getFilesInFolderWithFilter(), currentlySelected);
   }
 
-  async displayFileStructure(fileList) {
+  async displayFileStructure(fileList, checkedFiles) {
     this.fileContentMap.clear();
     this.fileListMap.clear();
     this.selectedFilesElement.innerHTML = '';
@@ -77,7 +72,7 @@ export class FileListController extends EventTarget {
       }
 
       this.fileListMap.set(file.path, file);
-      await this.addFileUI(filePath, file);
+      await this.addFileUI(filePath, file, checkedFiles.has(file.path));
     }
   }
 
@@ -117,13 +112,13 @@ export class FileListController extends EventTarget {
     }
   }
 
-  async addFileUI(filePath, file) {
+  async addFileUI(filePath, file, checked) {
     const id = Math.random() + "-checkbox";
     const warningClasses = file.size > 1000 ? 'class="token-serious-warning"' : file.size > 700 ? 'class="token-warning"' : '';
 
     const fileEntry = elementFromHTML(`
       <div class="file-entry">
-        <input id="${id}" ${this._selectedFilesBeforeRefresh.has(file.path) ? "checked" : ""} type="checkbox" data-filepath="${file.path}"/>
+        <input id="${id}" ${checked ? "checked" : ""} type="checkbox" data-filepath="${file.path}"/>
         <label for="${id}" ${warningClasses}>${filePath} (${file.size})</label>
       </div>
     `);
