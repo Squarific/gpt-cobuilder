@@ -126,7 +126,7 @@ export class FileListController extends EventTarget {
     file.checkbox = fileEntry.querySelector("input");
     file.checkbox.addEventListener("change", () => this.updateFileSelection(file));
 
-    if (this._selectedFilesBeforeRefresh.has(file.path)) {
+    if (checked) {
       this.selectedFilesElement.appendChild(fileEntry);
       this.updateFileSelection(file);
     } else {
