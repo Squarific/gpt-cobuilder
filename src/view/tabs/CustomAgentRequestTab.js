@@ -22,4 +22,4 @@ class CustomAgentRequestTab {
     }
 }
 
-export const newProjectTab = new NewProjectTab();
+export const customAgentRequestTab = new CustomAgentRequestTab();
