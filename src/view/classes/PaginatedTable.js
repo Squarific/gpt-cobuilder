@@ -40,11 +40,6 @@ export class PaginatedTable {
       const row = table.insertRow();
       this.fillCell(row, requestLog.model);
       this.fillCell(row, requestLog.dateTime.toLocaleString());
-      this.fillCell(row, requestLog.status);
-      this.fillCell(row, requestLog.inputTokens);
-      this.fillCell(row, requestLog.completionTokens);
-      this.fillCell(row, requestLog.cost);
-      this.fillCell(row, requestLog.finishReason);
       this.fillCell(row, requestLog.requestContent);
       this.fillCell(row, requestLog.responseContent);
 
@@ -73,7 +68,6 @@ export class PaginatedTable {
       requestLogData.push({
         model: requestLog.response.model,
         dateTime: this.parseDateTime(fileName),
-        status: 'DONE',
         inputTokens: parseInt(requestLog.response.usage.prompt_tokens),
         completionTokens: parseInt(requestLog.response.usage.completion_tokens),
         cost: costStringFromGPTResponse(requestLog.response),
@@ -89,8 +83,7 @@ export class PaginatedTable {
 
   createTableHeaders(table) {
     let headersHTML = [
-      "Model Name", "Date/Time", "Status", "Input Tokens", "Completion Tokens", 
-      "Cost", "Finish Reason", "Request Content", "Response Content"
+      "Model Name", "Date/Time", "Request Content", "Response Content"
     ].map(
       (headerText, index) => `<th data-sort-index="${index}">${headerText}</th>`
     ).join('');
@@ -129,8 +122,7 @@ export class PaginatedTable {
 
   getColumnKeyByIndex(index) {
     const keys = [
-      "model", "dateTime", "status", "inputTokens", "completionTokens",
-      "cost", "finishReason", "requestContent", "responseContent"
+      "model", "dateTime", "requestContent", "responseContent"
     ];
     return keys[index] || null;
   }

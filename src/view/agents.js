@@ -2,6 +2,7 @@ import { Agent } from './classes/Agent.js';
 import { agentTab } from './tabs/AgentTab.js';
 import { updateUserChangeRequestsTab } from './tabs/UserChangeRequestsTab.js';
 import { updateHighLevelChangeRequestsTab } from './tabs/HighLevelChangeRequestsTab.js';
+import { customAgentRequestTab } from './tabs/CustomAgentRequestTab.js';
 import { AGENTS_DIR_PATH } from './classes/Constants.js';
 
 export let agents = [];
@@ -22,4 +23,5 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   updateUserChangeRequestsTab();
   updateHighLevelChangeRequestsTab();
+  customAgentRequestTab.updateTabContent();
 });
