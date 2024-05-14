@@ -25,6 +25,7 @@ async function createSettingsTab() {
       <option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
       <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
       <option value="llama3-70b-8192">llama3-70b-8192</option>
+      <option value="gpt-4o">gpt-4o</option>
     </select>
     
     <div id="folder-display"></div>
@@ -82,7 +83,7 @@ async function updateProjectDescription() {
 }
 
 
-function updateRecentFoldersList() {
+export function updateRecentFoldersList() {
   const recentFolders = JSON.parse(localStorage.getItem('recentFolders')) || [];
   const recentFoldersList = $('#recent-folders-list');
   recentFoldersList.innerHTML = "";

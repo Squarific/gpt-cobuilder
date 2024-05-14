@@ -1,3 +1,5 @@
+import { updateRecentFoldersList } from './tabs/SettingsTab.js';
+
 const formattedTime = () => {
   const currentTime = new Date();
   const tzOffset = currentTime.getTimezoneOffset() * 60000;

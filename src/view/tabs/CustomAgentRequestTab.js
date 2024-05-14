@@ -1,5 +1,6 @@
 import { openTab } from "../tabOperations.js";
 import { agents } from "../agents.js";
+import { PromptParameters } from "../classes/PromptParameters.js";
 
 class CustomAgentRequestTab {
     constructor() {
@@ -49,6 +50,10 @@ class CustomAgentRequestTab {
         tabContent.querySelector(".folder-selection").addEventListener("click", async () => {
             const folder = await folderDialog.open();
             tabContent.querySelector(".folder").textContent = folder + "\\";
+        });
+
+        tabContent.querySelector(".run-agent").addEventListener("click", (event) => {
+            this.selectedAgent.run(new PromptParameters());
         });
     }
 }
